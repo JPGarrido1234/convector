@@ -1,0 +1,9 @@
+<?php
+require($_SERVER['DOCUMENT_ROOT']."/bd/c_usuario.php");
+require($_SERVER['DOCUMENT_ROOT']."/bd/c_producto.php");
+require($_SERVER['DOCUMENT_ROOT']."/bd/c_carga.php");
+require($_SERVER['DOCUMENT_ROOT']."/bd/c_entidad.php");
+require($_SERVER['DOCUMENT_ROOT']."/bd/c_enlace.php");
+require($_SERVER['DOCUMENT_ROOT']."/bd/c_subruta.php");
+require($_SERVER['DOCUMENT_ROOT']."/bd/c_datalogger.php");
+?>

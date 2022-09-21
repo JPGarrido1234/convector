@@ -1,0 +1,672 @@
+/* =============================================================================
+                                GENERAL
+============================================================================== */
+* {
+    padding: 0;
+    margin: 0;
+}
+body {
+    font-family: "Trebuchet MS", "Helvetica", "Sans-Serif";
+    font-size: 14px;
+    background-color: #F8F8F8;
+    color: #575757;
+    display: block;
+    margin: 0 auto;
+    width: 1200px;
+    height: 100%;
+}
+.inline {
+    display: inline-block;
+}
+.centered {
+    text-align: center;
+}
+/* =============================================================================
+                        TÍTULOS Y FORMULARIOS
+============================================================================== */
+.formulario {
+    width: 500px;
+    margin: 0 auto;
+}
+.titulo {
+    text-align: center;
+    width: 20%;
+    margin: 30px auto;
+    background-color: #00BFFF;
+    color: white;
+    border: 1px solid #545454;
+    border-radius: 3px 3px 3px 3px;
+    padding: 5px 0;
+}
+.titulo_secundario  {
+    background-color: rgb(84,84,84,0.4);
+}
+.input {
+    width: 500px;
+    background-color: #F8F8F8;
+    padding: 8px;
+    margin: 10px 0;
+    border: none;
+    border-bottom: 2px solid #C8C8C8;
+    transition: all .5s;
+    font-size: 16px;
+}
+.input:hover {
+    border-bottom: 2px solid #00BFFF;
+}
+.input_filtros {
+    margin-top: 5px;
+    background-color: #E5F8FF;
+    border: 1px solid #545454;
+    border-radius: 3px;
+    font-size: 12px;
+}
+.input_filtros:focus {
+    outline: none !important;
+}
+.label_filtros {
+    margin-left: 15px;
+}
+.submit_filtros {
+    background-color: rgb(84,84,84,0.4);
+    border-radius: 3px;
+    border: 1px solid black;
+}
+.formulario_filtros label {
+    padding-top: 3px;
+}
+.i_max {
+    width: 600px;
+}
+select {
+    width: 520px;
+    padding: 10px 20px;
+    border: 2px solid #C8C8C8;
+    border-radius: 5px;
+    background-color: #F8F8F8;  
+    font-size: 16px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    color: black;
+}
+select:hover  {
+    border: 2px solid #00BFFF;
+    transition: all .5s;
+}
+.boton {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 20px;
+}
+.submit {
+    width: 35%;
+    border: 1px solid #C8C8C8;
+    background-color: #00BFFF;
+    color: white;
+    padding: 10px;
+    font-size: 16px;
+}
+.submit:hover {
+    background-color: rgb(0,191,255,0.5);
+}
+.label_form h4 {
+    font-size: 16px;
+    font-weight: normal;
+    padding: 5px 0;
+}
+.con_btn_inv {
+    position: relative;
+}
+.btn_inv {
+    background: transparent;
+    border: none !important;
+    font-size: 0;
+    position: absolute;
+    top: 0%;
+    left: 0%;
+    width: 100%;
+    height: 100%;
+}
+.form2 {
+    width: auto !important;
+}
+.a_des {
+    pointer-events: none;
+}
+.submit_esp {
+    background-color: transparent;
+    border: none;
+    color: white;
+    pointer-events: visible !important;
+}
+.titulo_editar_borrar {
+    margin: 30px auto 15px auto !important;
+}
+.msg_error {
+    color: rgb(193, 66, 66);
+}
+/* =============================================================================
+                                MENÚS
+============================================================================== */
+.menu li {
+    list-style-type: none;
+    display: inline-block;
+}
+.menu li a {
+    background-color: #00BFFF;
+    border: #00BFFF;
+    border-radius: 5px 5px 5px 5px;
+    color: white;
+    text-decoration: none;
+    float: left;
+    font-weight: normal;
+    margin-right: 5px;
+    padding: 10px;
+    font-size: 16px;
+}
+.menu li a:hover, .menu li a:focus {
+    background-color: rgb(0,191,255, 0.5);
+}
+.menu_superior li:last-child a {
+    background-color: #545454;
+}
+.menu_superior li:last-child a:hover, .menu_superior li:last-child a:focus {
+    background-color: rgb(84,84,84,0.5);
+}
+.opcion_bien {
+    background-color: rgb(66, 193, 66) !important;
+    margin-left: 30px !important;
+    padding: 10px 15px !important;    
+    pointer-events: none !important;
+    cursor: default !important;
+}
+.opcion_error {
+    background-color: rgb(193, 66, 66) !important;
+    margin-left: 30px !important;
+    padding: 10px 15px !important;
+    pointer-events: none !important;
+    cursor: default !important;
+}
+.opcion_final {
+    background-color: #545454 !important;
+}
+.opcion_final:hover {
+    background-color: rgb(84,84,84,0.5) !important;
+}
+.menu_superior .form2 .submit_esp {
+    font-family: "Trebuchet MS", "Helvetica", "Sans-Serif" !important;
+    font-size: 16px !important;
+
+}
+.submenu_superior li a {
+    margin-top: 10px;
+    background-color: rgb(84,84,84,0.4);
+    border: rgb(84,84,84,0.4);
+}
+#menu_info_entidad_entidad {
+    margin-top: 40px;
+}
+.menu_centrado {
+    text-align: center;
+}
+.opcion0_menu{
+    background-color: #545454 !important;
+    font-weight: bold !important;
+    margin-right: 30px !important;
+}
+.boton_especial {
+    display: inline-block;
+}
+.opcion0_menu:hover {
+    background-color: rgb(54, 54, 54, 0.5) !important;
+}
+.boton_rojo {
+    background-color: rgb(193, 66, 66) !important;
+}
+.boton_rojo:hover {
+    background-color: rgb(193, 66, 66, 0.5) !important;
+}
+.boton_verde {
+    background-color: rgb(66, 193, 66) !important;
+}
+.boton_verde:hover {
+    background-color: rgb(66, 193, 66) !important;
+}
+/* =============================================================================
+                            HEADERS Y FOOTER
+============================================================================== */
+#header_inicio {
+    color: #545454;
+    float: left;
+    padding-bottom: 5px;
+    width: 1200px;
+}
+#seleccion_idioma {
+    float: left;
+    background-color: rgb(0,191,255);
+    padding: 10px;
+    color: white;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    font-size: 14px;
+}
+#seleccion_idioma a {
+    text-decoration: none;
+    font-weight: bold;
+    color: white;
+}
+#seleccion_idioma a:hover {
+    color: rgb(200,200,200);
+}
+#logo_ministerio {
+    clear: both;
+    float: left;
+    padding-top: 50px;
+    padding-bottom: 10px;
+}
+#logo_eurostars {
+    float: right;
+    padding-top: 10px;
+}
+#titulo {
+    float: left;
+    padding: 20px 10px;
+    background-color: #00BFFF;
+    color: white;
+    border: 1px solid black;
+    margin-top: 30px;
+    text-align: center;
+}
+#avion_logo_horizontal {
+    float: left;
+    max-width: 150px;
+    width: auto;
+    height: auto;
+    padding-left: 20px;
+}
+#avion_logo_diagonal {
+    float: right;
+    max-width: 150px;
+    width: auto;
+    height: auto;
+    transform: rotate(-20deg);
+    padding-left: 150px;
+    padding-right: 20px;
+}
+#header_principal {
+    float: left;
+    color: #545454;
+    padding-bottom: 5px;
+    width: 1200px;
+    padding-top: 20px;
+}
+#logo_ministerio_peq {
+    clear: both;
+}
+#logo_ministerio_peq img {
+    max-width: 300px;
+    width: auto;
+    height: auto;
+    float: left;
+    margin-top: 24px;
+}
+.elemento_doble {
+    float: right;
+}
+#titulo_peq {
+    background-color: #00BFFF;
+    color: white;
+    border: 1px solid black;
+    text-align: center;
+    float: left;
+    width: 78%;
+    padding: 5px 0;
+    margin-top: 18px;
+}
+#logo_eurostars_peq img {
+    max-width: 150px;
+    width: 33%;
+    height: auto;
+    float: right;
+}
+#avion_logo {
+    max-width: 100px;
+    width: auto;
+    height: auto;
+    float: right;
+    padding-right: 35px;
+}
+#seleccion_idioma_peq {
+    float: left;
+    background-color: rgb(0,191,255);
+    padding: 10px;
+    color: white;
+    border-radius: 5px;
+    font-size: 14px;
+}
+#seleccion_idioma_peq a {
+    text-decoration: none;
+    font-weight: bold;
+    color: white;
+}
+#seleccion_idioma_peq a:hover {
+    color: rgb(200,200,200);
+}
+#nombre_usuario {
+    float: left;
+    margin-left: 10px;
+    background-color: rgb(84,84,84,0.75);
+    padding: 10px;
+    border-radius: 5px;
+}
+#nombre_usuario h3 {
+    color: white;
+    font-size: 14px;
+}
+.logos_inferior {
+    padding-top: 50px;
+}
+.logos_inferior img {
+    max-width: 300px;
+    width: auto;
+    height: auto;
+    padding: 10px 6px;
+    vertical-align: bottom;
+}
+.logos_inferior_left, #logo_avionics, #logo_deustotech {
+    float: left;
+}
+.logos_inferior_right, #logo_inkoa, #logo_decoexsa {
+    float: right;
+}
+#logo_inkoa {
+    padding-top: 35px;
+}
+#logo_deustotech {
+    padding-top: 52px;
+}
+#logo_decoexsa {
+    padding-top: 61px;
+}
+/* =============================================================================
+                                SECCIONES
+============================================================================== */
+.seccion_oculta {
+    display: none;
+}
+/* =============================================================================
+                                LISTAS
+============================================================================== */
+.info_carga {
+    border: 1px solid #545454;
+    background-color: #E5F8FF;
+    padding: 10px;
+    margin-top: 20px;
+}
+.info_carga a {
+    font-size: 16px;
+    text-decoration: none;
+    font-weight: bold;
+    color: black;
+}
+.info_carga pre {
+    font-size: 16px;
+    text-decoration: none;
+    font-weight: bold;
+    color: black;
+    font-family: "Trebuchet MS", "Helvetica", "Sans-Serif";;
+}
+.info_carga:hover {
+    border: 2px solid #00BFFF;
+}
+.info_c {
+    display: none;
+    background-color: rgb(84,84,84, 0.2);
+    color: black;
+    border: 1px solid #545454;
+}
+.a_disabled {
+    pointer-events: none;
+    cursor: default;
+}
+/* =============================================================================
+                                MAPAS
+============================================================================== */
+#map, #map2, #map4, #map5, #map6, #map7 {
+    height: 500px;
+}
+#map3 {
+    height: 400px;
+}
+/* =============================================================================
+                                INDEX
+============================================================================== */
+#descripcion {
+    float: left;
+    padding: 10px 10px;
+    background-color: #E5F8FF;
+    color: black;
+    border: 1px solid black;
+    margin-top: 15px;
+    text-align: center;
+    font-size: 16px;
+}
+#inicio_sesion {
+    width: 1200px;
+    float: left;
+    margin-top: 30px;
+}
+/* =============================================================================
+                                LABEL
+============================================================================== */
+.label_centrado {
+    text-align: center;
+    margin-top: 20px;
+}
+/* =============================================================================
+                            FILTROS Y PERMISOS
+============================================================================== */
+.titulo_filtros {
+    margin-bottom: 15px;
+}
+.filtros pre {
+    font-family: "Trebuchet MS", "Helvetica", "Sans-Serif";
+    font-size: 14px;
+    font-weight: bold;
+    color: black;
+    margin-right: 5px;
+    margin-bottom: 5px;
+}
+.filtros .menu li a {
+    background-color: #00BFFF;
+    border: #00BFFF;
+    border-radius: 3px 3px 3px 3px;
+    color: white;
+    text-decoration: none;
+    float: left;
+    font-weight: normal;
+    margin-right: 5px;
+    padding: 5px;
+    font-size: 14px;
+}
+.filtros .menu li a:hover, .filtros .menu li a:focus {
+    background-color: rgb(0,191,255, 0.5);
+}
+.filtros .menu li:last-child a {
+    background-color: rgb(84,84,84,0.4);
+}
+.filtros .menu li:last-child a:hover {
+    background-color: rgb(0,191,255, 0.5);
+}
+.permisos pre {
+    font-family: "Trebuchet MS", "Helvetica", "Sans-Serif";
+    font-size: 12px;
+    font-weight: bold;
+    color: black;
+    margin-right: 10px;
+    margin-top: 20px;
+    display: inline-block;
+}
+.permisos_titulo {
+    font-size: 14px !important;
+    margin-right: 5px;
+}
+.permisos div {
+    display: inline-block;
+}
+.permisos img {
+    border: 1px solid black;
+    margin-right: 2px;
+}
+/* =============================================================================
+                    PANTALLA SUPERADMIN - ALTA ADMINISTRADOR
+============================================================================== */
+#titulo_alta_admin {
+    width: 25%;
+}
+#form_alta_admin .submit {
+    width: 40%;
+}
+/* =============================================================================
+                    PANTALLA SUPERADMIN - SELECCIÓN ENTIDAD
+============================================================================== */
+.busqueda_entidad label {
+    display: inline-block;
+    background-color: #00BFFF;
+    color: white;
+    border: 1px solid #545454;
+    border-radius: 3px 3px 3px 3px;
+    padding: 10px 10px;
+    font-size: 20px;
+    margin-right: 50px;
+    text-align: center;
+}
+#form_info_entidad {
+    display: inline-block;
+}
+#form_info_entidad select {
+    padding: 15px 20px;
+    border: 1px solid #545454;
+    font-size: 18px;
+    margin-right: 50px;
+}
+#info_entidad_btn, #div_actualizar_num_vehiculos, #div_actualizar_num_vehiculos_carga, #div_actualizar_num_vehiculos_ed, #div_actualizar_cod_datalogger_carga {
+    display: inline-block;
+}
+#info_entidad_btn .submit {
+    width: 130px;
+}
+/* =============================================================================
+            PANTALLA SUPERADMIN - SELECCIÓN ENTIDAD: INFORMACIÓN 
+============================================================================== */
+#titulo_info {
+    width: 25%;
+}
+#info_superadmin {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+/* =============================================================================
+                    PANTALLA ADMIN - INFORMACIÓN ENTIDAD
+============================================================================== */
+#titulo_info_entidad_admin {
+    width: 30%;
+}
+#menu_info_admin li {
+    padding-top: 40px;
+}
+#info_entidad_admin {
+    text-align: center;
+}
+#info_entidad_admin .info_carga {
+    text-align: left;
+}
+/* =============================================================================
+                    PANTALLA TÉCNICO - LISTAS CARGAS
+============================================================================== */
+#titulo_edit_cargas_tecnico {
+    width: 350px;
+}
+/* =============================================================================
+                         TITULOS CONCRETOS
+============================================================================== */
+#titulo_alta_mapas_admin {
+    width: 35%;
+}
+/* =============================================================================
+                        PANTALLA ALTA SUBRUTAS
+============================================================================== */
+#term_subr_btn .submit {
+    background-color: #00BFFF;
+    border: #00BFFF;
+    border-radius: 5px 5px 5px 5px;
+    color: white;
+    text-decoration: none;
+    float: left;
+    font-weight: normal;
+    margin-right: 5px;
+    padding: 10px;
+    font-size: 16px;
+    width: 30%;
+}
+#term_subr_btn .submit:hover {
+    background-color: rgb(0,191,255, 0.5);
+}
+/* =============================================================================
+                            BOTONES
+============================================================================== */
+.btns_editar_borrar a, .btns_dar_baja a {
+    margin-bottom: 15px;
+    padding: 5px !important;
+    font-size: 18px !important;
+}
+.btns_editar_borrar li:first-child a {
+    background-color: rgb(255, 187, 61) !important;
+}
+.btns_editar_borrar li:last-child a {
+    background-color: rgb(193, 66, 66);
+}
+.btns_editar_borrar li:first-child a:hover {
+    background-color: rgb(255, 187, 61, 0.5) !important
+}
+.btns_editar_borrar li:last-child a:hover {
+    background-color: rgb(193, 66, 66, 0.5);
+}
+.btns_dar_baja li #btn_dar_alta {
+    background-color: rgb(66, 193, 66);
+}
+.btns_dar_baja li #btn_dar_alta:hover {
+    background-color: rgb(66, 193, 66, 0.5);
+}
+.btns_dar_baja li #btn_dar_baja {
+    background-color: rgb(193, 66, 66);
+}
+.btns_dar_baja li #btn_dar_baja:hover {
+    background-color: rgb(193, 66, 66, 0.5);
+}
+/* =============================================================================
+                        EDITAR VEHÍCULOS - SUBRUTA
+============================================================================== */
+#form_num_vehiculos label, #form_cod_datalogger_carga label {
+    font-size: 16px;
+}
+#select_num_vehiculos, #select_num_vehiculos_carga, #select_num_vehiculos_ed {
+    width: 50px;
+    padding: 5px 5px;
+    margin: 0 20px;
+}
+#select_doc_datalogger_carga {
+    width: 150px;
+    padding: 5px 5px;
+    margin: 0 20px;
+}
+#div_actualizar_num_vehiculos .submit, #div_actualizar_num_vehiculos_carga .submit, #div_actualizar_num_vehiculos_ed .submit, #div_actualizar_cod_datalogger_carga .submit {
+    width: 30px;
+    padding: 5px 0 5px 0;
+    border-radius: 3px;
+    border: none;
+}
+#div_form_num_vehiculos, #div_form_num_vehiculos_carga, #div_form_num_vehiculos_ed, #div_form_cod_datalogger_carga {
+    margin-bottom: 40px;
+}
