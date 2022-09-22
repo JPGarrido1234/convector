@@ -77,12 +77,14 @@ if ( isset( $_POST ) ) {
         header("Location: detalles/detalle_carga.php");
         exit;
     } else if ( isset( $_POST['inv_btn_push_dat'] ) ) { // Lista de dataloggers -> Detalle datalogger
-        session_start();
+        //session_start();
         $_SESSION['ss_usuario'] = $_POST['session_datalogger'];
         $_SESSION['cod_datalogger'] = $_POST['codigo_datalogger'];
 
-        header("Location: detalles/detalle_datalogger.php");
-        exit;
+        
+        //header("Location: detalles/detalle_datalogger.php");
+        
+        //exit;
     } else if ( isset( $_POST['inv_btn_subr'] ) ) { // Lista de subrutas -> Detalle subruta
         session_start();
         $_SESSION['ss_usuario'] = $_POST['session_subr'];

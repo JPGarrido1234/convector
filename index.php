@@ -1,13 +1,21 @@
 <?php
+session_start();
 require($_SERVER['DOCUMENT_ROOT']."/languages/idioma.php");
 require($_SERVER['DOCUMENT_ROOT']."/"."languages/".$lang.".php");
 require($_SERVER['DOCUMENT_ROOT']."/index.ui.php");
-$url_localhost = "http://localhost:8001/";
 ?>
 <!DOCTYPE html>
 <html>
     <?php
-    require("headers_footers/head.php");
+    require("headers_footers/head_maps.php");
+
+    if(isset($_GET['entidad'])){
+        echo "GET : ".$_GET['entidad']."<br>";
+    }
+    if(isset($_POST['entidad'])){
+        echo "POST : ".$_POST['entidad']."<br>";
+    }
+    if(!isset( $_SESSION['enviado'] ) && !isset($_GET['entidad'])){
     ?>
     <body>
         <?php
@@ -38,4 +46,7 @@ $url_localhost = "http://localhost:8001/";
         require("headers_footers/footer.php");
         ?>
     </body>
+    <?php 
+    }
+    ?>
 </html>

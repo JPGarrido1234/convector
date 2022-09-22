@@ -20,7 +20,7 @@ function cambiarMenuSuperadmin(num) {
         alta_admins.style.display = 'block';
     }
     submenu_entidades.style.display = 'none';
-    history.pushState(null, '', location.href.substring(0, location.href.indexOf('?')));
+    //history.pushState(null, '', location.href.substring(0, location.href.indexOf('?')));
     document.getElementById("contenido_ajax_superadmin").innerHTML = "";
 }
 function desplegarSubmenuEntidadSuperadmin() {
@@ -32,12 +32,13 @@ function desplegarSubmenuEntidadSuperadmin() {
 
     opcion_0 = document.getElementById('opcion0_submenu_entidad_superadmin');
     opcion_0.innerHTML = entidad_sel.toUpperCase();
+    //TODO: Pierde sesión al refrescar, ARREGLARLO
     history.pushState(null, '', location.href.substring(0, location.href.indexOf('?')) + '?entidad=' + entidad_sel);
 }
 function desplegarBuscadorEntidadSuperadmin() {
     document.getElementById('submenu_entidad_superadmin').style.display = 'none';
     document.getElementById('lista_entidades_superadmin').style.display = 'block';
-    history.pushState(null, '', location.href.substring(0, location.href.indexOf('?')));
+    //history.pushState(null, '', location.href.substring(0, location.href.indexOf('?')));
     document.getElementById("contenido_ajax_superadmin").innerHTML = "";
 }
 function cambiarFiltrosEmpleadosSuperadmin(num) {

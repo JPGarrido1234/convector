@@ -1,23 +1,19 @@
 <?php
+
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
+/*
 if(!isset($_SESSION)){
     session_start();
 }   
-
-require($_SERVER['DOCUMENT_ROOT']."/bd/cn.php");
-require($_SERVER['DOCUMENT_ROOT']."/bd/clases.php");
-require($_SERVER['DOCUMENT_ROOT']."/languages/es.php");
-require($_SERVER['DOCUMENT_ROOT']."/formularios/formularios_superadmin.php");
-require($_SERVER['DOCUMENT_ROOT']."/general/sesion.php");
+*/
+//require($_SERVER['DOCUMENT_ROOT']."/general/sesion.php");
 ?>
-<!DOCTYPE html>
-<html>
-    <?php
-    require("headers_footers/head.php");
-    ?>
-    <body>
+<!-- <!DOCTYPE html>
+ <html>
+
+    <body>-->
         <?php
         require("headers_footers/header_principal.php");
         ?>
@@ -57,6 +53,7 @@ require($_SERVER['DOCUMENT_ROOT']."/general/sesion.php");
             </div>
         </section>
         <section class="seccion_oculta" id="submenu_entidad_superadmin">
+            <input type="hidden" id="sesion_usuario" value="<?php echo $_SESSION['ss_usuario'] ?>">
             <ul class="menu submenu_superior" id="submenu_entidad_superadmin">
                 <li><a class="opcion0_menu" id="opcion0_submenu_entidad_superadmin" href="javascript:desplegarBuscadorEntidadSuperadmin()"></a></li>
                 <li><a id="opcion1_submenu_entidad_superadmin" onclick="abrirListaCargas()" href="#"><?php echo lista_cargas ?></a></li>
@@ -175,7 +172,12 @@ require($_SERVER['DOCUMENT_ROOT']."/general/sesion.php");
             </form>
         </section>
         <?php
-        require("headers_footers/footer.php");
-        ?>
+        if(!isset($_POST['enviado'])){
+            require("headers_footers/footer.php");
+        }
+        ?> 
+        <!--
     </body>
 </html>
+-->
+                        

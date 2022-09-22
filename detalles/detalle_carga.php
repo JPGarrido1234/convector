@@ -2,25 +2,30 @@
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
+/*
 session_start();
 require($_SERVER['DOCUMENT_ROOT']."/bd/cn.php");
 require($_SERVER['DOCUMENT_ROOT']."/bd/clases.php");
 require($_SERVER['DOCUMENT_ROOT']."/languages/es.php");
 require($_SERVER['DOCUMENT_ROOT']."/formularios/formularios_detalle_carga.php");
 require($_SERVER['DOCUMENT_ROOT']."/general/sesion.php");
+*/
 ?>
+<!--
 <!DOCTYPE html>
 <html>
+-->
     <?php
     require($_SERVER['DOCUMENT_ROOT']."/headers_footers/head_maps.php");
     ?>
-    <body>
+   <!-- <body> -->
         <?php
         require($_SERVER['DOCUMENT_ROOT']."/headers_footers/header_principal.php");
         ?>
         <!-- ======================================================================================================================================
                                                          MENÚ HORIZONTAL DE OPCIONES
         ====================================================================================================================================== -->
+        
         <section class="menu_opciones_detalle_carga">
             <ul class="menu menu_superior" id="menu_opciones_detalle_carga">
                 <li><a id="opcion1_detalle_carga" href="#">
@@ -34,6 +39,7 @@ require($_SERVER['DOCUMENT_ROOT']."/general/sesion.php");
                 <li><a id="opcion2_detalle_carga" href="../index.php"><?php echo cerrar_sesion; session_destroy(); ?></a></li>
             </ul>
         </section>
+        
         <!-- ======================================================================================================================================
                                                     INFORMACIÓN DE LA CARGA SELECCIONADA
         ====================================================================================================================================== -->
@@ -187,8 +193,9 @@ require($_SERVER['DOCUMENT_ROOT']."/general/sesion.php");
                         '            '.contenedor.' '.$enlaces[$i]['contenedor'].'</pre>';
 
                         echo '<form class="formulario" id="form_lista_dataloggers_carga" method="POST" action="">';
-                            echo '<input type="hidden" name="session" value="'.$_SESSION['ss_usuario'].'">';
-                            echo '<input type="hidden" name="cod_datalogger" value="'.$enlaces[$i]['datalogger'].'">';
+                            echo '<input type="hidden" name="session_datalogger" value="'.$_SESSION['ss_usuario'].'">';
+                            echo '<input type="hidden" name="codigo_datalogger" value="'.$enlaces[$i]['datalogger'].'">';
+                            echo '<input type="hidden" name="tipo" value="carga">';
                             echo '<input class="btn_inv" name="inv_btn_push_dat" type="submit">';
                         echo '</form>';
 
@@ -349,5 +356,7 @@ require($_SERVER['DOCUMENT_ROOT']."/general/sesion.php");
         <?php
         require($_SERVER['DOCUMENT_ROOT']."/headers_footers/footer.php");
         ?>
+        <!--
     </body>
 </html>
+                    -->

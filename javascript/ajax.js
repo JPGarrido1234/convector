@@ -667,13 +667,15 @@ function recogerSubrutasFiltroUbicacionTextoTEC() {
 ============================================================================== */
 function recogerDataloggers() { // Superadmin 
     var entidad = new URLSearchParams(window.location.search).get('entidad');
+    var usuario = document.getElementById("sesion_usuario").value;
+    console.log(usuario);
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
             document.getElementById("contenido_ajax_superadmin").innerHTML = this.responseText;
         }
     };
-    xmlhttp.open("GET", "info_entidad/info_dataloggers.php?entidad=" + entidad, true);
+    xmlhttp.open("GET", "info_entidad/info_dataloggers.php?entidad=" + entidad + "&usu=" + usuario, true);
     xmlhttp.send();
 }
 /* =============================================================================

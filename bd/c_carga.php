@@ -604,16 +604,19 @@ function fx_recoger_responsable_carga( $cn, $carga ) {
 // RETURN: true si tiene acceso, false si no
 // ESTADO: Funciona
 function fx_comprobar_acceso_carga_usuario( $cn, $carga, $usuario ) {
+    $ret = false;
     $carga = mysqli_real_escape_string( $cn, $carga );
     $usuario = mysqli_real_escape_string( $cn, $usuario );
 
     $sql = "SELECT carga FROM acceso_informacion WHERE carga = '$carga' AND email = '$usuario'";
     $result = mysqli_query( $cn, $sql );
     $msg = mysqli_fetch_array( $result );
-    if ( $msg[0] != null ) {
-        $ret = true;
-    } else {
-        $ret = false;
+    if($msg != null){
+        if ( $msg[0] != null ) {
+            $ret = true;
+        } else {
+            $ret = false;
+        }
     }
     return $ret;
 }

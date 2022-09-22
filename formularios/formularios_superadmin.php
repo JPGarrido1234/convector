@@ -24,29 +24,42 @@
         $_POST['email2'], 'Administrador', $_POST['password2'], $_POST['entidad2'] );
 
     } else if ( isset( $_POST['inv_btn_push'] ) ) { // Lista de cargas -> Detalle carga
-        session_start();
+        //session_start();
         $_SESSION['ss_usuario'] = $_POST['session_carga'];
         $_SESSION['cod_carga'] = $_POST['codigo_carga'];
         $_SESSION['lvl_privilegios_carga'] = $_POST['lvl_privilegios_carga'];
 
-        header("Location: detalles/detalle_carga.php");
-        exit;
+        //header("Location: detalles/detalle_carga.php");
+        include($_SERVER['DOCUMENT_ROOT']."/detalles/detalle_carga.php");
+        //exit;
     } else if ( isset( $_POST['inv_btn_push_dat'] ) ) { // Lista de dataloggers -> Detalle datalogger
-        session_start();
-        $_SESSION['ss_usuario'] = $_POST['session_datalogger'];
-        $_SESSION['cod_datalogger'] = $_POST['codigo_datalogger'];
-        $_SESSION['entidad_dat'] = $_POST['entidad_datalogger'];
+        //session_start();
+        if(isset($_POST['session_datalogger'])){
+            $_SESSION['ss_usuario'] = $_POST['session_datalogger'];
+        }
+        if(isset($_POST['codigo_datalogger'])){
+            $_SESSION['cod_datalogger'] = $_POST['codigo_datalogger'];
+        }
+        if(isset($_POST['entidad_datalogger'])){
+            $_SESSION['entidad_dat'] = $_POST['entidad_datalogger'];
+        }
 
-        header("Location: detalles/detalle_datalogger.php");
-        exit;
+        if(isset($_POST['tipo']) && $_POST['tipo'] == 'dataloger'){
+            include($_SERVER['DOCUMENT_ROOT']."/detalles/detalle_datalogger.php");
+        }
+        
+        //header("Location: detalles/detalle_datalogger.php");
+        //include($_SERVER['DOCUMENT_ROOT']."/detalles/detalle_datalogger.php");
+        //exit;
     } else if ( isset( $_POST['inv_btn_subr'] ) ) { // Lista de subrutas -> Detalle subruta
-        session_start();
+        //session_start();
         $_SESSION['ss_usuario'] = $_POST['session_subr'];
         $_SESSION['cod_subruta'] = $_POST['cod_subruta'];
         $_SESSION['lvl_privilegios_subr'] = $_POST['lvl_privilegios_subr'];
 
-        header("Location: detalles/detalle_subruta.php");
-        exit;
+        //header("Location: detalles/detalle_subruta.php");
+        include($_SERVER['DOCUMENT_ROOT']."/detalles/detalle_subruta.php");
+        //exit;
     }
 //}
 

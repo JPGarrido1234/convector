@@ -36,9 +36,10 @@ require_once($_SERVER['DOCUMENT_ROOT']."/languages/es.php");
             echo '<pre>'.datalogger.' '.$dataloggers[$i]['codigo'].'            '.estado.': '.$dataloggers[$i]['estado'].'</pre>';
             
             echo '<form class="formulario" id="form_lista_dataloggers_superadmin_'.$dataloggers[$i]['codigo'].'" method="POST" action="">';
-                echo '<input type="hidden" name="session_datalogger" value="'.$_SESSION['ss_usuario'].'">';
+                echo '<input type="hidden" name="session_datalogger" value="'.$_GET['usu'].'">';
                 echo '<input type="hidden" name="codigo_datalogger" value="'.$dataloggers[$i]['codigo'].'">';
                 echo '<input type="hidden" name="entidad_datalogger" value="'.$_GET['entidad'].'">';
+                echo '<input type="hidden" name="tipo" value="dataloger">';
                 echo '<input class="btn_inv" name="inv_btn_push_dat" type="submit">';
             echo '</form>';
             
@@ -66,7 +67,7 @@ require_once($_SERVER['DOCUMENT_ROOT']."/languages/es.php");
             '           '.contenedor.': '.$enlace2['contenedor'].'</pre>';
             
             echo '<form class="formulario" id="form_lista_dataloggers_enuso_superadmin_'.$dataloggers_enuso[$i]['codigo'].'" method="POST" action="">';
-                echo '<input type="hidden" name="session_datalogger" value="'.$_SESSION['ss_usuario'].'">';
+                echo '<input type="hidden" name="session_datalogger" value="'.$_GET['usu'].'">';
                 echo '<input type="hidden" name="codigo_datalogger" value="'.$dataloggers_enuso[$i]['codigo'].'">';
                 echo '<input type="hidden" name="entidad_datalogger" value="'.$_GET['entidad'].'">';
                 echo '<input class="btn_inv" name="inv_btn_push_dat" type="submit">';
@@ -89,7 +90,7 @@ require_once($_SERVER['DOCUMENT_ROOT']."/languages/es.php");
             }
 
             echo '<form class="formulario" id="form_lista_dataloggers_apagados_superadmin_'.$dataloggers_apagados[$i]['codigo'].'" method="POST" action="">';
-                echo '<input type="hidden" name="session_datalogger" value="'.$_SESSION['ss_usuario'].'">';
+                echo '<input type="hidden" name="session_datalogger" value="'.$_GET['usu'].'">';
                 echo '<input type="hidden" name="codigo_datalogger" value="'.$dataloggers_apagados[$i]['codigo'].'">';
                 echo '<input type="hidden" name="entidad_datalogger" value="'.$_GET['entidad'].'">';
                 echo '<input class="btn_inv" name="inv_btn_push_dat" type="submit">';

@@ -24,12 +24,19 @@ if ( isset( $_POST ) ) {
         exit;
 
     } else if ( isset( $_POST['inv_btn_push_dat'] ) ) { // Detalle subruta -> Detalle datalogger
-        session_start();
-        $_SESSION['ss_usuario'] = $_POST['session'];
-        $_SESSION['cod_datalogger'] = $_POST['cod_datalogger'];
-
-        header("Location: detalle_datalogger.php");
-        exit;
+        //session_start();
+        if(isset($_POST['session_datalogger'])){
+            $_SESSION['ss_usuario'] = $_POST['session_datalogger'];
+        }
+        if(isset($_POST['codigo_datalogger'])){
+            $_SESSION['cod_datalogger'] = $_POST['codigo_datalogger'];
+        }
+        if(isset($_POST['tipo']) && $_POST['tipo'] == 'subruta'){
+            include($_SERVER['DOCUMENT_ROOT']."/detalles/detalle_datalogger.php");
+        }
+        //header("Location: detalle_datalogger.php");
+        //include($_SERVER['DOCUMENT_ROOT']."/detalles/detalle_datalogger.php");
+        //exit;
 
     } else if ( isset( $_POST['btn_sig_subr1'] ) ) { // Editar subruta -> Editar mapa
         session_start();

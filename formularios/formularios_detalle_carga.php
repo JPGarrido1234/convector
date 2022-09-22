@@ -28,21 +28,28 @@ if ( isset( $_POST ) ) {
         exit;
 
     } else if ( isset( $_POST['inv_btn_subr'] ) ) { // Detalle carga -> Detalle subruta
-        session_start();
-        $_SESSION['ss_usuario'] = $_POST['session'];
-        $_SESSION['cod_subruta'] = $_POST['cod_subruta'];
-        $_SESSION['lvl_privilegios_subr'] = $_POST['lvl_privilegios_subr'];
+        //session_start();
+        //$_SESSION['ss_usuario'] = $_POST['session'];
+        //$_SESSION['cod_subruta'] = $_POST['cod_subruta'];
+        //$_SESSION['lvl_privilegios_subr'] = $_POST['lvl_privilegios_subr'];
 
-        header("Location: detalle_subruta.php");
-        exit;
+        //header("Location: detalle_subruta.php");
+        //exit;
 
     } else if ( isset( $_POST['inv_btn_push_dat'] ) ) { // Detalle carga -> Detalle datalogger
-        session_start();
-        $_SESSION['ss_usuario'] = $_POST['session'];
-        $_SESSION['cod_datalogger'] = $_POST['cod_datalogger'];
-
-        header("Location: detalle_datalogger.php");
-        exit;
+        //session_start();
+        if(isset($_POST['session_datalogger'])){
+            $_SESSION['ss_usuario'] = $_POST['session_datalogger'];
+        }
+        if(isset($_POST['codigo_datalogger'])){
+            $_SESSION['cod_datalogger'] = $_POST['codigo_datalogger'];
+        }
+        if(isset($_POST['tipo']) && $_POST['tipo'] == 'carga'){
+            include($_SERVER['DOCUMENT_ROOT']."/detalles/detalle_datalogger.php");
+        }
+        //header("Location: detalle_datalogger.php");
+        
+        //exit;
     } else if ( isset( $_POST['btn_sig1'] ) ) { // Editar carga -> Editar mapas
         session_start();
         $_SESSION['ss_usuario'] = $_POST['session'];
