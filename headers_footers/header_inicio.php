@@ -1,4 +1,4 @@
-<header>
+<header class="container">
     <div id="header_inicio">
         <div id="seleccion_idioma">
             <a href="index.php?lang=en" title="<?php echo ingles ?>">EN</a>

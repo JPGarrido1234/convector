@@ -15,22 +15,27 @@ if(!isset($_SESSION)){
 
     <body>-->
         <?php
-        require("headers_footers/header_principal.php");
+        if(!isset($_POST['codigo_carga']) && !isset($_POST['cod_subruta']) && !isset($_POST['codigo_datalogger'])){
+            require("headers_footers/header_principal.php");
+        }
+        
         ?>
-        <?php if(isset($msg)){ ?>
-            <span><?php echo $msg; ?></span>
+        <?php if(isset($msgNotice)){ ?>
+            <span><?php echo $msgNotice; ?></span>
         <?php } ?>
         <!-- ======================================================================================================================================
                                                         MENÚ Y SUBMENÚS HORIZONTALES DE OPCIONES
         ====================================================================================================================================== -->
+        <?php if(!isset($_POST['codigo_carga']) && !isset($_POST['cod_subruta']) && !isset($_POST['codigo_datalogger'])){ ?>
         <section class="menu_opciones_superadmin">
             <ul class="menu menu_superior" id="menu_superadmin">
                 <li><a id="opcion1_superadmin" href="javascript:cambiarMenuSuperadmin(1)"><?php echo informacion_entidades ?></a></li>
                 <li><a id="opcion2_superadmin" href="javascript:cambiarMenuSuperadmin(2)"><?php echo alta_entidades ?></a></li>
                 <li><a id="opcion3_superadmin" href="javascript:cambiarMenuSuperadmin(3)"><?php echo alta_administradores ?></a></li>
-                <li><a id="opcion4_superadmin" href="index.php"><?php echo cerrar_sesion; session_destroy(); ?></a></li>
+                <li><a id="opcion4_superadmin" href="index.php"><?php echo cerrar_sesion; if(isset($_SESSION)){session_destroy();} ?></a></li>
             </ul>
         </section>
+        <?php } ?>
         <!-- ======================================================================================================================================
                                                         1. INFORMACIÓN DE ENTIDADES
         ====================================================================================================================================== -->
@@ -173,7 +178,9 @@ if(!isset($_SESSION)){
         </section>
         <?php
         if(!isset($_POST['enviado'])){
-            require("headers_footers/footer.php");
+            if(!isset($_POST['codigo_carga']) && !isset($_POST['cod_subruta']) && !isset($_POST['codigo_datalogger'])){
+                require("headers_footers/footer.php");
+            }
         }
         ?> 
         <!--

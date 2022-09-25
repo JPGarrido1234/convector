@@ -2,24 +2,28 @@
 
 if ( isset( $_POST ) ) {
     if ( isset( $_POST['inv_btn_edit'] ) ) { // Detalle subruta -> Editar subruta
-        session_start();
-        $_SESSION['ss_usuario'] = $_POST['session'];
-        $_SESSION['cod_subruta'] = $_POST['cod_subruta'];
-
-        header("Location: editar_subruta.php");
-        exit;
+        //session_start();
+        if(isset($_POST['session']) && isset($_POST['cod_subruta'])){
+            $_SESSION['ss_usuario'] = $_POST['session'];
+            $_SESSION['cod_subruta'] = $_POST['cod_subruta'];
+            include($_SERVER['DOCUMENT_ROOT']."/detalles/editar_subruta.php");
+        }
+        //header("Location: editar_subruta.php");
+        //exit;
 
     } else if ( isset( $_POST['inv_btn_erase'] ) ) { // Borrar subruta
-        session_start();
+        //session_start();
         $_SESSION['ss_usuario'] = $_POST['session'];
 
         fx_borrar_subruta( $cn, $_POST['cod_subruta'], $_POST['session'] );
 
         $rol = fx_recoger_rol( $cn, $_POST['session'] );
         if ( $rol == 'Administrador' ) {
-            header("Location: ../inicio_admin.php");
+            //header("Location: ../inicio_admin.php");
+            include($_SERVER['DOCUMENT_ROOT']."/inicio_admin.php");
         } else {
-            header("Location: ../inicio_tecnico.php");
+            //header("Location: ../inicio_tecnico.php");
+            include($_SERVER['DOCUMENT_ROOT']."/inicio_tecnico.php");
         }
         exit;
 
@@ -46,11 +50,12 @@ if ( isset( $_POST ) ) {
         fx_editar_subruta( $cn, $_POST['cod_subruta'], $_POST['responsable'],
         $_POST['fecha_hora_ini'], $_POST['fecha_hora_fin'] );
 
-        header("Location: editar_subruta_mapas.php");
-        exit;
+        //header("Location: editar_subruta_mapas.php");
+        include($_SERVER['DOCUMENT_ROOT']."/detalles/editar_subruta_mapas.php");
+        //exit;
 
     } else if ( isset( $_POST['btn_sig_subr2'] ) ) { // Editar mapa -> Editar vehículos
-        session_start();
+        //session_start();
         $_SESSION['ss_usuario'] = $_POST['session'];
         $_SESSION['cod_subruta'] = $_POST['cod_subruta'];
 
@@ -72,51 +77,56 @@ if ( isset( $_POST ) ) {
             fx_editar_lugares_subruta( $cn, $_POST['cod_subruta'], $lat_or, $long_or, $_POST['origen'], $lat_dest, $long_dest, $_POST['destino'] );
         }
 
-        header("Location: editar_subruta_vehiculos.php");
-        exit;
+        //header("Location: editar_subruta_vehiculos.php");
+        include($_SERVER['DOCUMENT_ROOT']."/detalles/editar_subruta_vehiculos.php");
+        //exit;
 
     } else if ( isset( $_POST['btn_sig_subr3'] ) ) { // Editar vehículos -> FIN -> Inicio
-        session_start();
-        $_SESSION['ss_usuario'] = $_POST['session'];
-        $_SESSION['cod_subruta'] = $_POST['cod_subruta'];
+        //session_start();
+        if(isset($_POST['session']) && isset($_POST['cod_subruta'])){
+            $_SESSION['ss_usuario'] = $_POST['session'];
+            $_SESSION['cod_subruta'] = $_POST['cod_subruta'];
+        
+        
+            $tipos = array();
+            $matriculas = array();
+            $i = 2;
+            $valorAnterior = "a";
 
-        $tipos = array();
-        $matriculas = array();
-        $i = 2;
-        $valorAnterior = "a";
+            foreach ( $_POST as $valor ) {
+                if ( $valor == null && $valorAnterior == null ) {
+                    array_pop( $tipos );
+                    break;
+                } else if ( $i % 2 == 0 ) {
+                    array_push( $tipos, $valor );
+                } else {
+                    array_push( $matriculas, $valor );
+                }
+                ++$i;
+                $valorAnterior = $valor;
+            }
 
-        foreach ( $_POST as $valor ) {
-            if ( $valor == null && $valorAnterior == null ) {
-                array_pop( $tipos );
-                break;
-            } else if ( $i % 2 == 0 ) {
-                array_push( $tipos, $valor );
+            $incorrecto = false;
+            foreach ( $matriculas as $mat ) {
+                if ( $mat == null ) {
+                    $incorrecto = true;
+                    break;
+                }
+            }
+
+            if ( !$incorrecto ) {
+                fx_editar_vehiculos( $cn, $_POST['cod_subruta'], $tipos, $matriculas );
+            }
+
+            if ( fx_recoger_rol( $cn, $_POST['session'] ) == 'Administrador' ) {
+                //header("Location: ../inicio_admin.php");
+                include($_SERVER['DOCUMENT_ROOT']."/inicio_admin.php");
             } else {
-                array_push( $matriculas, $valor );
-            }
-            ++$i;
-            $valorAnterior = $valor;
-        }
-
-        $incorrecto = false;
-        foreach ( $matriculas as $mat ) {
-            if ( $mat == null ) {
-                $incorrecto = true;
-                break;
+                //header("Location: ../inicio_tecnico.php");
+                include($_SERVER['DOCUMENT_ROOT']."/inicio_tecnico.php");
             }
         }
-
-        if ( !$incorrecto ) {
-            fx_editar_vehiculos( $cn, $_POST['cod_subruta'], $tipos, $matriculas );
-        }
-
-        if ( fx_recoger_rol( $cn, $_POST['session'] ) == 'Administrador' ) {
-            header("Location: ../inicio_admin.php");
-        } else {
-            header("Location: ../inicio_tecnico.php");
-        }
-        exit;
-
+        //exit;
     }
 }
 

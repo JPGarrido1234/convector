@@ -2,7 +2,7 @@
 
 if ( isset( $_POST ) ) {
     if ( isset( $_POST['enviado_log'] ) ) { // Alta dataloggers en alta de carga
-        session_start();
+        //session_start();
         $_SESSION['ss_usuario'] = $_POST['session'];
         $_SESSION['cod_carga'] = $_POST['cod_carga'];
     
@@ -24,11 +24,12 @@ if ( isset( $_POST ) ) {
             fx_crear_enlace( $cn, $_POST['cod_carga'], $dats, $conts );
         }
     
-        header("Location: alta_vehiculos.php");
-        exit;
+        //header("Location: alta_vehiculos.php");
+        include($_SERVER['DOCUMENT_ROOT']."/cargas/alta_vehiculos.php");
+        //exit;
 
     } else if ( isset( $_POST['mapas_sig'] ) ) { // Alta mapa en alta de carga
-        session_start();
+        //session_start();
         $_SESSION['ss_usuario'] = $_POST['session'];
         $_SESSION['cod_carga'] = $_POST['cod_carga'];
         $_SESSION['num_cont_carga'] = $_POST['num_cont_carga'];
@@ -52,17 +53,19 @@ if ( isset( $_POST ) ) {
         }
 
         if ( $_POST['fecha_ini'] != null && $_POST['fecha_fin'] != null ) {
-            header("Location: alta_dataloggers.php");
-            exit;
+            //header("Location: alta_dataloggers.php");
+            include($_SERVER['DOCUMENT_ROOT']."/cargas/alta_dataloggers.php");
+            //exit;
         } else {
-            header("Location: ../inicio_admin.php");
-            exit;
+            //header("Location: ../inicio_admin.php");
+            include($_SERVER['DOCUMENT_ROOT']."/inicio_admin.php");
+            //exit;
         }
 
     } else if ( isset( $_POST['alta_vehiculos_carga_btn'] ) ) { // Alta vehículos en alta de carga
-        session_start();
+        //session_start();
         $_SESSION['ss_usuario'] = $_POST['session'];
-
+        $_POST['cod_carga'] = null;
         $tipos = array();
         $matriculas = array();
         $i = 2;
@@ -93,8 +96,9 @@ if ( isset( $_POST ) ) {
             fx_insertar_vehiculos_carga( $cn, $_POST['cod_carga'], $tipos, $matriculas );
         }
 
-        header("Location: ../inicio_admin.php");
-        exit;
+        //header("Location: ../inicio_admin.php");
+        //include($_SERVER['DOCUMENT_ROOT']."/inicio_admin.php");
+        //exit;
 
     }
 }

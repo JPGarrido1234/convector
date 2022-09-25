@@ -2,25 +2,41 @@
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
+/*
 session_start();
 require($_SERVER['DOCUMENT_ROOT']."/bd/cn.php");
 require($_SERVER['DOCUMENT_ROOT']."/bd/clases.php");
 require($_SERVER['DOCUMENT_ROOT']."/languages/es.php");
 require($_SERVER['DOCUMENT_ROOT']."/formularios/formularios_admin.php");
 require($_SERVER['DOCUMENT_ROOT']."/general/sesion.php");
+*/
 ?>
+<!--
 <!DOCTYPE html>
 <html>
+-->
     <?php
-    require("headers_footers/head.php");
+    //require("headers_footers/head.php");
     ?>
-    <body>
+    <!-- <body> -->
         <?php
-        require("headers_footers/header_principal.php");
+        if(isset($_POST['nombre6'])){
+            echo "POST nombre : ".$_POST['nombre6']."<br>";
+        }
+        if(isset($_POST['codigo'])){
+            echo "POST codigo : ".$_POST['codigo']."<br>";
+        }
+        if(isset($_POST['cod_carga'])){
+            echo "POST codigo carga: ".$_POST['cod_carga']."<br>";
+        }
+        if(!isset($_POST['cod_carga']) && !isset($_POST['codigo']) && !isset($_POST['nombre6']) && !isset($_POST['session_carga']) && !isset($_POST['codigo_datalogger']) && !isset($_POST['cod_subruta'])){
+            require("headers_footers/header_principal.php");
+        }
         ?>
         <!-- ======================================================================================================================================
                                                     MENÚ Y SUBMENÚS HORIZONTALES DE OPCIONES
         ====================================================================================================================================== -->
+        <?php if(!isset($_POST['cod_carga']) && !isset($_POST['codigo']) && !isset($_POST['nombre6']) && !isset($_POST['session_carga']) && !isset($_POST['codigo_datalogger']) && !isset($_POST['cod_subruta'])){ ?>
         <section class="menu_opciones_admin">
             <ul class="menu menu_superior_aviso" id="menu_admin">
                 <li><a id="opcion1_admin" href="javascript:cambiarMenuAdmin(1)"><?php echo dar_alta ?></a></li>
@@ -55,7 +71,7 @@ require($_SERVER['DOCUMENT_ROOT']."/general/sesion.php");
                 </ul>
             </section>
         </section>
-
+        <?php } ?>
         <!-- ======================================================================================================================================
                                                                 1. ALTA DE CARGA
             ====================================================================================================================================== -->
@@ -474,6 +490,7 @@ require($_SERVER['DOCUMENT_ROOT']."/general/sesion.php");
                     echo '<form class="formulario" id="form_lista_dataloggers_admin_'.$dataloggers[$i]['codigo'].'" method="POST" action="">';
                         echo '<input type="hidden" name="session_datalogger" value="'.$_SESSION['ss_usuario'].'">';
                         echo '<input type="hidden" name="codigo_datalogger" value="'.$dataloggers[$i]['codigo'].'">';
+                        echo '<input type="hidden" name="tipo" value="dataloger">';
                         echo '<input class="btn_inv" name="inv_btn_push_dat" type="submit">';
                     echo '</form>';
                     echo '</div>';
@@ -502,6 +519,7 @@ require($_SERVER['DOCUMENT_ROOT']."/general/sesion.php");
                     echo '<form class="formulario" id="form_lista_dataloggers_enuso_admin_'.$dataloggers_enuso[$i]['codigo'].'" method="POST" action="">';
                         echo '<input type="hidden" name="session_datalogger" value="'.$_SESSION['ss_usuario'].'">';
                         echo '<input type="hidden" name="codigo_datalogger" value="'.$dataloggers_enuso[$i]['codigo'].'">';
+                        echo '<input type="hidden" name="tipo" value="dataloger">';
                         echo '<input class="btn_inv" name="inv_btn_push_dat" type="submit">';
                     echo '</form>';
 
@@ -524,6 +542,7 @@ require($_SERVER['DOCUMENT_ROOT']."/general/sesion.php");
                     echo '<form class="formulario" id="form_lista_dataloggers_apagado_admin_'.$dataloggers_apagados[$i]['codigo'].'" method="POST" action="">';
                         echo '<input type="hidden" name="session_datalogger" value="'.$_SESSION['ss_usuario'].'">';
                         echo '<input type="hidden" name="codigo_datalogger" value="'.$dataloggers_apagados[$i]['codigo'].'">';
+                        echo '<input type="hidden" name="tipo" value="dataloger">';
                         echo '<input class="btn_inv" name="inv_btn_push_dat" type="submit">';
                     echo '</form>';
 
@@ -625,7 +644,13 @@ require($_SERVER['DOCUMENT_ROOT']."/general/sesion.php");
             </div>
         </section>
         <?php
-        require("headers_footers/footer.php");
+        if(!isset($_POST['enviado'])){
+            if(!isset($_POST['cod_carga']) && !isset($_POST['codigo']) && !isset($_POST['nombre6']) && !isset($_POST['session_carga']) && !isset($_POST['codigo_datalogger']) && !isset($_POST['cod_subruta'])){
+                require("headers_footers/footer.php");
+            }
+        }
         ?>
+        <!--
     </body>
 </html>
+-->

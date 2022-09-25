@@ -14,23 +14,31 @@
         }
         $msg2 = fx_registrar_usuario( $cn, $_POST['nombre_admin'], $_POST['cargo1'],
         $_POST['email1'], $_POST['rol1'], $_POST['password1'], $_POST['nombre_entidad'] );
+        $msgNotice = "Entidad registrada correctamente.";
         $msg3 = fx_asignar_contacto( $cn, $_POST['session'], $_POST['email1'], $_POST['nombre_entidad'] );
 
     } else if ( isset( $_POST['alta_admin_sa_btn'] ) ) { // Alta administrador
-        session_start();
+        //session_start();
         $_SESSION['ss_usuario'] = $_POST['session2'];
 
         $msg = fx_registrar_usuario( $cn, $_POST['nombre_admin2'], $_POST['cargo2'],
         $_POST['email2'], 'Administrador', $_POST['password2'], $_POST['entidad2'] );
+        $msgNotice = "Alta administrador registrado correctamente.";
 
     } else if ( isset( $_POST['inv_btn_push'] ) ) { // Lista de cargas -> Detalle carga
         //session_start();
-        $_SESSION['ss_usuario'] = $_POST['session_carga'];
-        $_SESSION['cod_carga'] = $_POST['codigo_carga'];
-        $_SESSION['lvl_privilegios_carga'] = $_POST['lvl_privilegios_carga'];
-
+        if(isset($_POST['session_carga'])){
+            $_SESSION['ss_usuario'] = $_POST['session_carga'];
+        }
+        if(isset($_POST['codigo_carga'])){
+            $_SESSION['cod_carga'] = $_POST['codigo_carga'];
+        }
+        if(isset($_POST['lvl_privilegios_carga'])){
+            $_SESSION['lvl_privilegios_carga'] = $_POST['lvl_privilegios_carga'];
+        }
+        
         //header("Location: detalles/detalle_carga.php");
-        include($_SERVER['DOCUMENT_ROOT']."/detalles/detalle_carga.php");
+        //include($_SERVER['DOCUMENT_ROOT']."/detalles/detalle_carga.php");
         //exit;
     } else if ( isset( $_POST['inv_btn_push_dat'] ) ) { // Lista de dataloggers -> Detalle datalogger
         //session_start();
@@ -53,12 +61,18 @@
         //exit;
     } else if ( isset( $_POST['inv_btn_subr'] ) ) { // Lista de subrutas -> Detalle subruta
         //session_start();
-        $_SESSION['ss_usuario'] = $_POST['session_subr'];
-        $_SESSION['cod_subruta'] = $_POST['cod_subruta'];
-        $_SESSION['lvl_privilegios_subr'] = $_POST['lvl_privilegios_subr'];
+        if(isset($_POST['session_subr'])){
+            $_SESSION['ss_usuario'] = $_POST['session_subr'];
+        }
+        if(isset($_POST['cod_subruta'])){
+            $_SESSION['cod_subruta'] = $_POST['cod_subruta'];
+        }
+        if(isset($_POST['lvl_privilegios_subr'])){
+            $_SESSION['lvl_privilegios_subr'] = $_POST['lvl_privilegios_subr'];
+        }
 
         //header("Location: detalles/detalle_subruta.php");
-        include($_SERVER['DOCUMENT_ROOT']."/detalles/detalle_subruta.php");
+        //include($_SERVER['DOCUMENT_ROOT']."/detalles/detalle_subruta.php");
         //exit;
     }
 //}

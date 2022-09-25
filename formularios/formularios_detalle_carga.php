@@ -2,30 +2,36 @@
 
 if ( isset( $_POST ) ) {
     if ( isset( $_POST['inv_btn_edit'] ) ) { // Detalle carga -> Editar carga
-        session_start();
+        //session_start();
         $_SESSION['ss_usuario'] = $_POST['session'];
         $_SESSION['cod_carga'] = $_POST['cod_carga'];
 
         if ( $_POST['lvl_privilegios'] == 2 ) { // Ver y editar dataloggers
-            header("Location: editar_carga_dataloggers.php");
+            //header("Location: editar_carga_dataloggers.php");
+            include($_SERVER['DOCUMENT_ROOT']."/detalles/editar_carga_dataloggers.php");
         } else { // Ver, editar y borrar
-            header("Location: editar_carga.php");
+            //header("Location: editar_carga.php");
+            include($_SERVER['DOCUMENT_ROOT']."/detalles/editar_carga.php");
         }
-        exit;
+        //exit;
 
     } else if ( isset( $_POST['inv_btn_erase'] ) ) { // Detalle carga -> Borrar carga
-        session_start();
-        $_SESSION['ss_usuario'] = $_POST['session'];
-
-        fx_borrar_carga( $cn, $_POST['cod_carga'], $_POST['session'] );
-
-        $rol = fx_recoger_rol( $cn, $_SESSION['ss_usuario'] );
-        if ( $rol == 'Administrador' ) {
-            header("Location: ../inicio_admin.php");
-        } else {
-            header("Location: ../inicio_tecnico.php");
+        //session_start();
+        if(isset($_POST['session']) && isset($_POST['cod_carga'])){
+            $_SESSION['ss_usuario'] = $_POST['session'];
+            fx_borrar_carga( $cn, $_POST['cod_carga'], $_POST['session'] );
+            $_POST['cod_carga'] = null;
+            $rol = fx_recoger_rol( $cn, $_SESSION['ss_usuario'] );
+            if ( $rol == 'Administrador' ) {
+                //header("Location: ../inicio_admin.php");
+                include($_SERVER['DOCUMENT_ROOT']."/inicio_admin.php");
+    
+            } else {
+                //header("Location: ../inicio_tecnico.php");
+                include($_SERVER['DOCUMENT_ROOT']."/inicio_tecnico.php");
+            }
         }
-        exit;
+        //exit;
 
     } else if ( isset( $_POST['inv_btn_subr'] ) ) { // Detalle carga -> Detalle subruta
         //session_start();
@@ -51,7 +57,7 @@ if ( isset( $_POST ) ) {
         
         //exit;
     } else if ( isset( $_POST['btn_sig1'] ) ) { // Editar carga -> Editar mapas
-        session_start();
+        //session_start();
         $_SESSION['ss_usuario'] = $_POST['session'];
         $_SESSION['cod_carga'] = $_POST['cod_carga'];
         $carga_antes_de_cambios = fx_recoger_carga( $cn, $_POST['cod_carga'] );
@@ -82,11 +88,12 @@ if ( isset( $_POST ) ) {
             fx_eliminar_dataloggers_carga( $cn, $_POST['cod_carga'] );
         }
 
-        header("Location: editar_carga_mapas.php");
-        exit;
+        //header("Location: editar_carga_mapas.php");
+        include($_SERVER['DOCUMENT_ROOT']."/detalles/editar_carga_mapas.php");
+        //exit;
 
     } else if ( isset( $_POST['btn_sig2'] ) ) { // Editar mapas -> Editar dataloggers o Inicio (si no hay fechas aún)
-        session_start();
+        //session_start();
         $_SESSION['ss_usuario'] = $_POST['session'];
         $_SESSION['cod_carga'] = $_POST['cod_carga'];
         $carga = fx_recoger_carga( $cn, $_POST['cod_carga'], $_POST['session'] );
@@ -110,18 +117,21 @@ if ( isset( $_POST ) ) {
         }
 
         if ( $carga['fecha_inicio'] != null && $carga['fecha_final'] != null ) {
-            header("Location: editar_carga_dataloggers.php");
+            //header("Location: editar_carga_dataloggers.php");
+            include($_SERVER['DOCUMENT_ROOT']."/detalles/editar_carga_dataloggers.php");
         } else {
             if ( fx_recoger_rol( $cn, $_POST['session'] ) == 'Administrador' ) {
-                header("Location: ../inicio_admin.php");
+                //header("Location: ../inicio_admin.php");
+                include($_SERVER['DOCUMENT_ROOT']."/inicio_admin.php");
             } else {
-                header("Location: ../inicio_tecnico.php");
+                //header("Location: ../inicio_tecnico.php");
+                include($_SERVER['DOCUMENT_ROOT']."/inicio_tecnico.php");
             }
         }
-        exit;
+        //exit;
 
     } else if ( isset( $_POST['editar_dataloggers_end_btn'] ) ) { // Editar dataloggers -> Editar vehículos
-        session_start();
+        //session_start();
         $_SESSION['ss_usuario'] = $_POST['session'];
         $_SESSION['cod_carga'] = $_POST['cod_carga'];
         $carga = fx_recoger_carga_con_privilegios( $cn, $_POST['cod_carga'], $_POST['session'] );
@@ -145,12 +155,14 @@ if ( isset( $_POST ) ) {
             fx_editar_enlaces( $cn, $_POST['cod_carga'], $dats, $conts );
         }
         
-        header("Location: editar_carga_vehiculos.php");
-        exit;
+        //header("Location: editar_carga_vehiculos.php");
+        include($_SERVER['DOCUMENT_ROOT']."/detalles/editar_carga_vehiculos.php");
+        //exit;
 
     } else if ( isset( $_POST['btn_sig_subr3'] ) ) { // Editar vehículos -> FIN -> Inicio
-        session_start();
+        //session_start();
         $_SESSION['ss_usuario'] = $_POST['session'];
+        $_POST['cod_carga'] = null;
 
         $tipos = array();
         $matriculas = array();
@@ -183,28 +195,31 @@ if ( isset( $_POST ) ) {
         }
 
         if ( fx_recoger_rol( $cn, $_POST['session'] ) == 'Administrador' ) {
-            header("Location: ../inicio_admin.php");
+            //header("Location: ../inicio_admin.php");
         } else {
-            header("Location: ../inicio_tecnico.php");
+            //header("Location: ../inicio_tecnico.php");
         }
-        exit;
+        //exit;
 
     } else if ( isset( $_POST['inv_btn_volver'] ) ) { // Volver
-        session_start();
+        //session_start();
         $_SESSION['ss_usuario'] = $_POST['session'];
         $rol = fx_recoger_rol( $cn, $_POST['session'] );
 
         if ( $rol == 'Administrador' ) {
-            header("Location: ../inicio_admin.php");
+            //header("Location: ../inicio_admin.php");
+            include($_SERVER['DOCUMENT_ROOT']."/inicio_admin.php");
         } else if ( $rol == 'Técnico' ) {
-            header("Location: ../inicio_tecnico.php");
+            //header("Location: ../inicio_tecnico.php");
+            include($_SERVER['DOCUMENT_ROOT']."/inicio_tecnico.php");
         } else {
-            header("Location: ../inicio_superadmin.php");
+            //header("Location: ../inicio_superadmin.php");
+            include($_SERVER['DOCUMENT_ROOT']."/inicio_superadmin.php");
         }
         exit;
 
     } else if ( isset( $_POST['btn_act_cod_datalogger_carga'] ) ) { // Recargar gráfica
-        session_start();
+        //session_start();
         $_SESSION['ss_usuario'] = $_POST['session'];
         $_SESSION['cod_carga'] = $_POST['cod_carga'];
 

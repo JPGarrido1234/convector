@@ -883,7 +883,13 @@ function fx_recoger_datalogger_random_carga( $cn, $cod_carga ) {
     $sql = "SELECT datalogger FROM enlace WHERE carga = '$cod_carga'";
     $result = mysqli_query( $cn, $sql );
     $fila = mysqli_fetch_array( $result );
-    return $fila[0];
+    if($fila != null){    
+        return $fila[0];
+    }else{
+        return 0;
+    }
+    
+    
 }
 
 // Función que recoge las temperaturas de un datalogger en una carga ordenadas por fecha/hora

@@ -2,19 +2,23 @@
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
+/*
 session_start();
 require($_SERVER['DOCUMENT_ROOT']."/bd/cn.php");
 require($_SERVER['DOCUMENT_ROOT']."/bd/clases.php");
 require($_SERVER['DOCUMENT_ROOT']."/formularios/formularios_alta_subrutas.php");
 require($_SERVER['DOCUMENT_ROOT']."/general/sesion.php");
 require($_SERVER['DOCUMENT_ROOT']."/languages/es.php");
+*/
 ?>
+<!--
 <!DOCTYPE html>
 <html>
+-->
     <?php
     require($_SERVER['DOCUMENT_ROOT']."/headers_footers/head_maps.php");
     ?>
-    <body>
+    <!-- <body> -->
         <?php
         require($_SERVER['DOCUMENT_ROOT']."/headers_footers/header_principal.php");
         ?>
@@ -73,5 +77,7 @@ require($_SERVER['DOCUMENT_ROOT']."/languages/es.php");
         <?php
         require($_SERVER['DOCUMENT_ROOT']."/headers_footers/footer.php");
         ?>
+        <!--
     </body>
 </html>
+-->

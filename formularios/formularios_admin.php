@@ -2,7 +2,7 @@
 
 if ( isset( $_POST ) ) {
     if ( isset( $_POST['sig_btn'] ) ) { // Alta carga
-        session_start();
+        //session_start();
         $_SESSION['ss_usuario'] = $_POST['session'];
         $_SESSION['cod_carga'] = $_POST['codigo'];
         $_SESSION['num_cont_carga'] = $_POST['contenedores'];
@@ -27,11 +27,12 @@ if ( isset( $_POST ) ) {
         fx_crear_carga( $cn, $_POST['codigo'], $_POST['kilos'], $_POST['contenedores'], $_POST['fecha_ini'], $_POST['fecha_fin'],
         $_POST['fecha_cadu'], $cod_producto_el, fx_recoger_entidad( $cn, $_POST['session'] ), $_POST['sel_usu5'] );
 
-        header("Location: cargas/alta_mapas.php");
-        exit;
+        //header("Location: cargas/alta_mapas.php");
+        include($_SERVER['DOCUMENT_ROOT']."/cargas/alta_mapas.php");
+        //exit;
 
     } else if ( isset( $_POST['sig_alta_subruta_prin'] ) ) { // Alta subruta
-        session_start();
+        //session_start();
         $_SESSION['ss_usuario'] = $_POST['session'];
         $_SESSION['cod_subruta'] = $_POST['codigo'];
         $_SESSION['num_vehiculos'] = $_POST['num_vehiculos'];
@@ -39,16 +40,19 @@ if ( isset( $_POST ) ) {
         fx_crear_subruta_incompleta( $cn, $_POST['codigo'], $_POST['fecha_hora_ini'], $_POST['fecha_hora_fin'],
         $_POST['entidad_asignada'], $_POST['sel_car_subr'] );
 
-        header("Location: subrutas/alta_mapas_subr.php");
-        exit;
+        //header("Location: subrutas/alta_mapas_subr.php");
+        include($_SERVER['DOCUMENT_ROOT']."/subrutas/alta_mapas_subr.php");
+        //exit;
     } else if ( isset( $_POST['dat_btn'] ) ) { // Alta datalogger
-        session_start();
+        //session_start();
         $_SESSION['ss_usuario'] = $_POST['session_dat'];
 
         fx_crear_datalogger( $cn, $_POST['cod_dat_adm'], fx_recoger_entidad( $cn, $_SESSION['ss_usuario'] ) );
+
+        include($_SERVER['DOCUMENT_ROOT']."/inicio_admin.php");
     
     } else if ( isset( $_POST['prod_btn'] ) ) { // Alta producto
-        session_start();
+        //session_start();
         $_SESSION['ss_usuario'] = $_POST['session6'];
 
         if ( empty( $_POST['variedad6'] ) ) {
@@ -58,41 +62,60 @@ if ( isset( $_POST ) ) {
             $msg = fx_registrar_producto($cn, $_POST['session6'], $_POST['nombre6'],
             $_POST['variedad6'], $_POST['t_min6'], $_POST['t_max6'] );
         }
+        $_POST['nombre6'] = null;
+        //include($_SERVER['DOCUMENT_ROOT']."/inicio_admin.php");
 
     } else if ( isset( $_POST['usu_btn'] ) ) { // Alta usuario
-        session_start();
+        //session_start();
         $_SESSION['ss_usuario'] = $_POST['session_usu'];
 
         $msg = fx_registrar_usuario( $cn, $_POST['nombre4'], $_POST['cargo4'], $_POST['email4'],
         $_POST['rol_usu4'], $_POST['password4'], fx_recoger_entidad( $cn, $_POST['session_usu'] ) );
 
         $_SESSION['msg'] = $msg;
+        //include($_SERVER['DOCUMENT_ROOT']."/inicio_admin.php");
     
     } else if ( isset( $_POST['inv_btn_push'] ) ) { // Lista de cargas -> Detalle carga
-        session_start();
-        $_SESSION['ss_usuario'] = $_POST['session_carga'];
-        $_SESSION['cod_carga'] = $_POST['codigo_carga'];
-        $_SESSION['lvl_privilegios_carga'] = $_POST['lvl_privilegios_carga'];
+        //session_start();
+        if(isset($_POST['session_carga'])){
+            $_SESSION['ss_usuario'] = $_POST['session_carga'];
+        }
+        if(isset($_POST['codigo_carga'])){
+            $_SESSION['cod_carga'] = $_POST['codigo_carga'];
+        }
+        if(isset($_POST['lvl_privilegios_carga'])){
+            $_SESSION['lvl_privilegios_carga'] = $_POST['lvl_privilegios_carga'];
+        }
 
-        header("Location: detalles/detalle_carga.php");
-        exit;
+        //header("Location: detalles/detalle_carga.php");
+        //include($_SERVER['DOCUMENT_ROOT']."/detalles/detalle_carga.php");
+        //exit;
     } else if ( isset( $_POST['inv_btn_push_dat'] ) ) { // Lista de dataloggers -> Detalle datalogger
         //session_start();
-        $_SESSION['ss_usuario'] = $_POST['session_datalogger'];
-        $_SESSION['cod_datalogger'] = $_POST['codigo_datalogger'];
+        if(isset($_POST['session_datalogger']) && isset($_POST['codigo_datalogger'])){
+            $_SESSION['ss_usuario'] = $_POST['session_datalogger'];
+            $_SESSION['cod_datalogger'] = $_POST['codigo_datalogger'];
 
+            if(isset($_POST['tipo']) && $_POST['tipo'] == 'dataloger'){
+                include($_SERVER['DOCUMENT_ROOT']."/detalles/detalle_datalogger.php");
+            }
+        }
         
-        //header("Location: detalles/detalle_datalogger.php");
-        
-        //exit;
     } else if ( isset( $_POST['inv_btn_subr'] ) ) { // Lista de subrutas -> Detalle subruta
-        session_start();
-        $_SESSION['ss_usuario'] = $_POST['session_subr'];
-        $_SESSION['cod_subruta'] = $_POST['cod_subruta'];
-        $_SESSION['lvl_privilegios_subr'] = $_POST['lvl_privilegios_subr'];
+        //session_start();
+        if(isset($_POST['session_subr'])){
+            $_SESSION['ss_usuario'] = $_POST['session_subr'];
+        }
+        if(isset($_POST['cod_subruta'])){
+            $_SESSION['cod_subruta'] = $_POST['cod_subruta'];
+        }
+        if(isset($_POST['lvl_privilegios_subr'])){
+            $_SESSION['lvl_privilegios_subr'] = $_POST['lvl_privilegios_subr'];
+        }
 
-        header("Location: detalles/detalle_subruta.php");
-        exit;
+        //header("Location: detalles/detalle_subruta.php");
+        //include($_SERVER['DOCUMENT_ROOT']."/detalles/detalle_subruta.php");
+        //exit;
     }
 }
 

@@ -11,9 +11,9 @@ body {
     background-color: #F8F8F8;
     color: #575757;
     display: block;
-    margin: 0 auto;
     width: 1200px;
     height: 100%;
+    margin: auto !important;
 }
 .inline {
     display: inline-block;
@@ -362,6 +362,7 @@ select:hover  {
 #nombre_usuario h3 {
     color: white;
     font-size: 14px;
+    margin: 3px;
 }
 .logos_inferior {
     padding-top: 50px;

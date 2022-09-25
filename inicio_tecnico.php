@@ -2,19 +2,23 @@
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
+/*
 session_start();
 require($_SERVER['DOCUMENT_ROOT']."/bd/cn.php");
 require($_SERVER['DOCUMENT_ROOT']."/bd/clases.php");
 require($_SERVER['DOCUMENT_ROOT']."/languages/es.php");
 require($_SERVER['DOCUMENT_ROOT']."/formularios/formularios_tecnico.php");
 require($_SERVER['DOCUMENT_ROOT']."/general/sesion.php");
+*/
 ?>
+<!--
 <!DOCTYPE html>
 <html>
+-->
     <?php
     require("headers_footers/head.php");
     ?>
-    <body>
+    <!-- <body> -->
         <?php
         require("headers_footers/header_principal.php");
         ?>
@@ -26,7 +30,7 @@ require($_SERVER['DOCUMENT_ROOT']."/general/sesion.php");
                 <li><a id="opcion1_tecnico" href="javascript:cambiarOpcionesTecnico(1)"><?php echo lista_cargas ?></a></li>
                 <li><a id="opcion2_tecnico" href="javascript:cambiarOpcionesTecnico(2)"><?php echo lista_subrutas ?></a></li>
                 <li><a id="opcion3_tecnico" href="javascript:cambiarOpcionesTecnico(3)"><?php echo alta_datalogger ?></a></li>
-                <li><a id="opcion4_tecnico" href="index.php"><?php cerrar_sesion; session_destroy(); ?></a></li>
+                <li><a id="opcion4_tecnico" href="index.php"><?php echo cerrar_sesion; session_destroy(); ?></a></li>
             </ul>
         </section>
         <!-- ======================================================================================================================================
@@ -199,5 +203,7 @@ require($_SERVER['DOCUMENT_ROOT']."/general/sesion.php");
         <?php
         require("headers_footers/footer.php");
         ?>
+        <!--
     </body>
 </html>
+                    -->

@@ -70,6 +70,7 @@ require_once($_SERVER['DOCUMENT_ROOT']."/languages/es.php");
                 echo '<input type="hidden" name="session_datalogger" value="'.$_GET['usu'].'">';
                 echo '<input type="hidden" name="codigo_datalogger" value="'.$dataloggers_enuso[$i]['codigo'].'">';
                 echo '<input type="hidden" name="entidad_datalogger" value="'.$_GET['entidad'].'">';
+                echo '<input type="hidden" name="tipo" value="dataloger">';
                 echo '<input class="btn_inv" name="inv_btn_push_dat" type="submit">';
             echo '</form>';
             
@@ -93,6 +94,7 @@ require_once($_SERVER['DOCUMENT_ROOT']."/languages/es.php");
                 echo '<input type="hidden" name="session_datalogger" value="'.$_GET['usu'].'">';
                 echo '<input type="hidden" name="codigo_datalogger" value="'.$dataloggers_apagados[$i]['codigo'].'">';
                 echo '<input type="hidden" name="entidad_datalogger" value="'.$_GET['entidad'].'">';
+                echo '<input type="hidden" name="tipo" value="dataloger">';
                 echo '<input class="btn_inv" name="inv_btn_push_dat" type="submit">';
             echo '</form>';
 
