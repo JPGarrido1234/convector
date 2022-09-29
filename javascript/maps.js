@@ -1,4 +1,4 @@
-var map;
+let map;
 const labels = "AB";
 let labelIndex = 0;
 var markers = [];
@@ -329,6 +329,12 @@ function initMap7() {
         } if (markers.length == 2) {
             history.pushState(null, '', location.href + '?pos1=' + markers[0].getPosition() + '&pos2=' + markers[1].getPosition());
         }
+    });
+}
+function initMapAlertas(){
+    map = new google.maps.Map(document.getElementById('mapAlertas'), {
+        center: {lat: 40.472222, lng: -3.560833},
+        zoom: 6,
     });
 }
 function addMarker(location, map) {

@@ -2,40 +2,10 @@
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
-/*
-session_start();
-require($_SERVER['DOCUMENT_ROOT']."/bd/cn.php");
-require($_SERVER['DOCUMENT_ROOT']."/bd/clases.php");
-require($_SERVER['DOCUMENT_ROOT']."/languages/es.php");
-require($_SERVER['DOCUMENT_ROOT']."/formularios/formularios_admin.php");
-require($_SERVER['DOCUMENT_ROOT']."/general/sesion.php");
-*/
-?>
-<!--
-<!DOCTYPE html>
-<html>
--->
-    <?php
-    //require("headers_footers/head.php");
-    ?>
-    <!-- <body> -->
-        <?php
-        if(isset($_POST['nombre6'])){
-            echo "POST nombre : ".$_POST['nombre6']."<br>";
-        }
-        if(isset($_POST['codigo'])){
-            echo "POST codigo : ".$_POST['codigo']."<br>";
-        }
-        if(isset($_POST['cod_carga'])){
-            echo "POST codigo carga: ".$_POST['cod_carga']."<br>";
-        }
         if(!isset($_POST['cod_carga']) && !isset($_POST['codigo']) && !isset($_POST['nombre6']) && !isset($_POST['session_carga']) && !isset($_POST['codigo_datalogger']) && !isset($_POST['cod_subruta'])){
             require("headers_footers/header_principal.php");
         }
         ?>
-        <!-- ======================================================================================================================================
-                                                    MENÚ Y SUBMENÚS HORIZONTALES DE OPCIONES
-        ====================================================================================================================================== -->
         <?php if(!isset($_POST['cod_carga']) && !isset($_POST['codigo']) && !isset($_POST['nombre6']) && !isset($_POST['session_carga']) && !isset($_POST['codigo_datalogger']) && !isset($_POST['cod_subruta'])){ ?>
         <section class="menu_opciones_admin">
             <ul class="menu menu_superior_aviso" id="menu_admin">
@@ -483,20 +453,20 @@ require($_SERVER['DOCUMENT_ROOT']."/general/sesion.php");
                     } else if ( $dataloggers[$i]['estado'] == 'Apagado' ) {
                         array_push( $dataloggers_apagados, $dataloggers[$i] );
                     }
-                    echo '<div class="info_carga con_btn_inv" onmouseover="mostrarDetalles(\'info_dat_'.$dataloggers[$i]['codigo'].
-                    '\')"'.' onmouseout="esconderDetalles(\'info_dat_'.$dataloggers[$i]['codigo'].'\')">';
-                    echo '<pre>'.datalogger.' '.$dataloggers[$i]['codigo'].'            '.estado.': '.$dataloggers[$i]['estado'].'</pre>';
+                    echo '<div class="info_carga con_btn_inv" onmouseover="mostrarDetalles(\'info_dat_'.$dataloggers[$i]['code'].
+                    '\')"'.' onmouseout="esconderDetalles(\'info_dat_'.$dataloggers[$i]['code'].'\')">';
+                    echo '<pre>'.datalogger.' '.$dataloggers[$i]['code'].'            '.estado.': '.$dataloggers[$i]['estado'].'</pre>';
                     
-                    echo '<form class="formulario" id="form_lista_dataloggers_admin_'.$dataloggers[$i]['codigo'].'" method="POST" action="">';
+                    echo '<form class="formulario" id="form_lista_dataloggers_admin_'.$dataloggers[$i]['code'].'" method="POST" action="">';
                         echo '<input type="hidden" name="session_datalogger" value="'.$_SESSION['ss_usuario'].'">';
-                        echo '<input type="hidden" name="codigo_datalogger" value="'.$dataloggers[$i]['codigo'].'">';
+                        echo '<input type="hidden" name="codigo_datalogger" value="'.$dataloggers[$i]['code'].'">';
                         echo '<input type="hidden" name="tipo" value="dataloger">';
                         echo '<input class="btn_inv" name="inv_btn_push_dat" type="submit">';
                     echo '</form>';
                     echo '</div>';
                     
-                    echo '<div class="info_c" id="info_dat_'.$dataloggers[$i]['codigo'].'">';
-                    $enlace = fx_recoger_ultimo_enlace( $cn, $dataloggers[$i]['codigo'] );
+                    echo '<div class="info_c" id="info_dat_'.$dataloggers[$i]['code'].'">';
+                    $enlace = fx_recoger_ultimo_enlace( $cn, $dataloggers[$i]['code'] );
                     if ( $dataloggers[$i]['estado'] != "Apagado" ) {
                         echo '<pre>'.carga_actual.': '.$enlace['carga'].' - '.contenedor.': '.$enlace['contenedor'].'</pre>';
                     } elseif ( $enlace['carga'] != null ) {
@@ -511,14 +481,14 @@ require($_SERVER['DOCUMENT_ROOT']."/general/sesion.php");
             <div class="seccion_oculta" id="div_lista_dataloggers_enuso">
                 <?php
                 for ( $i = 0, $cant = count( $dataloggers_enuso ); $i < $cant; ++$i ) {
-                    $enlace2 = fx_recoger_ultimo_enlace( $cn, $dataloggers_enuso[$i]['codigo'] );
+                    $enlace2 = fx_recoger_ultimo_enlace( $cn, $dataloggers_enuso[$i]['code'] );
                     echo '<div class="info_carga con_btn_inv">';
-                    echo '<pre>'.datalogger.' '.$dataloggers_enuso[$i]['codigo'].'            '.carga_actual.': '.$enlace2['carga'].
+                    echo '<pre>'.datalogger.' '.$dataloggers_enuso[$i]['code'].'            '.carga_actual.': '.$enlace2['carga'].
                     '           '.contenedor.': '.$enlace2['contenedor'].'</pre>';
 
-                    echo '<form class="formulario" id="form_lista_dataloggers_enuso_admin_'.$dataloggers_enuso[$i]['codigo'].'" method="POST" action="">';
+                    echo '<form class="formulario" id="form_lista_dataloggers_enuso_admin_'.$dataloggers_enuso[$i]['code'].'" method="POST" action="">';
                         echo '<input type="hidden" name="session_datalogger" value="'.$_SESSION['ss_usuario'].'">';
-                        echo '<input type="hidden" name="codigo_datalogger" value="'.$dataloggers_enuso[$i]['codigo'].'">';
+                        echo '<input type="hidden" name="codigo_datalogger" value="'.$dataloggers_enuso[$i]['code'].'">';
                         echo '<input type="hidden" name="tipo" value="dataloger">';
                         echo '<input class="btn_inv" name="inv_btn_push_dat" type="submit">';
                     echo '</form>';
@@ -581,15 +551,17 @@ require($_SERVER['DOCUMENT_ROOT']."/general/sesion.php");
                 <h2><?php echo informacion_entidad_M ?></h2>
             </div>
             <form class="formulario" id="form_info_entidad_admin" method="POST" action="">
-                <?php
+            <?php
                 $entidad = fx_recoger_datos_entidad( $cn, $_SESSION['ss_usuario'] );
-                echo '<input class="input" type="text" value="&#127963;  '.nombre_entidad.':     '.$entidad['nombre'].'" disabled>';
-                echo '<input class="input" type="text" value="&#128712;  '.tipo.':        '.$entidad['tipo'].'" disabled>';
-                echo '<input class="input" type="text" value="&#9872;  '.direccion_1.':     '.$entidad['direccion1'].'" disabled>';
-                echo '<input class="input" type="text" value="&#9873;  '.direccion_2.':     '.$entidad['direccion2'].'" disabled>';
-                echo '<input class="input" type="text" value="&#127968;&#65038;  '.poblacion.':     '.$entidad['poblacion'].'" disabled>';
-                echo '<input class="input" type="text" value="&#127757;&#65038;  '.pais.':     '.$entidad['pais'].'" disabled>';
-                ?>
+                if(isset($entidad)){
+                    echo '<input class="input" type="text" value="&#127963;  '.nombre_entidad.':     '.$entidad['nombre'].'" disabled>';
+                    echo '<input class="input" type="text" value="&#128712;  '.tipo.':        '.$entidad['tipo'].'" disabled>';
+                    echo '<input class="input" type="text" value="&#9872;  '.direccion_1.':     '.$entidad['direccion1'].'" disabled>';
+                    echo '<input class="input" type="text" value="&#9873;  '.direccion_2.':     '.$entidad['direccion2'].'" disabled>';
+                    echo '<input class="input" type="text" value="&#127968;&#65038;  '.poblacion.':     '.$entidad['poblacion'].'" disabled>';
+                    echo '<input class="input" type="text" value="&#127757;&#65038;  '.pais.':     '.$entidad['pais'].'" disabled>';
+                }
+            ?>
             </form>
             <div class="titulo titulo_secundario titulo_filtros" id="titulo_info_empleados_admin">
                 <h2><?php echo lista_empleados_M ?></h2>

@@ -1,13 +1,20 @@
 <?php
 session_start();
-require($_SERVER['DOCUMENT_ROOT']."/languages/idioma.php");
-require($_SERVER['DOCUMENT_ROOT']."/"."languages/".$lang.".php");
-require($_SERVER['DOCUMENT_ROOT']."/index.ui.php");
 ?>
 <!DOCTYPE html>
 <html>
     <?php
-    require("headers_footers/head_maps.php");
+        require($_SERVER['DOCUMENT_ROOT']."/languages/idioma.php");
+        require($_SERVER['DOCUMENT_ROOT']."/"."languages/".$lang.".php");
+    ?>
+    <head>
+        <?php
+            require($_SERVER['DOCUMENT_ROOT']."/headers_footers/head_maps.php");
+        ?>
+    </head>
+    <?php
+    require($_SERVER['DOCUMENT_ROOT']."/index.ui.php");
+
     if(!isset($_SESSION['ss_usuario'])){
         ?>
         <body>
@@ -15,11 +22,6 @@ require($_SERVER['DOCUMENT_ROOT']."/index.ui.php");
             require("headers_footers/header_inicio.php");
             ?>
             <section class="container">
-                <?php
-                if(isset($msgLogin)){
-                    echo $msgLogin;
-                }
-                ?>
                 <div id="descripcion">
                     <p><?php echo descripcion_larga ?></p>
                 </div>
@@ -34,6 +36,7 @@ require($_SERVER['DOCUMENT_ROOT']."/index.ui.php");
                             <input class="input" type="password" name="password" required>
                         </div>
                         <input type="hidden" name="enviado" value="enviado"/>
+                        <div style="color:red;" class="p-3 mb-2"><?php if(isset($msgLogin)){echo $msgLogin;} ?></div>
                         <div class="boton" id="form_inicio_sesion_btn">
                             <input class="submit" type="submit" value="<?php echo acceso_M ?>">
                         </div>

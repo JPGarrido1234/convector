@@ -43,7 +43,7 @@ if ( isset( $_POST ) ) {
         //exit;
 
     } else if ( isset( $_POST['btn_sig_subr1'] ) ) { // Editar subruta -> Editar mapa
-        session_start();
+        //session_start();
         $_SESSION['ss_usuario'] = $_POST['session'];
         $_SESSION['cod_subruta'] = $_POST['cod_subruta'];
 
@@ -118,15 +118,13 @@ if ( isset( $_POST ) ) {
                 fx_editar_vehiculos( $cn, $_POST['cod_subruta'], $tipos, $matriculas );
             }
 
+            $registroNuevo = "Registrado correctamente.";
             if ( fx_recoger_rol( $cn, $_POST['session'] ) == 'Administrador' ) {
-                //header("Location: ../inicio_admin.php");
                 include($_SERVER['DOCUMENT_ROOT']."/inicio_admin.php");
             } else {
-                //header("Location: ../inicio_tecnico.php");
                 include($_SERVER['DOCUMENT_ROOT']."/inicio_tecnico.php");
             }
         }
-        //exit;
     }
 }
 

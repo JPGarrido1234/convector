@@ -25,11 +25,8 @@ if ( isset( $_POST ) ) {
             fx_anadir_ubicacion_subruta( $cn, $_POST['cod_subruta'], $lat_or, $long_or, $_POST['origen'], $lat_dest, $long_dest, $_POST['destino'] );
         }
 
-        //header("Location: alta_vehiculos.php");
         include($_SERVER['DOCUMENT_ROOT']."/subrutas/alta_vehiculos.php");
-        //exit;
     } else if ( isset( $_POST['alta_vehiculos_subruta_btn'] ) ) { // Alta vehículos en alta de subrutas
-        //session_start();
         $_SESSION['ss_usuario'] = $_POST['session'];
         $_SESSION['cod_subruta'] = $_POST['cod_subruta'];
         $_SESSION['num_vehiculos'] = $_POST['num_vehiculos'];
@@ -50,10 +47,7 @@ if ( isset( $_POST ) ) {
 
         if ( $i % 2 == 0 ) {
             fx_crear_vehiculos_en_subruta( $cn, $_POST['cod_subruta'], $tipos, $matriculas );
-
-            //header("Location: ../inicio_admin.php");
             include($_SERVER['DOCUMENT_ROOT']."/inicio_admin.php");
-            //exit;
         }
     }
 }

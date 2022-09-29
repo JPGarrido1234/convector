@@ -6,7 +6,7 @@
 function fx_recoger_datalogger( $cn, $cod_datalogger ) {
     $cod_datalogger = mysqli_real_escape_string( $cn, $cod_datalogger );
 
-    $sql = "SELECT * FROM datalogger WHERE codigo = '$cod_datalogger'";
+    $sql = "SELECT * FROM datalogger WHERE code = '$cod_datalogger'";
     $result = mysqli_query( $cn, $sql );
     $array = mysqli_fetch_array( $result );
     return $array;
@@ -34,15 +34,15 @@ function fx_recoger_dataloggers_disponibles( $cn, $entidad, $cod_carga ) {
     $carga = fx_recoger_carga( $cn, mysqli_real_escape_string( $cn, $cod_carga ) );
     $carga_ini = $carga['fecha_inicio']; $carga_fin = $carga['fecha_final'];
 
-    $sql = "SELECT * FROM datalogger WHERE entidad = '$entidad' AND NOT estado = 'De baja' AND NOT codigo IN (
+    $sql = "SELECT * FROM datalogger WHERE entidad = '$entidad' AND NOT estado = 'De baja' AND NOT code IN (
         SELECT datalogger FROM enlace WHERE carga IN (
-            SELECT codigo FROM carga WHERE NOT ( (fecha_inicio < $carga_ini AND fecha_final < $carga_ini) OR (fecha_inicio > $carga_fin AND fecha_final > $carga_fin) )
+            SELECT code FROM carga WHERE NOT ( (fecha_inicio < $carga_ini AND fecha_final < $carga_ini) OR (fecha_inicio > $carga_fin AND fecha_final > $carga_fin) )
         )
     )";
     $array = array();
     $result = mysqli_query( $cn, $sql );
     while ( $fila = mysqli_fetch_array( $result ) ) {
-        array_push( $array, $fila['codigo'] );
+        array_push( $array, $fila['code'] );
     }
 
     return $array;
@@ -91,9 +91,9 @@ function fx_baja_datalogger( $cn, $cod_datalogger, $baja ) {
     $cod_datalogger = mysqli_real_escape_string( $cn, $cod_datalogger );
 
     if ($baja) { 
-        $sql = "UPDATE datalogger SET estado = 'De baja' WHERE codigo = '$cod_datalogger'";
+        $sql = "UPDATE datalogger SET estado = 'De baja' WHERE code = '$cod_datalogger'";
     } else {
-        $sql = "UPDATE datalogger SET estado = 'Disponible' WHERE codigo = '$cod_datalogger'";
+        $sql = "UPDATE datalogger SET estado = 'Disponible' WHERE code = '$cod_datalogger'";
     }
     $msg = mysqli_query( $cn, $sql ) or die( mysqli_error( $cn ) );
 }

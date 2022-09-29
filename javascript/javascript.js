@@ -202,23 +202,25 @@ function cambiarMenuAdmin(num) {
     submenu1 = document.getElementById("seccion_submenu_alta");
     submenu2 = document.getElementById("seccion_submenu_gestion");
     info_entidad = document.getElementById("seccion_info_entidad");
-    if (num == 1) {
-        submenu1.style.display = 'block';
-        submenu2.style.display = 'none';
-        info_entidad.style.display = 'none';
-        cambiarSubmenuGestionAdmin(0);
-    } else if (num == 2) {
-        submenu1.style.display = 'none';
-        submenu2.style.display = 'block';
-        info_entidad.style.display = 'none';
-        cambiarSubmenuAltaAdmin(0);
-    } else if (num == 3) {
-        submenu1.style.display = 'none';
-        submenu2.style.display = 'none';
-        info_entidad.style.display = 'block';
-        cambiarSubmenuAltaAdmin(0);
-        cambiarSubmenuGestionAdmin(0);
-    }
+    //if(submenu1 != null && submenu2 != null && info_entidad != null){
+        if (num == 1) {
+            submenu1.style.display = 'block';
+            submenu2.style.display = 'none';
+            info_entidad.style.display = 'none';
+            cambiarSubmenuGestionAdmin(0);
+        } else if (num == 2) {
+            submenu1.style.display = 'none';
+            submenu2.style.display = 'block';
+            info_entidad.style.display = 'none';
+            cambiarSubmenuAltaAdmin(0);
+        } else if (num == 3) {
+            submenu1.style.display = 'none';
+            submenu2.style.display = 'none';
+            info_entidad.style.display = 'block';
+            cambiarSubmenuAltaAdmin(0);
+            cambiarSubmenuGestionAdmin(0);
+        }
+    //}
 }
 function cambiarSubmenuAltaAdmin(num) {
     alta_carga = document.getElementById("alta_carga_admin");

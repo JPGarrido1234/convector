@@ -2,29 +2,8 @@
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
-/*
-session_start();
-require($_SERVER['DOCUMENT_ROOT']."/bd/cn.php");
-require($_SERVER['DOCUMENT_ROOT']."/bd/clases.php");
-require($_SERVER['DOCUMENT_ROOT']."/languages/es.php");
-require($_SERVER['DOCUMENT_ROOT']."/formularios/formularios_tecnico.php");
-require($_SERVER['DOCUMENT_ROOT']."/general/sesion.php");
-*/
-?>
-<!--
-<!DOCTYPE html>
-<html>
--->
-    <?php
-    require("headers_footers/head.php");
-    ?>
-    <!-- <body> -->
-        <?php
-        require("headers_footers/header_principal.php");
+    require("headers_footers/header_principal.php");
         ?>
-        <!-- ======================================================================================================================================
-                                                        MENÚ HORIZONTAL DE OPCIONES
-        ====================================================================================================================================== -->
         <section class="menu_opciones_tecnico">
             <ul class="menu menu_superior" id="menu_tecnico">
                 <li><a id="opcion1_tecnico" href="javascript:cambiarOpcionesTecnico(1)"><?php echo lista_cargas ?></a></li>
@@ -33,9 +12,13 @@ require($_SERVER['DOCUMENT_ROOT']."/general/sesion.php");
                 <li><a id="opcion4_tecnico" href="index.php"><?php echo cerrar_sesion; session_destroy(); ?></a></li>
             </ul>
         </section>
-        <!-- ======================================================================================================================================
-                                                        1. LISTA DE CARGAS
-        ====================================================================================================================================== -->
+        <section style="color:green;">
+        <?php 
+            if(isset($msgTecnico)){
+                echo $msgTecnico;
+            }
+            ?>
+        </section>
         <section class="seccion_oculta" id="info_cargas_tecnico">
             <div class="titulo" id="titulo_info_cargas_tecnico">
                 <h2><?php echo lista_cargas_M ?></h2>

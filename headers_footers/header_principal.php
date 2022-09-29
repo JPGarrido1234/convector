@@ -5,8 +5,11 @@
              | 
             <a href="?lang=es" title="<?php echo espanol ?>">ES</a>
         </div>
-        <div id="nombre_usuario">
+        <div class="nombre_usuario">
             <h3><?php echo usuario ?>: <?php echo fx_recoger_nombre( $cn, $_SESSION['ss_usuario'] ); ?></h3>
+        </div>
+        <div class="nombre_usuario">
+            <h3><?php echo entidad ?>:<?php echo fx_recoger_entidad( $cn, $_SESSION['ss_usuario'] ); ?></h3>
         </div>
         <div id="logo_ministerio_peq">
             <img title="cdti_logo" src="../images/CDTI.png" alt="<?php echo cdti_M ?>">
