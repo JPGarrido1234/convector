@@ -37,43 +37,44 @@ require_once($_SERVER['DOCUMENT_ROOT']."/languages/es.php");
     } else {
         $cargas = fx_recoger_cargas_entidad_usuario( $cn, fx_recoger_entidad( $cn, $_GET['usu'] ), $_GET['usu'] );
     }
-    if ( count( $cargas ) != 0 ) {
-        for ( $i = 0, $cant = count( $cargas ); $i < $cant; ++$i ) {
-            echo '<div class="info_carga con_btn_inv" id="car_com_'.$cargas[ $i ][ 'codigo' ].'"'.
-            ' onmouseenter="cambiarColorPrivi(\'info_ca_com1_'.$cargas[ $i ][ 'codigo' ].'\', \''.$cargas[$i]['lvl_privilegios'].'\')"'.
-            ' onmouseover="mostrarDetalles(\'info_ca_com1_'.$cargas[ $i ][ 'codigo' ].'\')"'.
-            ' onmouseout="esconderDetalles(\'info_ca_com1_'.$cargas[ $i ][ 'codigo' ].'\')">';
-            if ( $cargas[$i]['producto'] != null ) {
-                echo '<a id="ca_'.$cargas[ $i ][ 'codigo' ].'" href="#">'.carga.' '.$cargas[ $i ][ 'codigo' ].
-                ' - '.producto.': '.fx_recoger_nombre_producto( $cn, $cargas[ $i ][ 'producto' ] ).' - '.responsable.': '.
-                fx_recoger_nombre( $cn, $cargas[ $i ][ 'responsable' ] ).'</a>';
+
+    if (count($cargas) != 0 ) {
+        for ($i = 0, $cant = count( $cargas ); $i < $cant; ++$i) {
+            echo '<div class="info_carga con_btn_inv" id="car_com_'.$cargas[$i]['code'].'"'.
+            ' onmouseenter="cambiarColorPrivi(\'info_ca_com1_'.$cargas[$i]['code'].'\', \''.$cargas[$i]['lvl_privilegios'].'\')"'.
+            ' onmouseover="mostrarDetalles(\'info_ca_com1_'.$cargas[$i]['code'].'\')"'.
+            ' onmouseout="esconderDetalles(\'info_ca_com1_'.$cargas[$i]['code'].'\')">';
+            if ($cargas[$i]['product_id'] != null) {
+                echo '<a id="ca_'.$cargas[$i]['code'].'" href="#">'.carga.' '.$cargas[$i]['code'].
+                ' - '.producto.': '.fx_recoger_nombre_producto($cn, $cargas[$i]['product_id']).' - '.responsable.': '.
+                fx_recoger_nombre_by_id($cn, $cargas[$i]['supervisor_id']).'</a>';
             } else {
-                echo '<a id="ca_'.$cargas[ $i ][ 'codigo' ].'" href="#">'.carga.' '.$cargas[ $i ][ 'codigo' ].
-                ' - '.responsable.': '.fx_recoger_nombre( $cn, $cargas[ $i ][ 'responsable' ] ).'</a>';
+                echo '<a id="ca_'.$cargas[$i]['code'].'" href="#">'.carga.' '.$cargas[$i]['code'].
+                ' - '.responsable.': '.fx_recoger_nombre_by_id( $cn, $cargas[$i]['supervisor_id'] ).'</a>';
             }
-            echo '<form class="formulario" id="form_lista_cargas_admin_'.$cargas[ $i ][ 'codigo' ].'" method='.'"POST" action="">';
+            echo '<form class="formulario" id="form_lista_cargas_admin_'.$cargas[$i]['code'].'" method='.'"POST" action="">';
                 if ( isset( $_GET['usu'] ) ) {
                     echo '<input type="hidden" name="session_carga" value="'.$_GET['usu'].'">';
                 } else if ( isset( $_GET['ent'] ) ) {
-                    echo '<input type="hidden" name="session_carga" value="'.fx_recoger_email_superadmin( $cn ).'">';
+                    echo '<input type="hidden" name="session_carga" value="'.fx_recoger_email_superadmin($cn).'">';
                 }
-                echo '<input type="hidden" name="codigo_carga" value="'.$cargas[$i]['codigo'].'">';
+                echo '<input type="hidden" name="codigo_carga" value="'.$cargas[$i]['code'].'">';
                 echo '<input type="hidden" name="lvl_privilegios_carga" value="'.$cargas[$i]['lvl_privilegios'].'">';
                 echo '<input class="btn_inv" name="inv_btn_push" type="submit">';
             echo '</form>';
             echo '</div>';
-            echo '<div class="info_c" id="info_ca_com1_'.$cargas[ $i ][ 'codigo' ].'">';
+            echo '<div class="info_c" id="info_ca_com1_'.$cargas[$i]['code'].'">';
             $pre = '<pre>'.fecha_inicio.': ';
-            if ( $cargas[ $i ][ 'fecha_inicio' ] != null ) {
-                $pre .= $cargas[ $i ][ 'fecha_inicio' ].'        '.fecha_final.': ';
+            if ( $cargas[$i]['start'] != null ) {
+                $pre .= $cargas[$i]['start'].'        '.fecha_final.': ';
             } else {
                 $pre .= sin_establecer_m.'        '.fecha_final.': ';
-            } if ( $cargas[ $i ][ 'fecha_final' ] != null ) {
-                $pre .= $cargas[ $i ][ 'fecha_final' ].'        '.fecha_caducidad.': ';
+            } if ( $cargas[ $i ][ 'end' ] != null ) {
+                $pre .= $cargas[ $i ][ 'end' ].'        '.fecha_caducidad.': ';
             } else {
                 $pre .= sin_establecer_m.'        '.fecha_caducidad.': ';
-            } if ( $cargas[ $i ][ 'fecha_caducidad' ] != null ) {
-                $pre .= $cargas[ $i ][ 'fecha_caducidad' ].'</pre>';
+            } if ( $cargas[ $i ][ 'expiry' ] != null ) {
+                $pre .= $cargas[ $i ][ 'expiry' ].'</pre>';
             } else {
                 $pre .= sin_establecer_m.'</pre>';
             }
@@ -96,7 +97,7 @@ require_once($_SERVER['DOCUMENT_ROOT']."/languages/es.php");
             </div>
         </div>';
     } else {
-        echo ' ';
+        echo ' Lista vacía ';
     }
     ?>
 </body>

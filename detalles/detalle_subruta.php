@@ -27,12 +27,12 @@ require($_SERVER['DOCUMENT_ROOT']."/headers_footers/header_principal.php");
         ?>
     </div>
     <?php
-    if ( $subruta['lvl_privilegios'] == 3 && $subruta['fecha_hora_final'] > date("Y-m-d") ) {
+    if ( $subruta['lvl_privilegios'] == 3 && $subruta['end'] > date("Y-m-d") ) {
         echo '<ul class="menu menu_superior btns_editar_borrar centered" id="editar_borrar_detalle_subruta">';
             echo '<li>';
                 echo '<a class="a_des" id="opcion1_editar_borrar_subruta" href="#">&#9998;';
                     echo '<form class="formulario form2" id="form_editar_subruta" method="POST" action="">';
-                        echo '<input type="hidden" name="cod_subruta" value="'.$subruta['codigo'].'">';
+                        echo '<input type="hidden" name="cod_subruta" value="'.$subruta['code'].'">';
                         echo '<input type="hidden" name="lvl_privilegios" value="'.$subruta['lvl_privilegios'].'">';
                         echo '<input type="hidden" name="session" value="'.$_SESSION['ss_usuario'].'">';
                         echo '<input class="submit_esp" name="inv_btn_edit" type="submit" value="'.editar.'">';
@@ -42,7 +42,7 @@ require($_SERVER['DOCUMENT_ROOT']."/headers_footers/header_principal.php");
             echo '<li>';
                 echo '<a class="a_des" id="opcion2_editar_borrar_subruta" href="#">&#10006;';
                     echo '<form class="formulario form2" id="form_borrar_subruta" method="POST" action="">';
-                        echo '<input type="hidden" name="cod_subruta" value="'.$subruta['codigo'].'">';
+                        echo '<input type="hidden" name="cod_subruta" value="'.$subruta['code'].'">';
                         echo '<input type="hidden" name="session" value="'.$_SESSION['ss_usuario'].'">';
                         echo '<input class="submit_esp" name="inv_btn_erase" type="submit" value="'.borrar.'">';
                     echo '</form>';
@@ -55,16 +55,16 @@ require($_SERVER['DOCUMENT_ROOT']."/headers_footers/header_principal.php");
         <?php
         echo '<div class="label_form">';
             echo '<h4>&#128234;&#65038;   '.carga.':</h4>';
-            echo '<input class="input" type="text" value="'.$subruta['carga'].'" disabled>';
+            echo '<input class="input" type="text" value="'.$subruta['load_id'].'" disabled>';
         echo '</div>';
         echo '<div class="label_form">';
             echo '<h4>&#127963;   '.entidad.':</h4>';
-            echo '<input class="input" type="text" value="'.$subruta['entidad'].'" disabled>';
+            echo '<input class="input" type="text" value="'.$subruta['entity_id'].'" disabled>';
         echo '</div>';
         echo '<div class="label_form">';
             echo '<h4>&#128104;&#65038;   '.responsable.':</h4>';
-            if ( $subruta['responsable'] != null ) {
-                echo '<input class="input" type="text" value="'.$subruta['responsable'].'" disabled>';
+            if ( isset($subruta['managing_entity_id'])) {
+                echo '<input class="input" type="text" value="'.$subruta['managing_entity_id'].'" disabled>';
             } else {
                 echo '<input class="input" type="text" value="'.sin_establecer_m.'" disabled>';
             }
@@ -73,8 +73,8 @@ require($_SERVER['DOCUMENT_ROOT']."/headers_footers/header_principal.php");
         echo '<br><br>';
         echo '<div class="label_form">';
             echo '<h4>&#128467;   '.fecha_hora_inicio.':</h4>';
-            if ( $subruta['fecha_hora_inicio'] != null ) {
-                $fh_ini = date('Y-m-d\TH:i', strtotime($subruta['fecha_hora_inicio']));
+            if ( isset($subruta['start'])) {
+                $fh_ini = date('Y-m-d\TH:i', strtotime($subruta['start']));
                 echo '<input class="input" type="datetime-local" value='.$fh_ini.' disabled>';
             } else {
                 echo '<input class="input" type="text" value="'.sin_establecer_m.'" disabled>';
@@ -82,8 +82,8 @@ require($_SERVER['DOCUMENT_ROOT']."/headers_footers/header_principal.php");
         echo '</div>';
         echo '<div class="label_form">';
             echo '<h4>&#128467;   '.fecha_hora_final.':</h4>';
-            if ( $subruta['fecha_hora_final'] != null ) {
-                $fh_fin = date('Y-m-d\TH:i', strtotime($subruta['fecha_hora_final']));
+            if (isset($subruta['end'])) {
+                $fh_fin = date('Y-m-d\TH:i', strtotime($subruta['end']));
                 echo '<input class="input" type="datetime-local" value='.$fh_fin.' disabled>';
             } else {
                 echo '<input class="input" type="text" value="'.sin_establecer_m.'" disabled>';
@@ -93,13 +93,13 @@ require($_SERVER['DOCUMENT_ROOT']."/headers_footers/header_principal.php");
     </form>
     <br><br>
     <?php
-    if ( $subruta['latitud_origen'] != null && $subruta['longitud_origen'] != null && $subruta['latitud_destino'] != null && $subruta['longitud_destino'] != null ) {
+    if ( $subruta['origin_latitude'] != null && $subruta['origin_longitude'] != null && $subruta['destiny_latitude'] != null && $subruta['destiny_longitude'] != null ) {
     ?>
     <div id ="map6"> </div>
-    <input type="hidden" id="lat_or_hid" value="<?php echo $subruta['latitud_origen'] ?>">
-    <input type="hidden" id="long_or_hid" value="<?php echo $subruta['longitud_origen'] ?>">
-    <input type="hidden" id="lat_dest_hid" value="<?php echo $subruta['latitud_destino'] ?>">
-    <input type="hidden" id="long_dest_hid" value="<?php echo $subruta['longitud_destino'] ?>">
+    <input type="hidden" id="lat_or_hid" value="<?php echo $subruta['origin_latitude'] ?>">
+    <input type="hidden" id="long_or_hid" value="<?php echo $subruta['origin_longitude'] ?>">
+    <input type="hidden" id="lat_dest_hid" value="<?php echo $subruta['destiny_latitude'] ?>">
+    <input type="hidden" id="long_dest_hid" value="<?php echo $subruta['destiny_longitude'] ?>">
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCIgR-ebv3xMaS0nXVS_533d3m9xx1LT2o&callback=initMapStatic2" async defer></script>
     <?php } ?>
     <br><br>
@@ -116,15 +116,15 @@ require($_SERVER['DOCUMENT_ROOT']."/headers_footers/header_principal.php");
             <h2><?php echo lista_dataloggers_M ?></h2>
         </div>
         <?php
-        $enlaces = fx_recoger_dataloggers_subruta( $cn, $subruta['codigo'] );
+        $enlaces = fx_recoger_dataloggers_subruta( $cn, $subruta['code'] );
         for ( $i = 0, $cant = count( $enlaces ); $i < $cant; ++$i ) {
             echo '<div class="info_carga con_btn_inv">';
-                echo '<pre>'.datalogger.' '.$enlaces[$i]['datalogger'].
-                '            '.contenedor.' '.$enlaces[$i]['contenedor'].'</pre>';
+                echo '<pre>'.datalogger.' '.$enlaces[$i]['datalogger_id'].
+                '            '.contenedor.' '.$enlaces[$i]['code'].'</pre>';
 
                 echo '<form class="formulario" id="form_lista_dataloggers_subruta" method="POST" action="">';
                     echo '<input type="hidden" name="session_datalogger" value="'.$_SESSION['ss_usuario'].'">';
-                    echo '<input type="hidden" name="codigo_datalogger" value="'.$enlaces[$i]['datalogger'].'">';
+                    echo '<input type="hidden" name="codigo_datalogger" value="'.$enlaces[$i]['datalogger_id'].'">';
                     echo '<input type="hidden" name="tipo" value="subruta">';
                     echo '<input class="btn_inv" name="inv_btn_push_dat" type="submit">';
                 echo '</form>';
@@ -138,15 +138,15 @@ require($_SERVER['DOCUMENT_ROOT']."/headers_footers/header_principal.php");
             <h2><?php echo lista_vehiculos_M ?></h2>
         </div>
         <?php
-        $vehiculos = fx_recoger_vehiculos_subruta( $cn, $subruta['codigo'] );
+        $vehiculos = fx_recoger_vehiculos_subruta( $cn, $subruta['id'] );
         for ( $j = 0, $cont = count( $vehiculos ); $j < $cont; ++$j ) {
             echo '<div class="info_carga">';
-                if ( $vehiculos[$j]['tipo'] != null ) {
-                    echo '<pre>'.tipo_vehiculo.': '.$vehiculos[$j]['tipo'].
-                    '        '.matricula.': '.$vehiculos[$j]['matricula'].'</pre>';
+                if ( $vehiculos[$j]['vehicle_id'] != null ) {
+                    echo '<pre>'.tipo_vehiculo.': '.$vehiculos[$j]['vehicle_id'].
+                    '        '.matricula.': '.$vehiculos[$j]['vehicle_id'].'</pre>';
                 } else {
                     echo '<pre>'.tipo_vehiculo.': '.sin_establecer_m.'        '.matricula.': '.
-                    $vehiculos[$j]['matricula'].'</pre>';
+                    $vehiculos[$j]['vehicle_id'].'</pre>';
                 }
             echo '</div>';
         }

@@ -127,7 +127,7 @@ function recogerCargasFiltroUbicacionTextoSA() {
     } 
 }
 function recogerCargasSinFiltro() { // Admin
-    var usuario = document.getElementById("sesion_usuario").value;
+    var usuario = document.getElementById("name_user").innerText;
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
@@ -140,7 +140,7 @@ function recogerCargasSinFiltro() { // Admin
 function recogerCargasFiltroDatalogger() {
     var datalogger = document.getElementById("filtro_datalogger_cod").value;
     if (datalogger !== "") {
-        var usuario = document.getElementById("sesion_usuario").value;
+        var usuario = document.getElementById("name_user").innerText;
         var xmlhttp = new XMLHttpRequest();
         xmlhttp.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
@@ -154,7 +154,7 @@ function recogerCargasFiltroDatalogger() {
 function recogerCargasFiltroContenedor() {
     var contenedor = document.getElementById("filtro_contenedor_cod").value;
     if (contenedor !== "") {
-        var usuario = document.getElementById("sesion_usuario").value;
+        var usuario = document.getElementById("name_user").innerText;
         var xmlhttp = new XMLHttpRequest();
         xmlhttp.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
@@ -169,7 +169,7 @@ function recogerCargasFiltroActivo() {
     var fec1 = document.getElementById("filtro_activo_fecha1").value;
     var fec2 = document.getElementById("filtro_activo_fecha2").value;
     if (fec1 !== "" || fec2 !== "") {
-        var usuario = document.getElementById("sesion_usuario").value;
+        var usuario = document.getElementById("name_user").innerText;
         var xmlhttp = new XMLHttpRequest();
         xmlhttp.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
@@ -184,7 +184,7 @@ function recogerCargasFiltroInactivo() {
     var fec3 = document.getElementById("filtro_inactivo_fecha3").value;
     var fec4 = document.getElementById("filtro_inactivo_fecha4").value;
     if (fec3 !== "" || fec4 !== "") {
-        var usuario = document.getElementById("sesion_usuario").value;
+        var usuario = document.getElementById("name_user").innerText;
         var xmlhttp = new XMLHttpRequest();
         xmlhttp.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
@@ -201,7 +201,7 @@ function recogerCargasFiltroUbicacion() {
     var lat_dest = document.getElementById("filtros_ubicacion_latitud_destino").value;
     var long_dest = document.getElementById("filtros_ubicacion_longitud_destino").value;
     if ( ( lat_or !== "" && long_or !== "" ) || ( lat_dest !== "" && long_dest !== "") ) {
-        var usuario = document.getElementById("sesion_usuario").value;
+        var usuario = document.getElementById("name_user").innerText;
         var xmlhttp = new XMLHttpRequest();
         xmlhttp.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
@@ -217,7 +217,7 @@ function recogerCargasFiltroUbicacionTexto() {
     var origen = document.getElementById("filtro_ubicacion_origen").value;
     var destino = document.getElementById("filtro_ubicacion_destino").value;
     if (origen !== "" || destino !== "") {
-        var usuario = document.getElementById("sesion_usuario").value;
+        var usuario = document.getElementById("name_user").innerText;
         var xmlhttp = new XMLHttpRequest();
         xmlhttp.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
@@ -229,7 +229,7 @@ function recogerCargasFiltroUbicacionTexto() {
     } 
 }
 function recogerCargasSinFiltroTEC() { // Técnico 
-    var usuario = document.getElementById("sesion_usuario").value;
+    var usuario = document.getElementById("name_user").innerText;
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
@@ -242,7 +242,7 @@ function recogerCargasSinFiltroTEC() { // Técnico
 function recogerCargasFiltroDataloggerTEC() {
     var datalogger = document.getElementById("filtro_datalogger_cod_tec").value;
     if (datalogger !== "") {
-        var usuario = document.getElementById("sesion_usuario").value;
+        var usuario = document.getElementById("name_user").innerText;
         var xmlhttp = new XMLHttpRequest();
         xmlhttp.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
@@ -256,7 +256,7 @@ function recogerCargasFiltroDataloggerTEC() {
 function recogerCargasFiltroContenedorTEC() {
     var contenedor = document.getElementById("filtro_contenedor_cod_tec").value;
     if (contenedor !== "") {
-        var usuario = document.getElementById("sesion_usuario").value;
+        var usuario = document.getElementById("name_user").innerText;
         var xmlhttp = new XMLHttpRequest();
         xmlhttp.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
@@ -271,7 +271,7 @@ function recogerCargasFiltroActivoTEC() {
     var fec1 = document.getElementById("filtro_activo_fecha1_tec").value;
     var fec2 = document.getElementById("filtro_activo_fecha2_tec").value;
     if (fec1 !== "" || fec2 !== "") {
-        var usuario = document.getElementById("sesion_usuario").value;
+        var usuario = document.getElementById("name_user").innerText;
         var xmlhttp = new XMLHttpRequest();
         xmlhttp.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
@@ -286,7 +286,7 @@ function recogerCargasFiltroInactivoTEC() {
     var fec3 = document.getElementById("filtro_inactivo_fecha3_tec").value;
     var fec4 = document.getElementById("filtro_inactivo_fecha4_tec").value;
     if (fec3 !== "" || fec4 !== "") {
-        var usuario = document.getElementById("sesion_usuario").value;
+        var usuario = document.getElementById("name_user").innerText;
         var xmlhttp = new XMLHttpRequest();
         xmlhttp.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
@@ -303,7 +303,7 @@ function recogerCargasFiltroUbicacionTEC() {
     var lat_dest = document.getElementById("filtros_ubicacion_latitud_destino_tec").value;
     var long_dest = document.getElementById("filtros_ubicacion_longitud_destino_tec").value;
     if ( ( lat_or !== "" && long_or !== "" ) || ( lat_dest !== "" && long_dest !== "") ) {
-        var usuario = document.getElementById("sesion_usuario").value;
+        var usuario = document.getElementById("name_user").innerText;
         var xmlhttp = new XMLHttpRequest();
         xmlhttp.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
@@ -319,7 +319,7 @@ function recogerCargasFiltroUbicacionTextoTEC() {
     var origen = document.getElementById("filtro_ubicacion_origen_tec").value;
     var destino = document.getElementById("filtro_ubicacion_destino_tec").value;
     if (origen !== "" || destino !== "") {
-        var usuario = document.getElementById("sesion_usuario").value;
+        var usuario = document.getElementById("name_user").innerText;
         var xmlhttp = new XMLHttpRequest();
         xmlhttp.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {

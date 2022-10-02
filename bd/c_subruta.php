@@ -36,7 +36,7 @@ function fx_crear_subruta_completa( $cn, $cod_subruta, $fecha_hora_ini, $fecha_h
     $sql_pre .= $cod_carga."');";
     $sql_suj .= $sql_pre;
 
-    mysqli_query( $cn, $sql_suj );
+    mysqli_query($cn, $sql_suj);
 }
 
 // Función que crea una nueva subruta en la base de datos en base a los parámetros pasados sin
@@ -44,22 +44,26 @@ function fx_crear_subruta_completa( $cn, $cod_subruta, $fecha_hora_ini, $fecha_h
 // RETURN: -
 // ESTADO: Funciona
 function fx_crear_subruta_incompleta( $cn, $cod_subruta, $fh_ini, $fh_fin, $entidad, $cod_carga ) {
-    $cod_subruta = mysqli_real_escape_string( $cn, $cod_subruta );
-    $entidad = mysqli_real_escape_string( $cn, $entidad );
-    $cod_carga = mysqli_real_escape_string( $cn, $cod_carga );
-    $sql_suj = "INSERT INTO subruta (codigo, ";
-    $sql_pre = "VALUES ('$cod_subruta', '";
+    $cod_subruta = mysqli_real_escape_string($cn, $cod_subruta);
+    $entidad = mysqli_real_escape_string($cn, $entidad);
+    $cod_carga = mysqli_real_escape_string($cn, $cod_carga);
+
+    $load_id = fx_recoger_carga($cn, $cod_carga);
+    $entidad_id = fx_recoger_entidad_id($cn, $entidad);
+
+    $sql_suj = "INSERT INTO subroute (code, managing_entity_id, ";
+    $sql_pre = "VALUES ('$cod_subruta', '$entidad_id', '";
 
     if ( $fh_ini != null ) {
-        $sql_suj .= "fecha_hora_inicio, "; $sql_pre .= $fh_ini."', '";
+        $sql_suj .= "start, "; $sql_pre .= $fh_ini."', '";
     } if ( $fh_fin != null ) {
-        $sql_suj .= "fecha_hora_final, "; $sql_pre .= $fh_fin."', '";
+        $sql_suj .= "end, "; $sql_pre .= $fh_fin."', '";
     }
-    $sql_suj .= "entidad, carga) ";
-    $sql_pre .= $entidad."', '".$cod_carga."');";
+    $sql_suj .= "entity_id, load_id) ";
+    $sql_pre .= $entidad_id."', '".$load_id['id']."');";
     $sql_suj .= $sql_pre;
 
-    mysqli_query( $cn, $sql_suj );
+    mysqli_query($cn, $sql_suj);
 }
 
 // Función que añade las coordenadas y nombre de origen y destino a una subruta ya creada
@@ -70,24 +74,38 @@ function fx_anadir_ubicacion_subruta( $cn, $cod_subruta, $lat_or, $long_or, $nom
     $nombre_origen = mysqli_real_escape_string( $cn, $nombre_origen );
     $nombre_destino = mysqli_real_escape_string( $cn, $nombre_destino );
 
-    $sql = "UPDATE subruta SET latitud_origen = '$lat_or', longitud_origen = '$long_or',
-    latitud_destino = '$lat_dest', longitud_destino = '$long_dest', nombre_origen = '$nombre_origen', 
-    nombre_destino = '$nombre_destino' WHERE codigo = '$cod_subruta'";
-
+    if(strlen($lat_dest) > 20){
+        $lat_destino = explode(",", $lat_dest);
+        $sql = "UPDATE subroute SET origin_latitude = '$lat_or', origin_longitude = '$long_or',
+        destiny_latitude = '$lat_destino[0]', destiny_longitude = '$long_dest', origin = '$nombre_origen', 
+        destiny = '$nombre_destino' WHERE code = '$cod_subruta'";
+    }else{
+        $sql = "UPDATE subroute SET origin_latitude = '$lat_or', origin_longitude = '$long_or',
+        destiny_latitude = '$lat_dest', destiny_longitude = '$long_dest', origin = '$nombre_origen', 
+        destiny = '$nombre_destino' WHERE code = '$cod_subruta'";
+    }
     mysqli_query( $cn, $sql );
 }
 
 // Función que añade los vehículos a una carga
-// RETURN: -
-// ESTADO: Sin comprobar
-function fx_crear_vehiculos_en_subruta( $cn, $cod_subruta, $lista_tipos, $lista_matriculas ) {
-    $cod_subruta = mysqli_real_escape_string( $cn, $cod_subruta );
+function fx_crear_vehiculos_en_subruta($cn, $cod_subruta, $lista_tipos, $lista_matriculas) {
+    $cod_subruta = mysqli_real_escape_string($cn, $cod_subruta);
 
     for ( $i = 0, $cant = count( $lista_tipos ); $i < $cant; ++$i ) {
         $tipo = mysqli_real_escape_string( $cn, $lista_tipos[$i] );
-        $matricula = mysqli_real_escape_string( $cn, $lista_matriculas[$i] );
-        $sql = "INSERT INTO vehiculo (matricula, tipo, subruta) VALUES ('$matricula', '$tipo', '$cod_subruta')";
-        mysqli_query( $cn, $sql );
+        $matricula = mysqli_real_escape_string($cn, $lista_matriculas[$i]);
+
+        $load_id = fx_recoger_carga_subruta($cn, $cod_subruta);
+
+        $sql = "INSERT INTO vehicle (license_number, type_car) VALUES ('$matricula', '$tipo')";
+        $msg = mysqli_query($cn, $sql);
+        $select_sql = "SELECT id FROM vehicle WHERE license_number = '$matricula' LIMIT 1";
+        $result = mysqli_query($cn, $select_sql);
+        $vehicle_id = mysqli_fetch_array($result);
+        if(isset($vehicle_id[0])){
+            $insert_vehicle_subruta = "INSERT INTO subroute_vehicle (subroute_id, vehicle_id) VALUES ('$load_id', '$vehicle_id[0]')";
+            $result2 = mysqli_query($cn, $insert_vehicle_subruta) or die(mysqli_error($cn));
+        }
     }
 }
 
@@ -110,10 +128,10 @@ function fx_recoger_subrutas_carga( $cn, $carga, $email ) {
 // Función que recoge el código de la carga a la que pertenece la subruta
 // RETURN: Código de la carga
 // ESTADO: Sin comprobar
-function fx_recoger_carga_subruta( $cn, $cod_subruta ) {
+function fx_recoger_carga_subruta($cn, $cod_subruta) {
     $cod_subruta = mysqli_real_escape_string( $cn, $cod_subruta );
 
-    $sql = "SELECT carga FROM subruta WHERE codigo = '$cod_subruta'";
+    $sql = "SELECT load_id FROM subroute WHERE code = '$cod_subruta'";
     $result = mysqli_query( $cn, $sql );
     $msg = mysqli_fetch_array( $result );
 
@@ -134,18 +152,23 @@ function fx_asignar_responsable_subruta( $cn, $cod_subruta, $email ) {
 // Función que recoge el producto de una subruta
 // RETURN: Nombre del producto deseado
 // ESTADO: Sin comprobar
-function fx_recoger_producto_subruta( $cn, $cod_subruta ) {
-    $cod_subruta = mysqli_real_escape_string( $cn, $cod_subruta );
+function fx_recoger_producto_subruta($cn, $cod_subruta) {
+    $cod_subruta = mysqli_real_escape_string($cn, $cod_subruta);
 
-    $sql = "SELECT nombre FROM producto WHERE codigo = (
-        SELECT producto FROM carga WHERE codigo = (
-            SELECT carga FROM subruta WHERE codigo = '$cod_subruta'
+    $sql = "SELECT name FROM product WHERE code = (
+        SELECT product_id FROM loading WHERE code = (
+            SELECT load_id FROM subroute WHERE code = '$cod_subruta'
         )
     )";
-    $result = mysqli_query( $cn, $sql );
-    $msg = mysqli_fetch_array( $result );
 
-    return $msg[0];
+    $result = mysqli_query($cn, $sql);
+    $msg = mysqli_fetch_array($result);
+
+    if(isset($msg)){
+        return $msg[0];
+    }
+    
+    return $msg;
 }
 
 // Función que recoge el responsable de una subruta
@@ -158,7 +181,11 @@ function fx_recoger_responsable_subruta( $cn, $cod_subruta ) {
     $result = mysqli_query( $cn, $sql );
     $msg = mysqli_fetch_array( $result );
 
-    return $msg[0];
+    if(isset($msg)){
+        return $msg[0];
+    }
+    
+    return $msg;
 }
 
 // Función que recoge el responsable de una carga a partir de una subruta
@@ -182,11 +209,15 @@ function fx_recoger_responsable_carga_subruta( $cn, $cod_subruta ) {
 function fx_recoger_entidad_subruta( $cn, $cod_subruta ) {
     $cod_subruta = mysqli_real_escape_string( $cn, $cod_subruta );
 
-    $sql = "SELECT entidad FROM subruta WHERE codigo = '$cod_subruta'";
+    $sql = "SELECT entity_id FROM subroute WHERE code = '$cod_subruta'";
     $result = mysqli_query( $cn, $sql );
     $msg = mysqli_fetch_array( $result );
 
-    return $msg[0];
+    if(isset($msg)){
+        return $msg[0];
+    }
+    
+    return $msg;
 }
 
 // Función que calcula y deveulve el nivel de privilegios de un usuario en una subruta
@@ -205,7 +236,7 @@ function fx_calcular_privilegios_subruta_usuario( $cn, $subruta, $usuario ) {
 
     if ( $usuario == $resp_carga || $usuario == $resp_subruta ) {
         $lvl = 3; // ver, editar y borrar
-    } else if ( $rol_usu == 'Técnico' ) {
+    } else if ( $rol_usu == 'ROLE_TECHNICIAN' ) {
         $lvl = 1; // ver
     } else if ( $entidad_usuario == $entidad_carga || $entidad_usuario == $entidad_subruta ) {
         $lvl = 3; // ver, editar y borrar
@@ -218,23 +249,25 @@ function fx_calcular_privilegios_subruta_usuario( $cn, $subruta, $usuario ) {
 
 // Función que sirve para recoger todas las subrutas que puede ver un usuario
 // con su respectivo nivel de privilegio
-// RETURN: Array con las subrutas
-// ESTADO: Funciona
 function fx_recoger_subrutas_usuario( $cn, $usuario ) {
     $usuario = mysqli_real_escape_string( $cn, $usuario );
-    $entidad = fx_recoger_entidad( $cn, $usuario );
+    $entidad = fx_recoger_entidad($cn, $usuario);
 
-    $sql = "SELECT * FROM subruta WHERE entidad = '$entidad' UNION 
-    SELECT * FROM subruta WHERE carga IN (
-        SELECT carga FROM acceso_informacion WHERE email = '$usuario'
-    ) UNION SELECT * FROM subruta WHERE carga IN (
-        SELECT codigo FROM carga WHERE entidad = '$entidad'
+    if(!is_numeric($usuario)){
+        $usuario = fx_recoger_usuario_id($cn, $usuario);
+    }
+
+    $sql = "SELECT * FROM subroute WHERE entity_id = '$entidad' UNION 
+    SELECT * FROM subroute WHERE load_id IN (
+        SELECT load_id FROM view_load_permission WHERE user_id = '$usuario'
+    ) UNION SELECT * FROM subroute WHERE load_id IN (
+        SELECT code FROM loading WHERE entity_id = '$entidad'
     )";
     $array = array();
-    $result = mysqli_query( $cn, $sql );
-    while ( $fila = mysqli_fetch_array( $result ) ) {
-        $fila['lvl_privilegios'] = fx_calcular_privilegios_subruta_usuario( $cn, $fila['codigo'], $usuario );
-        array_push( $array, $fila );
+    $result = mysqli_query($cn, $sql);
+    while ( $fila = mysqli_fetch_array($result) ) {
+        $fila['lvl_privilegios'] = fx_calcular_privilegios_subruta_usuario($cn, $fila['code'], $usuario);
+        array_push($array, $fila);
     }
 
     return $array;
@@ -697,7 +730,7 @@ function fx_recoger_subruta_con_privilegios( $cn, $cod_subruta, $usuario ) {
     $cod_subruta = mysqli_real_escape_string( $cn, $cod_subruta );
     $usuario = mysqli_real_escape_string( $cn, $usuario );
 
-    $sql = "SELECT * FROM subruta WHERE codigo = '$cod_subruta'";
+    $sql = "SELECT * FROM subroute WHERE code = '$cod_subruta'";
     $result = mysqli_query( $cn, $sql );
     $array = mysqli_fetch_array( $result );
     $array['lvl_privilegios'] = fx_calcular_privilegios_subruta_usuario( $cn, $cod_subruta, $usuario );
@@ -710,8 +743,8 @@ function fx_recoger_subruta_con_privilegios( $cn, $cod_subruta, $usuario ) {
 function fx_recoger_dataloggers_subruta( $cn, $cod_subruta ) {
     $cod_subruta = mysqli_real_escape_string( $cn, $cod_subruta );
 
-    $sql = "SELECT * FROM enlace WHERE carga =
-    (SELECT carga FROM subruta WHERE codigo = '$cod_subruta')";
+    $sql = "SELECT * FROM container WHERE load_id =
+    (SELECT load_id FROM subroute WHERE code = '$cod_subruta')";
     $array = array();
     $result = mysqli_query( $cn, $sql );
     while ( $fila = mysqli_fetch_array( $result ) ) {
@@ -726,7 +759,7 @@ function fx_recoger_dataloggers_subruta( $cn, $cod_subruta ) {
 function fx_recoger_vehiculos_subruta( $cn, $cod_subruta ) {
     $cod_subruta = mysqli_real_escape_string( $cn, $cod_subruta );
 
-    $sql = "SELECT * FROM vehiculo WHERE subruta = '$cod_subruta'";
+    $sql = "SELECT * FROM subroute_vehicle WHERE subroute_id = '$cod_subruta'";
     $array = array();
     $result = mysqli_query( $cn, $sql );
     while ( $fila = mysqli_fetch_array( $result ) ) {

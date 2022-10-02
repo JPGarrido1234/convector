@@ -15,7 +15,7 @@ if ( isset( $_POST ) ) {
             fx_borrar_carga( $cn, $_POST['cod_carga'], $_POST['session'] );
             $_POST['cod_carga'] = null;
             $rol = fx_recoger_rol( $cn, $_SESSION['ss_usuario'] );
-            if ( $rol == 'Administrador' ) {
+            if ( $rol == 'ROLE_ADMIN' ) {
                 include($_SERVER['DOCUMENT_ROOT']."/inicio_admin.php");
     
             } else {
@@ -95,7 +95,7 @@ if ( isset( $_POST ) ) {
         if ( $carga['fecha_inicio'] != null && $carga['fecha_final'] != null ) {
             include($_SERVER['DOCUMENT_ROOT']."/detalles/editar_carga_dataloggers.php");
         } else {
-            if ( fx_recoger_rol( $cn, $_POST['session'] ) == 'Administrador' ) {
+            if ( fx_recoger_rol( $cn, $_POST['session'] ) == 'ROLE_ADMIN' ) {
                 include($_SERVER['DOCUMENT_ROOT']."/inicio_admin.php");
             } else {
                 include($_SERVER['DOCUMENT_ROOT']."/inicio_tecnico.php");
@@ -162,7 +162,7 @@ if ( isset( $_POST ) ) {
             fx_editar_vehiculos_carga( $cn, $_POST['cod_carga'], $tipos, $matriculas );
         }
 
-        if ( fx_recoger_rol( $cn, $_POST['session'] ) == 'Administrador' ) {
+        if ( fx_recoger_rol( $cn, $_POST['session'] ) == 'ROLE_ADMIN' ) {
             //header("Location: ../inicio_admin.php");
         } else {
             //header("Location: ../inicio_tecnico.php");

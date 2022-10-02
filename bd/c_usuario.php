@@ -24,15 +24,20 @@ function fx_registrar_usuario( $cn, $nombre, $cargo, $email, $rol, $password, $e
     $cargo = mysqli_real_escape_string( $cn, $cargo );
     $email = mysqli_real_escape_string( $cn, $email );
     $rol = mysqli_real_escape_string( $cn, $rol );
-    $password = md5( mysqli_real_escape_string( $cn, $password ) );
-    $entidad = mysqli_real_escape_string( $cn, $entidad );
+    $password = md5( mysqli_real_escape_string($cn, $password));
+    $entidad = mysqli_real_escape_string($cn, $entidad);
 
-    if ( fx_comprobar_email( $cn, $email ) == 1 ) {
+    if(!is_numeric($entidad)){
+        $entidad = fx_recoger_entidad_id($cn, $entidad);
+    }
+
+    if (fx_comprobar_email($cn, $email) == 1) {
         $msg = "Ya existe un usuario con el mismo email en la aplicación";
     } else {
-        $sql = "INSERT INTO usuario (nombre, cargo, email, rol, password, entidad)
+        $sql = "INSERT INTO user (first_name, position, email, role, password, entity_id)
         VALUES ('$nombre', '$cargo', '$email', '$rol', '$password', '$entidad')";
-        mysqli_query( $cn, $sql );
+
+        mysqli_query($cn, $sql);
         $msg = "Usuario registrado";
     }
     return $msg;
@@ -64,7 +69,7 @@ function fx_recoger_rol( $cn, $email ) {
     $email = mysqli_real_escape_string( $cn, $email );
 
     if ( fx_comprobar_email( $cn, $email ) == 1 ) {
-        $sql = "SELECT rol FROM usuario WHERE email = '$email'";
+        $sql = "SELECT role FROM user WHERE email = '$email'";
         $result = mysqli_query( $cn, $sql );
         $msg = mysqli_fetch_array( $result );
     } else {
@@ -80,26 +85,59 @@ function fx_recoger_nombre( $cn, $email ) {
     $email = mysqli_real_escape_string( $cn, $email );
 
     if ( fx_comprobar_email( $cn, $email ) == 1 ) {
-        $sql = "SELECT nombre FROM usuario WHERE email = '$email'";
+        $sql = "SELECT first_name FROM user WHERE email = '$email'";
         $result = mysqli_query( $cn, $sql );
         $msg = mysqli_fetch_array( $result );
     } else {
-        $msg[ 0 ] = "Usuario no existente";
+        $msg[0] = "Usuario no existente";
     }
-    return $msg[ 0 ];
+    return $msg[0];
+}
+
+function fx_recoger_nombre_by_id( $cn, $id ) {
+    $sql = "SELECT first_name FROM user WHERE id = '$id'";
+    $result = mysqli_query($cn, $sql);
+    $msg = mysqli_fetch_array($result);
+
+    return $msg[0];
+}
+
+function fx_recoger_usuario_id($cn, $email){
+    $email = mysqli_real_escape_string( $cn, $email );
+    if ( fx_comprobar_email( $cn, $email ) == 1 ) {
+        $sql = "SELECT id FROM user WHERE email = '$email'";
+        $result = mysqli_query( $cn, $sql );
+        $msg = mysqli_fetch_array( $result );
+    } else {
+        $msg[0] = "Usuario no existente";
+    }
+
+    return $msg[0];
 }
 
 // Función que sirve para recoger la entidad a la que pertenece un usuario
-// RETURN: Entidad del usuario o mensaje de error si no existe ese usuario
-// ESTADO: Funciona
-function fx_recoger_entidad( $cn, $email ) {
+// RETURN: entity_id
+function fx_recoger_entidad($cn, $email) {
+    $msg = null;
     $email = mysqli_real_escape_string( $cn, $email );
 
-    $sql = "SELECT entidad FROM usuario WHERE email = '$email'";
+    $sql = "SELECT entity_id FROM user WHERE email = '$email'";
     $result = mysqli_query( $cn, $sql );
     $msg = mysqli_fetch_array( $result );
+    if(isset($msg)){
+        return $msg[0];
+    }
+    return $msg;
+}
+
+function fx_recoger_entidad_id($cn, $name) {
+    $name = mysqli_real_escape_string($cn, $name);
+
+    $sql = "SELECT id FROM entity WHERE name = '$name'";
+    $result = mysqli_query($cn, $sql);
+    $msg = mysqli_fetch_array($result);
     
-    return $msg[ 0 ];
+    return $msg[0];
 }
 
 // Función que comprueba si un usuario existe en la aplicación o no
@@ -108,7 +146,7 @@ function fx_recoger_entidad( $cn, $email ) {
 function fx_comprobar_email( $cn, $email ) {
     $email = mysqli_real_escape_string( $cn, $email );
 
-    $sql = "SELECT * FROM usuario WHERE email = '$email'";
+    $sql = "SELECT * FROM user WHERE email = '$email'";
     $exists = mysqli_num_rows( mysqli_query( $cn, $sql ) );
 
     if ( $exists > 0 ) {
@@ -126,7 +164,7 @@ function fx_comprobar_password( $cn, $email, $password ) {
     $email = mysqli_real_escape_string( $cn, $email );
     $password = md5( mysqli_real_escape_string( $cn, $password ) );
 
-    $sql = "SELECT * FROM usuario WHERE email = '$email'";
+    $sql = "SELECT * FROM user WHERE email = '$email'";
     $result = mysqli_fetch_array( mysqli_query( $cn, $sql ) );
 
     if ( $result['password'] == $password ) {
@@ -170,10 +208,10 @@ function fx_recoger_subrutas_responsable( $cn, $email ) {
 // Función que reocge el email del superadministrador de la aplicación
 // RETURN: Email del superadministrador
 // ESTADO: Sin comprobar
-function fx_recoger_email_superadmin( $cn ) {
-    $sql = "SELECT email FROM usuario WHERE rol = 'Superadministrador'";
-    $result = mysqli_query( $cn, $sql );
-    $msg = mysqli_fetch_array( $result );
+function fx_recoger_email_superadmin($cn) {
+    $sql = "SELECT email FROM user WHERE role = 'ROLE_SUPER_ADMIN'";
+    $result = mysqli_query($cn, $sql);
+    $msg = mysqli_fetch_array($result);
     return $msg[0];
 }
 

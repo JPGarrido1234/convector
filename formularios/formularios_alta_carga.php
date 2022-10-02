@@ -19,7 +19,7 @@ if ( isset( $_POST ) ) {
         }
     
         if ( $i % 2 == 0 ) { // Se ha metido bien los pares datalogger-contenedor
-            fx_crear_enlace( $cn, $_POST['cod_carga'], $dats, $conts );
+            //fx_crear_enlace( $cn, $_POST['cod_carga'], $dats, $conts );
         }
     
         include($_SERVER['DOCUMENT_ROOT']."/cargas/alta_vehiculos.php");
@@ -54,7 +54,6 @@ if ( isset( $_POST ) ) {
 
     } else if ( isset( $_POST['alta_vehiculos_carga_btn'] ) ) { // Alta vehículos en alta de carga
         $_SESSION['ss_usuario'] = $_POST['session'];
-        $_POST['cod_carga'] = null;
         $tipos = array();
         $matriculas = array();
         $i = 2;
@@ -83,6 +82,8 @@ if ( isset( $_POST ) ) {
         if ( !$incorrecto ) {
             fx_insertar_vehiculos_carga( $cn, $_POST['cod_carga'], $tipos, $matriculas );
         }
+
+        $_POST['cod_carga'] = null;
     }
 }
 

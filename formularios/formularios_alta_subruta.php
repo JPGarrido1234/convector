@@ -1,8 +1,7 @@
 <?php
 
-if ( isset( $_POST ) ) {
+if (isset( $_POST )) {
     if ( isset( $_POST['mapas_subr_sig'] ) ) { // Alta mapa en alta de subrutas
-        session_start();
         $_SESSION['ss_usuario'] = $_POST['session'];
         $_SESSION['cod_subruta'] = $_POST['cod_subruta'];
         $_SESSION['num_vehiculos'] = $_POST['num_vehiculos'];
@@ -30,23 +29,24 @@ if ( isset( $_POST ) ) {
         $_SESSION['ss_usuario'] = $_POST['session'];
         $_SESSION['cod_subruta'] = $_POST['cod_subruta'];
         $_SESSION['num_vehiculos'] = $_POST['num_vehiculos'];
+        $_SESSION['alta_subruta'] = "alta";
 
         $tipos = array();
         $matriculas = array();
         $i = 2;
         foreach ( $_POST as $valor ) {
-            if ( $valor == null || $valor == $_POST['session'] ) {
+            if ($valor == null || $valor == $_POST['session']) {
                 break;
             } else if ( $i % 2 == 0 ) {
-                array_push( $tipos, $valor );
+                array_push($tipos, $valor);
             } else {
-                array_push( $matriculas, $valor );
+                array_push($matriculas, $valor);
             }
             ++$i;
         }
 
         if ( $i % 2 == 0 ) {
-            fx_crear_vehiculos_en_subruta( $cn, $_POST['cod_subruta'], $tipos, $matriculas );
+            fx_crear_vehiculos_en_subruta($cn, $_POST['cod_subruta'], $tipos, $matriculas);
             include($_SERVER['DOCUMENT_ROOT']."/inicio_admin.php");
         }
     }

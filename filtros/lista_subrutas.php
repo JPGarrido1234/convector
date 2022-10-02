@@ -37,41 +37,41 @@ require_once($_SERVER['DOCUMENT_ROOT']."/languages/es.php");
     } else {
         $subrutas = fx_recoger_subrutas_usuario( $cn, $_GET['usu'] );
     }
-    if ( count( $subrutas ) != 0 ) {
-        for ( $i = 0, $cant = count( $subrutas ); $i < $cant; ++$i ) {
-            echo '<div class="info_carga con_btn_inv" id="subr_com_'.$subrutas[ $i ][ 'codigo' ].'"'.
-            ' onmouseenter="cambiarColorPrivi(\'info_subr_com1_'.$subrutas[ $i ][ 'codigo' ].'\', \''.$subrutas[$i]['lvl_privilegios'].'\')"'.
-            ' onmouseover="mostrarDetalles(\'info_subr_com1_'.$subrutas[ $i ][ 'codigo' ].'\')"'.
-            ' onmouseout="esconderDetalles(\'info_subr_com1_'.$subrutas[ $i ][ 'codigo' ].'\')">';
-                echo '<a id="subr_'.$subrutas[$i]['codigo'].'" href="#">'.subruta.' '.$subrutas[$i]['codigo'].
-                ' - '.carga.' '.$subrutas[$i]['carga'].' - '.responsable.': '.$subrutas[$i]['responsable'].'</a>';
+    if (count($subrutas) != 0) {
+        for ($i = 0, $cant = count($subrutas); $i < $cant; ++$i) {
+            echo '<div class="info_carga con_btn_inv" id="subr_com_'.$subrutas[$i]['code'].'"'.
+            ' onmouseenter="cambiarColorPrivi(\'info_subr_com1_'.$subrutas[$i]['code'].'\', \''.$subrutas[$i]['lvl_privilegios'].'\')"'.
+            ' onmouseover="mostrarDetalles(\'info_subr_com1_'.$subrutas[$i]['code'].'\')"'.
+            ' onmouseout="esconderDetalles(\'info_subr_com1_'.$subrutas[$i]['code'].'\')">';
+                echo '<a id="subr_'.$subrutas[$i]['code'].'" href="#">'.subruta.' '.$subrutas[$i]['code'].
+                ' - '.carga.' '.$subrutas[$i]['load_id'].' - '.responsable.': '.$subrutas[$i]['managing_entity_id'].'</a>';
 
-                echo '<form class="formulario" id="form_lista_subrutas_admin_'.$subrutas[$i]['codigo'].'" method='.'"POST" action="">';
+                echo '<form class="formulario" id="form_lista_subrutas_admin_'.$subrutas[$i]['code'].'" method='.'"POST" action="">';
                     if ( isset( $_GET['usu'] ) ) {
                         echo '<input type="hidden" name="session_subr" value="'.$_GET['usu'].'">';
                     } else if ( isset( $_GET['ent'] ) ) {
                         echo '<input type="hidden" name="session_subr" value="'.fx_recoger_email_superadmin( $cn ).'">';
                     }
-                    echo '<input type="hidden" name="cod_subruta" value="'.$subrutas[$i]['codigo'].'">';
+                    echo '<input type="hidden" name="cod_subruta" value="'.$subrutas[$i]['code'].'">';
                     echo '<input type="hidden" name="lvl_privilegios_subr" value="'.$subrutas[$i]['lvl_privilegios'].'">';
                     echo '<input class="btn_inv" name="inv_btn_subr" type="submit">';
                 echo '</form>';
 
             echo '</div>';
 
-            echo '<div class="info_c" id="info_subr_com1_'.$subrutas[ $i ][ 'codigo' ].'">';
-                $producto = fx_recoger_producto_subruta( $cn, $subrutas[$i]['codigo'] );
+            echo '<div class="info_c" id="info_subr_com1_'.$subrutas[$i]['code'].'">';
+                $producto = fx_recoger_producto_subruta( $cn, $subrutas[$i]['code'] );
                 $pre = '<pre>'.producto.': ';
                 if ( $producto != null ) {
                     $pre .= $producto.'         '.fecha_hora_inicio.': ';
                 } else {
                     $pre .= sin_establecer_m.'         '.fecha_hora_inicio.': ';
-                } if ( $subrutas[$i]['fecha_hora_inicio'] != null ) {
-                    $pre .= $subrutas[$i]['fecha_hora_inicio'].'            '.fecha_hora_final.': ';
+                } if ( $subrutas[$i]['start'] != null ) {
+                    $pre .= $subrutas[$i]['start'].'            '.fecha_hora_final.': ';
                 } else {
                     $pre .= sin_establecer_m.'         '.fecha_hora_final.': ';
-                } if ( $subrutas[$i]['fecha_hora_final'] != null ) {
-                    $pre .= $subrutas[$i]['fecha_hora_final'].'</pre>';
+                } if ( $subrutas[$i]['end'] != null ) {
+                    $pre .= $subrutas[$i]['end'].'</pre>';
                 } else {
                     $pre .= sin_establecer_m.'</pre>';
                 }
@@ -90,7 +90,7 @@ require_once($_SERVER['DOCUMENT_ROOT']."/languages/es.php");
             </div>
         </div>';
     } else {
-        echo ' ';
+        echo ' Lista de subrutas vacía ';
     }
     ?>
 </body>

@@ -1,20 +1,21 @@
 <?php
 
 // Función que recoge un datalogger en base a su código
-// RETURN: Información del datalogger
-// ESTADO: Sin comprobar
-function fx_recoger_datalogger( $cn, $cod_datalogger ) {
-    $cod_datalogger = mysqli_real_escape_string( $cn, $cod_datalogger );
+function fx_recoger_datalogger($cn, $cod_datalogger) {
+    $cod_datalogger = mysqli_real_escape_string( $cn, $cod_datalogger);
 
-    $sql = "SELECT * FROM datalogger WHERE code = '$cod_datalogger'";
-    $result = mysqli_query( $cn, $sql );
-    $array = mysqli_fetch_array( $result );
+    if(is_numeric($cod_datalogger)){
+        $sql = "SELECT * FROM datalogger WHERE id = '$cod_datalogger'";
+    }else{
+        $sql = "SELECT * FROM datalogger WHERE code = '$cod_datalogger'";
+    }
+    
+    $result = mysqli_query($cn, $sql);
+    $array = mysqli_fetch_array($result);
     return $array;
 }
 
 // Función que recoge todos los dataloggers registrados en la aplicación
-// RETURN: Todos los detaloggers
-// ESTADO: Sin comprobar
 function fx_recoger_dataloggers( $cn ) {
     $sql = "SELECT * FROM datalogger";
     $array = array();
@@ -28,13 +29,12 @@ function fx_recoger_dataloggers( $cn ) {
 // Función que recoge los dataloggers de una entidad que estén disponibles para usar
 // para una carga concreta
 // RETURN: Lista de códigos de los dataloggers
-// ESTADO: Funciona (aunque también devuelve los dataloggers de la propia carga)
 function fx_recoger_dataloggers_disponibles( $cn, $entidad, $cod_carga ) {
     $entidad = mysqli_real_escape_string( $cn, $entidad );
     $carga = fx_recoger_carga( $cn, mysqli_real_escape_string( $cn, $cod_carga ) );
     $carga_ini = $carga['fecha_inicio']; $carga_fin = $carga['fecha_final'];
 
-    $sql = "SELECT * FROM datalogger WHERE entidad = '$entidad' AND NOT estado = 'De baja' AND NOT code IN (
+    $sql = "SELECT * FROM datalogger WHERE entidad = '$entidad' AND NOT is_active = 0 AND NOT code IN (
         SELECT datalogger FROM enlace WHERE carga IN (
             SELECT code FROM carga WHERE NOT ( (fecha_inicio < $carga_ini AND fecha_final < $carga_ini) OR (fecha_inicio > $carga_fin AND fecha_final > $carga_fin) )
         )
@@ -91,11 +91,17 @@ function fx_baja_datalogger( $cn, $cod_datalogger, $baja ) {
     $cod_datalogger = mysqli_real_escape_string( $cn, $cod_datalogger );
 
     if ($baja) { 
-        $sql = "UPDATE datalogger SET estado = 'De baja' WHERE code = '$cod_datalogger'";
+        $sql = "UPDATE datalogger SET is_active = 0 WHERE code = '$cod_datalogger'";
     } else {
-        $sql = "UPDATE datalogger SET estado = 'Disponible' WHERE code = '$cod_datalogger'";
+        $sql = "UPDATE datalogger SET is_active = 1 WHERE code = '$cod_datalogger'";
     }
     $msg = mysqli_query( $cn, $sql ) or die( mysqli_error( $cn ) );
+}
+
+function fx_update_datalogger($cn, $tochange, $cod_datalogger, $entidad){
+    $cod_datalogger = mysqli_real_escape_string( $cn, $cod_datalogger );
+    $sql = "UPDATE datalogger SET code = '$tochange', is_active = 0 WHERE code = '$cod_datalogger' AND entity_id = '$entidad'";
+    $msg = mysqli_query($cn, $sql) or die(mysqli_error($cn));
 }
 
 ?>

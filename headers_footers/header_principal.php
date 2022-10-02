@@ -6,8 +6,9 @@
             <a href="?lang=es" title="<?php echo espanol ?>">ES</a>
         </div>
         <div class="nombre_usuario">
-            <h3><?php echo usuario ?>: <?php echo fx_recoger_nombre( $cn, $_SESSION['ss_usuario'] ); ?></h3>
+            <h3><?php echo usuario ?>:<span><?php echo fx_recoger_nombre( $cn, $_SESSION['ss_usuario'] ); ?></span></h3>
         </div>
+        <div id="name_user" style="display:none;"><?php echo $_SESSION['ss_usuario']; ?></div>
         <div class="nombre_usuario">
             <h3><?php echo entidad ?>:<?php echo fx_recoger_entidad( $cn, $_SESSION['ss_usuario'] ); ?></h3>
         </div>

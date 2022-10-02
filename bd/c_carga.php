@@ -6,11 +6,15 @@
 function fx_recoger_entidad_carga( $cn, $carga ) {
     $carga = mysqli_real_escape_string( $cn, $carga );
 
-    $sql = "SELECT entidad FROM carga WHERE codigo='$carga'";
+    $sql = "SELECT entity_id FROM loading WHERE id='$carga'";
     $result = mysqli_query( $cn, $sql );
     $msg = mysqli_fetch_array( $result );
 
-    return $msg[0];
+    if(isset($msg)){
+        return $msg[0];
+    }
+    
+    return $msg;
 }
 
 // Función que crea una nueva carga en la base de datos en base a los parámetros pasados
@@ -22,36 +26,36 @@ $fecha_cadu, $prod, $entidad, $resp ) {
     $codigo = mysqli_real_escape_string( $cn, $codigo );
     $resp = mysqli_real_escape_string( $cn, $resp );
 
-    $sql_suj = "INSERT INTO carga(codigo, ";
+    $sql_suj = "INSERT INTO loading (code, ";
     $sql_pre = "VALUES ('$codigo', '";
 
     if ( $kgs_totales != null ) {
-        $sql_suj .= "kgs_totales, ";
+        $sql_suj .= "weight, ";
         $sql_pre .= $kgs_totales."', '";
     } if ( $num_cont != null ) {
-        $sql_suj .= "num_contenedores, ";
+        $sql_suj .= "containers, ";
         $sql_pre .= $num_cont."', '";
     } if ( $fecha_ini != null ) {
-        $sql_suj .= "fecha_inicio, ";
+        $sql_suj .= "start, ";
         $sql_pre .= $fecha_ini."', '";
     } if ( $fecha_fin != null ) {
-        $sql_suj .= "fecha_final, ";
+        $sql_suj .= "end, ";
         $sql_pre .= $fecha_fin."', '";
     } if ( $fecha_cadu != null ) {
-        $sql_suj .= "fecha_caducidad, ";
+        $sql_suj .= "expiry, ";
         $sql_pre .= $fecha_cadu."', '";
     } if ( $prod != null ) {
-        $sql_suj .= "producto, ";
+        $sql_suj .= "product_id, ";
         $sql_pre .= $prod."', '";
     } if ( $entidad != null ) {
-        $sql_suj .= "entidad, ";
+        $sql_suj .= "entity_id, ";
         $sql_pre .= $entidad."', '";
     }
 
-    $sql_suj .= "responsable) ";
+    $sql_suj .= "supervisor_id) ";
     $sql_pre .= $resp."');";
     $sql_suj .= $sql_pre;
-
+    
     mysqli_query( $cn, $sql_suj );
 }
 
@@ -62,11 +66,15 @@ function fx_anadir_lugares( $cn, $carga, $lat_origen, $long_origen, $nombre_orig
     $carga = mysqli_real_escape_string( $cn, $carga );
     $nombre_origen = mysqli_real_escape_string( $cn, $nombre_origen );
     $nombre_destino = mysqli_real_escape_string( $cn, $nombre_destino );
-    
-    $sql = "UPDATE carga SET latitud_origen = '$lat_origen', longitud_origen = '$long_origen', latitud_destino = '$lat_destino',
-    longitud_destino = '$long_destino', nombre_origen = '$nombre_origen', nombre_destino = '$nombre_destino' WHERE codigo = '$carga'";
-
-    mysqli_query( $cn, $sql );
+    if(strlen($lat_destino) >  20){
+        $lat_destino = explode(",", $lat_destino);
+        $sql = "UPDATE loading SET origin_latitude = '$lat_origen', origin_longitude = '$long_origen', destiny_latitude = '$lat_destino[0]',
+    destiny_longitude = '$long_destino', origin = '$nombre_origen', destiny = '$nombre_destino' WHERE code = '$carga'";
+    }else{
+        $sql = "UPDATE loading SET origin_latitude = '$lat_origen', origin_longitude = '$long_origen', destiny_latitude = '$lat_destino',
+    destiny_longitude = '$long_destino', origin = '$nombre_origen', destiny = '$nombre_destino' WHERE code = '$carga'";
+    }
+    mysqli_query($cn, $sql);
 }
 
 // Función que borra una carga comprobando que el usuario tiene permisos para ello
@@ -85,45 +93,48 @@ function fx_borrar_carga( $cn, $cod_carga, $email ) {
 // Función que recoge toda la información sobre una carga en base a su código
 // RETURN: Array con la información de la carga deseada
 // ESTADO: Sin comprobar
-function fx_recoger_carga( $cn, $cod_carga ) {
-    $cod_carga = mysqli_real_escape_string( $cn, $cod_carga );
+function fx_recoger_carga($cn, $cod_carga) {
+    $cod_carga = mysqli_real_escape_string($cn, $cod_carga);
 
-    $sql = "SELECT * FROM carga WHERE codigo = '$cod_carga'";
-    $result = mysqli_query( $cn, $sql );
-    $array = mysqli_fetch_array( $result );
-    return $array;
+    $sql = "SELECT * FROM loading WHERE code = '$cod_carga'";
+    $result = mysqli_query($cn, $sql);
+    $array = mysqli_fetch_array($result);
+    return $array[0];
 }
 
 // Función que recoge toda la información sobre una carga en base a su código con lvl de privilegios
 // RETURN: Array con la información de la carga deseada
-// ESTADO: Funciona
-function fx_recoger_carga_con_privilegios( $cn, $cod_carga, $usuario ) {
-    $cod_carga = mysqli_real_escape_string( $cn, $cod_carga );
-    $usuario = mysqli_real_escape_string( $cn, $usuario );
+function fx_recoger_carga_con_privilegios($cn, $cod_carga, $usuario) {
+    $cod_carga = mysqli_real_escape_string($cn, $cod_carga);
+    $usuario = mysqli_real_escape_string($cn, $usuario);
 
-    $sql = "SELECT * FROM carga WHERE codigo = '$cod_carga'";
-    $result = mysqli_query( $cn, $sql );
-    $array = mysqli_fetch_array( $result );
-    $array['lvl_privilegios'] = fx_calcular_privilegios_carga_usuario( $cn, $cod_carga, $usuario );
+    $sql = "SELECT * FROM loading WHERE code = '$cod_carga'";
+    $result = mysqli_query($cn, $sql);
+    $array = mysqli_fetch_array($result);
+    $array['lvl_privilegios'] = fx_calcular_privilegios_carga_usuario($cn, $cod_carga, $usuario);
     return $array;
 }
 
 // Función que sirve para recoger todas las cargas de una entidad en base a su nombre y contando con el nombre de usuario
 // RETURN: Array de arrays con los datos de las cargas de la entidad
-// ESTADO: Funciona
 function fx_recoger_cargas_entidad_usuario( $cn, $entidad, $usuario ) {
     $entidad = mysqli_real_escape_string( $cn, $entidad );
 
-    $sql = "SELECT * FROM carga WHERE entidad = '$entidad' 
-    UNION SELECT * FROM carga WHERE codigo IN (
-        SELECT carga FROM subruta WHERE entidad = '$entidad'
-    ) UNION SELECT * FROM carga WHERE codigo IN (
-        SELECT carga FROM acceso_informacion WHERE email = '$usuario'
+    if(!is_numeric($usuario)){
+        $usuario = fx_recoger_usuario_id($cn, $usuario);
+    }
+    
+
+    $sql = "SELECT * FROM loading WHERE entity_id = '$entidad' 
+    UNION SELECT * FROM loading WHERE code IN (
+        SELECT load_id FROM subroute WHERE entity_id = '$entidad'
+    ) UNION SELECT * FROM loading WHERE code IN (
+        SELECT load_id FROM view_load_permission WHERE user_id = '$usuario'
     )";
     $array = array();
     $result = mysqli_query( $cn, $sql );
     while ( $fila = mysqli_fetch_array( $result ) ) {
-        $fila['lvl_privilegios'] = fx_calcular_privilegios_carga_usuario( $cn, $fila['codigo'], $usuario );
+        $fila['lvl_privilegios'] = fx_calcular_privilegios_carga_usuario( $cn, $fila['code'], $usuario );
         array_push( $array, $fila );
     }
     return $array;
@@ -131,7 +142,6 @@ function fx_recoger_cargas_entidad_usuario( $cn, $entidad, $usuario ) {
 
 // Función que sirve para recoger todas las cargas de una entidad en base a su nombre (método para superadmin)
 // RETURN: Array de arrays con los datos de las cargas de la entidad
-// ESTADO: Funciona
 function fx_recoger_cargas_entidad_superadmin( $cn, $entidad ) {
     $entidad = mysqli_real_escape_string( $cn, $entidad );
 
@@ -157,27 +167,38 @@ function fx_recoger_cargas_entidad_superadmin( $cn, $entidad ) {
 // RETURN: Array con la información de todas las cargas buscadas
 // ESTADO: Funciona
 function fx_recoger_cargas_datalogger( $cn, $cod_datalogger, $usuario ) {
-    $cod_datalogger = mysqli_real_escape_string( $cn, $cod_datalogger );
-    $entidad = fx_recoger_entidad( $cn, $usuario );
+    $cod_datalogger = mysqli_real_escape_string($cn, $cod_datalogger);
+    $entidad = fx_recoger_entidad($cn, $usuario);
+
+    if(!is_numeric($entidad)){
+        $entidad = fx_recoger_entidad_id($cn, $entidad);
+    }
+
+    if(!is_numeric($usuario)){
+        $usuario = fx_recoger_usuario_id($cn, $usuario);
+    }
     
-    $sql = "SELECT * FROM carga WHERE entidad = '$entidad' AND codigo IN (
-        SELECT carga FROM enlace WHERE datalogger = '$cod_datalogger'
-    ) UNION SELECT * FROM carga WHERE codigo IN (
-        SELECT carga FROM acceso_informacion WHERE email = '$usuario'
-    ) AND codigo IN (
-        SELECT carga FROM enlace WHERE datalogger = '$cod_datalogger'
-    ) UNION SELECT * FROM carga WHERE codigo IN (
-        SELECT carga FROM subruta WHERE entidad = '$entidad'
-    ) AND codigo IN (
-        SELECT carga FROM enlace WHERE datalogger = '$cod_datalogger'
+    
+    $sql = "SELECT * FROM loading WHERE entity_id = '$entidad' AND code IN (
+        SELECT load_id FROM container WHERE datalogger_id = '$cod_datalogger'
+    ) UNION SELECT * FROM loading WHERE code IN (
+        SELECT load_id FROM view_load_permission WHERE user_id = '$usuario'
+    ) AND code IN (
+        SELECT load_id FROM container WHERE datalogger_id = '$cod_datalogger'
+    ) UNION SELECT * FROM loading WHERE code IN (
+        SELECT load_id FROM subroute WHERE entity_id = '$entidad'
+    ) AND code IN (
+        SELECT load_id FROM container WHERE datalogger_id = '$cod_datalogger'
     )";
+
     $array = array();
     $result = mysqli_query( $cn, $sql );
     while ( $fila = mysqli_fetch_array( $result ) ) {
-        $fila['lvl_privilegios'] = fx_calcular_privilegios_carga_usuario( $cn, $fila['codigo'], $usuario );
+        $fila['lvl_privilegios'] = fx_calcular_privilegios_carga_usuario( $cn, $fila['code'], $usuario );
         array_push( $array, $fila );
     }
     return $array;
+    
 }
 
 // Función que recoge toda la información de una carga de una entidad en base a en las que ha estado
@@ -188,26 +209,31 @@ function fx_recoger_cargas_datalogger_entidad( $cn, $cod_datalogger, $entidad ) 
     $cod_datalogger = mysqli_real_escape_string( $cn, $cod_datalogger );
     $entidad = mysqli_real_escape_string( $cn, $entidad );
 
-    $sql = "SELECT * FROM carga WHERE entidad = '$entidad' AND codigo IN (
-        SELECT carga FROM enlace WHERE datalogger = '$cod_datalogger'
-    ) UNION SELECT * FROM carga WHERE codigo IN (
-        SELECT DISTINCT carga FROM acceso_informacion WHERE email IN (
-            SELECT email FROM usuario WHERE entidad = '$entidad'
+    $entidad_id = fx_recoger_entidad_id($cn, $entidad);
+
+    $sql = "SELECT * FROM loading WHERE entity_id = '$entidad_id' AND codigo IN (
+        SELECT load_id FROM container WHERE datalogger_id = '$cod_datalogger'
+    ) UNION SELECT * FROM loading WHERE code IN (
+        SELECT DISTINCT load_id FROM vide_load_permission WHERE user_id IN (
+            SELECT id FROM user WHERE entity_id = '$entidad_id'
         )
-    ) AND codigo IN (
-        SELECT carga FROM enlace WHERE datalogger = '$cod_datalogger'
-    ) UNION SELECT * FROM carga WHERE codigo IN (
-        SELECT carga FROM subruta WHERE entidad = '$entidad'
-    ) AND codigo IN (
-        SELECT carga FROM enlace WHERE datalogger = '$cod_datalogger'
+    ) AND code IN (
+        SELECT load_id FROM container WHERE datalogger_id = '$cod_datalogger'
+    ) UNION SELECT * FROM loading WHERE code IN (
+        SELECT load_id FROM subroute WHERE entity_id = '$entidad_id'
+    ) AND code IN (
+        SELECT load_id FROM container WHERE datalogger_id = '$cod_datalogger'
     )";
+
+    
     $array = array();
-    $result = mysqli_query( $cn, $sql );
-    while ( $fila = mysqli_fetch_array( $result ) ) {
+    $result = mysqli_query($cn, $sql);
+    while ( $fila = mysqli_fetch_array($result)) {
         $fila['lvl_privilegios'] = 1;
         array_push( $array, $fila );
     }
     return $array;
+    
 }
 
 // Función que recoge toda la información de unas cargas de una entidad en base a en las que
@@ -555,13 +581,13 @@ function fx_recoger_cargas_ubicacion_texto_entidad( $cn, $origen, $destino, $ent
 // Función que recoge todos los dataloggers y su contenedor correspondiente de una carga
 // RETURN: Array con los dataloggers y contenedores correspondientes
 // ESTADO: Funciona
-function fx_recoger_dataloggers_carga( $cn, $carga ) {
-    $carga = mysqli_real_escape_string( $cn, $carga );
-    $sql = "SELECT * FROM enlace WHERE carga = '$carga'";
+function fx_recoger_dataloggers_carga($cn, $carga) {
+    $carga = mysqli_real_escape_string($cn, $carga);
+    $sql = "SELECT * FROM container WHERE load_id = '$carga'";
     $array = array();
-    $result = mysqli_query( $cn, $sql );
-    while ( $fila = mysqli_fetch_array( $result ) ) {
-        array_push( $array, $fila );
+    $result = mysqli_query($cn, $sql);
+    while ($fila = mysqli_fetch_array($result)) {
+        array_push($array, $fila);
     }
     return $array;
 }
@@ -570,47 +596,63 @@ function fx_recoger_dataloggers_carga( $cn, $carga ) {
 // RETURN: 1 -> Solo ver, 2 -> Ver y editar dataloggers, 3 -> Ver, editar y borrar
 // ESTADO: Funciona
 function fx_calcular_privilegios_carga_usuario( $cn, $carga, $usuario ) {
-    $carga = fx_recoger_carga( $cn, mysqli_real_escape_string( $cn, $carga ) );
+    $carga = fx_recoger_carga( $cn, mysqli_real_escape_string($cn, $carga));
     $usuario = mysqli_real_escape_string( $cn, $usuario );
     $rol_usu = fx_recoger_rol( $cn, $usuario );
-    $resp_carga = fx_recoger_responsable_carga( $cn, $carga['codigo'] );
-    $entidad_usu = fx_recoger_entidad( $cn, $usuario );
-
-    if ( fx_comprobar_acceso_carga_usuario( $cn, $carga['codigo'], $usuario) ) {
+    $resp_carga = fx_recoger_responsable_carga($cn, $carga);
+    $entidad_usu = fx_recoger_entidad($cn, $usuario);
+    $user_id = fx_recoger_usuario_id($cn, $usuario);
+    
+    if (fx_comprobar_acceso_carga_usuario($cn, $carga, $user_id)) {
         $lvl = 2; // ver y editar dataloggers
-    } else if ( ($rol_usu == 'Administrador' && $entidad_usu == $carga['entidad'] ) ||
-    $resp_carga == $usuario ) {
+    } else if ( ($rol_usu == 'ROLE_ADMIN' && $entidad_usu == fx_recoger_entidad_by_id($cn, $carga)) ||
+    $resp_carga == $user_id ) {
         $lvl = 3; // ver, editar y borrar
     } else {
         $lvl = 1;
     }
+    
     return $lvl;
+}
+
+function fx_recoger_entidad_by_id($cn, $load_id){
+    $sql = "SELECT entity_id FROM loading WHERE id = '$load_id'";
+    $result = mysqli_query($cn, $sql);
+    $msg = mysqli_fetch_array($result);
+
+    return $msg[0];
 }
 
 // Función que recoge el responsable de una carga
 // RETURN: Responsable de la carga introducida
 // ESTADO: Funciona
-function fx_recoger_responsable_carga( $cn, $carga ) {
-    $carga = mysqli_real_escape_string( $cn, $carga );
+function fx_recoger_responsable_carga($cn, $carga) {
+    $msg = null;
+    $carga = mysqli_real_escape_string($cn, $carga);
 
-    $sql = "SELECT responsable FROM carga WHERE codigo = '$carga'";
-    $result = mysqli_query( $cn, $sql );
-    $msg = mysqli_fetch_array( $result );
+    $sql = "SELECT supervisor_id FROM loading WHERE id = '$carga'";
+    $result = mysqli_query($cn, $sql);
+    $msg = mysqli_fetch_array($result);
 
-    return $msg[0];
+    if(isset($msg)){
+        return $msg[0];
+    }
+
+    return $msg;
 }
 
 // Función que comprueba si el usuario tiene acceso a la información de una carga de otra entidad
 // RETURN: true si tiene acceso, false si no
 // ESTADO: Funciona
-function fx_comprobar_acceso_carga_usuario( $cn, $carga, $usuario ) {
+function fx_comprobar_acceso_carga_usuario($cn, $carga, $usuario) {
     $ret = false;
-    $carga = mysqli_real_escape_string( $cn, $carga );
-    $usuario = mysqli_real_escape_string( $cn, $usuario );
+    //$carga = mysqli_real_escape_string($cn, $carga);
+    //$usuario = mysqli_real_escape_string( $cn, $usuario );
+    
 
-    $sql = "SELECT carga FROM acceso_informacion WHERE carga = '$carga' AND email = '$usuario'";
-    $result = mysqli_query( $cn, $sql );
-    $msg = mysqli_fetch_array( $result );
+    $sql = "SELECT load_id FROM view_load_permission WHERE load_id = ".$carga." AND user_id = '$usuario'";
+    $result = mysqli_query($cn, $sql);
+    $msg = mysqli_fetch_array($result);
     if($msg != null){
         if ( $msg[0] != null ) {
             $ret = true;
@@ -707,16 +749,19 @@ function fx_editar_enlaces( $cn, $cod_carga, $lista_dataloggers, $lista_contened
 function recoger_cargas_disponibles_subruta( $cn, $usuario ) {
     $entidad = fx_recoger_entidad( $cn, mysqli_real_escape_string( $cn, $usuario ) );
 
-    $sql = "SELECT * FROM carga WHERE entidad = '$entidad' AND fecha_inicio > DATE( NOW() ) AND 
-    fecha_final > DATE( NOW() ) AND latitud_origen IS NOT NULL AND longitud_origen IS NOT NULL AND 
-    latitud_destino IS NOT NULL AND longitud_destino IS NOT NULL";
+    $sql = "SELECT * FROM loading WHERE entity_id = '$entidad' AND start > DATE( NOW() ) AND 
+    end > DATE( NOW() ) AND origin_latitude IS NOT NULL AND origin_longitude IS NOT NULL AND 
+    destiny_latitude IS NOT NULL AND destiny_longitude IS NOT NULL";
     $array = array();
+    
     $result = mysqli_query( $cn, $sql );
     while ( $fila = mysqli_fetch_array( $result ) ) {
         $fila['lvl_privilegios'] = 3;
         array_push( $array, $fila );
     }
     return $array;
+    
+    
 }
 
 // Función que inserta nuevos vehículos en una carga
@@ -724,16 +769,16 @@ function recoger_cargas_disponibles_subruta( $cn, $usuario ) {
 // ESTADO: Funciona
 function fx_insertar_vehiculos_carga( $cn, $cod_carga, $lista_tipos, $lista_matriculas ) {
     $cod_carga = mysqli_real_escape_string( $cn, $cod_carga );
-
+    $load_id = fx_recoger_carga($cn, $cod_carga);
     for ( $i = 0, $cont = count( $lista_tipos ); $i < $cont; ++$i ) {
         $mat = mysqli_real_escape_string( $cn, $lista_matriculas[$i] );
-        if ( $lista_tipos[$i] != null ) {
+        if ($lista_tipos[$i] != null ) {
             $tipo = mysqli_real_escape_string( $cn, $lista_tipos[$i] );
-            $sql = "INSERT INTO vehiculo_carga (matricula, tipo, carga) VALUES ('$mat', '$tipo', '$cod_carga')";
+            $sql = "INSERT INTO vehicle_load (license_number, type_car, load_id) VALUES ('$mat', '$tipo', ".$load_id['id'].")";
         } else {
-            $sql = "INSERT INTO vehiculo_carga (matricula, carga) VALUES ('$mat', '$cod_carga')";
+            $sql = "INSERT INTO vehicle_load (license_number, load_id) VALUES ('$mat', '$load_id')";
         }
-        mysqli_query( $cn, $sql );
+        $msg = mysqli_query($cn, $sql) or die(mysqli_error($cn));
     }
 }
 
@@ -745,7 +790,7 @@ function fx_recoger_vehiculos_carga( $cn, $cod_carga ) {
 
     $sql = "SELECT * FROM vehiculo_carga WHERE carga = '$cod_carga'";
     $array = array();
-    $result = mysqli_query( $cn, $sql );
+    $result = mysqli_query($cn, $sql);
     while ( $fila = mysqli_fetch_array( $result ) ) {
         array_push( $array, $fila );
     }
@@ -768,20 +813,22 @@ function fx_editar_vehiculos_carga( $cn, $cod_carga, $lista_tipos, $lista_matric
         } else {
             $sql2 = "INSERT INTO vehiculo_carga (matricula, carga) VALUES ('$mat', '$cod_carga')";
         }
-        mysqli_query( $cn, $sql2 );
+        mysqli_query($cn, $sql2);
     }
 }
 
 // Función que comprueba si una carga ha terminado y se ha descargado su histórico en la DB
 // RETURN: 0 si no ha terminado/descargado el histórico, 1 en caso afirmativo
 // ESTADO: Funciona
-function fx_comprobar_carga_terminada( $cn, $cod_carga, $dat ) {
-    $cod_carga = mysqli_real_escape_string( $cn, $cod_carga );
+function fx_comprobar_carga_terminada($cn, $cod_carga, $dat) {
+    $cod_carga = mysqli_real_escape_string($cn, $cod_carga);
     
-    $sql = "SELECT COUNT(*) FROM registro WHERE datalogger = '$dat' AND fecha <= (SELECT fecha_final FROM carga WHERE codigo = '$cod_carga') AND 
-    fecha >= (SELECT fecha_inicio FROM carga WHERE codigo = '$cod_carga')";
-    $result = mysqli_query( $cn, $sql );
-    $fila = mysqli_fetch_array( $result );
+    $cod_carga = fx_recoger_carga($cn, $cod_carga);
+
+    $sql = "SELECT COUNT(*) FROM log WHERE datalogger_id = '$dat' AND timestamp <= (SELECT end FROM loading WHERE id = '$cod_carga') AND 
+    timestamp >= (SELECT start FROM loading WHERE id = '$cod_carga')";
+    $result = mysqli_query($cn, $sql);
+    $fila = mysqli_fetch_array($result);
     if ( $fila[0] == 0 ) { // No hay registros
         $msg = 0;
     } else { // Histórico de esa carga existente en la DB
@@ -877,12 +924,15 @@ function fx_recoger_consigna_inferior_carga( $cn, $cod_carga ) {
 // Función que recoge el código de un datalogger aleatorio de una carga
 // RETURN: Código de una datalogger
 // ESTADO: Sin comprobar
-function fx_recoger_datalogger_random_carga( $cn, $cod_carga ) {
-    $cod_carga = mysqli_real_escape_string( $cn, $cod_carga );
-
-    $sql = "SELECT datalogger FROM enlace WHERE carga = '$cod_carga'";
-    $result = mysqli_query( $cn, $sql );
-    $fila = mysqli_fetch_array( $result );
+function fx_recoger_datalogger_random_carga($cn, $cod_carga) {
+    $cod_carga = mysqli_real_escape_string($cn, $cod_carga);
+    if(!is_numeric($cod_carga)){
+        $cod_carga = fx_recoger_carga($cn, $cod_carga);
+    }
+   
+    $sql = "SELECT datalogger_id FROM container WHERE load_id = ".$cod_carga['id'];
+    $result = mysqli_query($cn, $sql);
+    $fila = mysqli_fetch_array($result);
     if($fila != null){    
         return $fila[0];
     }else{

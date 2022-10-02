@@ -21,9 +21,9 @@ if ( isset( $_POST['inv_btn_volver'] ) ) { // Volver
     $rol = fx_recoger_rol( $cn, $_POST['session'] );
     $_POST['volver'] = 'ok';
 
-    if ( $rol == 'Administrador' ) {
+    if ( $rol == 'ROLE_ADMIN' ) {
         include($_SERVER['DOCUMENT_ROOT']."/inicio_admin.php");
-    } else if ( $rol == 'Técnico' ) {
+    } else if ( $rol == 'ROLE_TECHNICIAN' ) {
         include($_SERVER['DOCUMENT_ROOT']."/inicio_tecnico.php");
     } else {
         include($_SERVER['DOCUMENT_ROOT']."/inicio_superadmin.php");
@@ -39,13 +39,13 @@ if ( isset( $_POST['inv_btn_volver'] ) ) { // Volver
                 $_SESSION['enviado'] = $_POST['enviado'];
                 $rol = fx_recoger_rol( $cn, $_POST['email'] );
     
-                if ( $rol == 'Técnico' ) {
+                if ( $rol == 'ROLE_TECHNICIAN' ) {
                     $tecnico = true;
                     include($_SERVER['DOCUMENT_ROOT']."/inicio_tecnico.php");
-                } elseif ( $rol == 'Administrador' ) {
+                } elseif ( $rol == 'ROLE_ADMIN' ) {
                     $admin = true;
                     include($_SERVER['DOCUMENT_ROOT']."/inicio_admin.php");
-                } elseif ( $rol == 'Superadministrador' ) {
+                } elseif ( $rol == 'ROLE_SUPER_ADMIN' ) {
                     $superadmin = true;
                     include($_SERVER['DOCUMENT_ROOT']."/inicio_superadmin.php");
                 }
@@ -57,19 +57,19 @@ if ( isset( $_POST['inv_btn_volver'] ) ) { // Volver
     
     if(isset($_SESSION['ss_usuario'])){
         $rol = fx_recoger_rol( $cn, $_SESSION['ss_usuario'] );
-        if ( $rol == 'Técnico' ) {
+        if ( $rol == 'ROLE_TECHNICIAN' ) {
             if(!$tecnico){
                 if(!isset($_POST['volver'])){
                     include($_SERVER['DOCUMENT_ROOT']."/inicio_tecnico.php");
                 }
             }
-        } elseif ( $rol == 'Administrador' ) {
+        } elseif ( $rol == 'ROLE_ADMIN' ) {
             if(!$admin){
-                if(!isset($_POST['volver'])){
+                if(!isset($_POST['volver']) && !isset($_SESSION['alta_subruta']) && !isset($_SESSION['cod_datalogger']) && isset($_SESSION['cod_carga'])){
                     include($_SERVER['DOCUMENT_ROOT']."/inicio_admin.php");
                 }
             }
-        } elseif ( $rol == 'Superadministrador' ) {
+        } elseif ( $rol == 'ROLE_SUPER_ADMIN' ) {
             if(!$superadmin){
                 if(!isset($_POST['volver'])){
                     include($_SERVER['DOCUMENT_ROOT']."/inicio_superadmin.php");

@@ -26,18 +26,18 @@ require_once($_SERVER['DOCUMENT_ROOT']."/languages/es.php");
         $dataloggers_enuso = array();
         $dataloggers_apagados = array();
         for ( $i = 0, $cant = count( $dataloggers ); $i < $cant; ++$i ) {
-            if ( $dataloggers[$i]['estado'] == 'En uso' ) {
+            if ( $dataloggers[$i]['is_active'] == 1 ) {
                 array_push( $dataloggers_enuso, $dataloggers[$i] );
-            } else if ( $dataloggers[$i]['estado'] == 'Apagado' ) {
+            } else if ( $dataloggers[$i]['is_active'] == 0 ) {
                 array_push( $dataloggers_apagados, $dataloggers[$i] );
             }
-            echo '<div class="info_carga con_btn_inv" onmouseover="mostrarDetalles(\'info_dat_sa_'.$dataloggers[$i]['codigo'].
-            '\')"'.' onmouseout="esconderDetalles(\'info_dat_sa_'.$dataloggers[$i]['codigo'].'\')">';
-            echo '<pre>'.datalogger.' '.$dataloggers[$i]['codigo'].'            '.estado.': '.$dataloggers[$i]['estado'].'</pre>';
+            echo '<div class="info_carga con_btn_inv" onmouseover="mostrarDetalles(\'info_dat_sa_'.$dataloggers[$i]['code'].
+            '\')"'.' onmouseout="esconderDetalles(\'info_dat_sa_'.$dataloggers[$i]['code'].'\')">';
+            echo '<pre>'.datalogger.' '.$dataloggers[$i]['code'].'            '.estado.': '.$dataloggers[$i]['is_active'].'</pre>';
             
-            echo '<form class="formulario" id="form_lista_dataloggers_superadmin_'.$dataloggers[$i]['codigo'].'" method="POST" action="">';
+            echo '<form class="formulario" id="form_lista_dataloggers_superadmin_'.$dataloggers[$i]['code'].'" method="POST" action="">';
                 echo '<input type="hidden" name="session_datalogger" value="'.$_GET['usu'].'">';
-                echo '<input type="hidden" name="codigo_datalogger" value="'.$dataloggers[$i]['codigo'].'">';
+                echo '<input type="hidden" name="codigo_datalogger" value="'.$dataloggers[$i]['code'].'">';
                 echo '<input type="hidden" name="entidad_datalogger" value="'.$_GET['entidad'].'">';
                 echo '<input type="hidden" name="tipo" value="dataloger">';
                 echo '<input class="btn_inv" name="inv_btn_push_dat" type="submit">';
@@ -47,7 +47,7 @@ require_once($_SERVER['DOCUMENT_ROOT']."/languages/es.php");
             
             echo '<div class="info_c" id="info_dat_sa_'.$dataloggers[$i]['codigo'].'">';
             $enlace = fx_recoger_ultimo_enlace( $cn, $dataloggers[$i]['codigo'] );
-            if ( $dataloggers[$i]['estado'] != "Apagado" ) {
+            if ( $dataloggers[$i]['is_active'] != "Apagado" ) {
                 echo '<pre>'.carga_actual.': '.$enlace['carga'].' - '.contenedor.': '.$enlace['contenedor'].'</pre>';
             } elseif ( $enlace['carga'] != null ) {
                 echo '<pre>'.ultima_carga.': '.$enlace['carga'].' - '.contenedor.': '.$enlace['contenedor'].'</pre>';
@@ -61,14 +61,14 @@ require_once($_SERVER['DOCUMENT_ROOT']."/languages/es.php");
     <div class="seccion_oculta" id="div_lista_dataloggers_enuso_sa">
         <?php
         for ( $i = 0, $cant = count( $dataloggers_enuso ); $i < $cant; ++$i ) {
-            $enlace2 = fx_recoger_ultimo_enlace( $cn, $dataloggers_enuso[$i]['codigo'] );
+            $enlace2 = fx_recoger_ultimo_enlace( $cn, $dataloggers_enuso[$i]['code'] );
             echo '<div class="info_carga con_btn_inv">';
-            echo '<pre>'.datalogger.' '.$dataloggers_enuso[$i]['codigo'].'            '.carga_actual.': '.$enlace2['carga'].
+            echo '<pre>'.datalogger.' '.$dataloggers_enuso[$i]['code'].'            '.carga_actual.': '.$enlace2['carga'].
             '           '.contenedor.': '.$enlace2['contenedor'].'</pre>';
             
-            echo '<form class="formulario" id="form_lista_dataloggers_enuso_superadmin_'.$dataloggers_enuso[$i]['codigo'].'" method="POST" action="">';
+            echo '<form class="formulario" id="form_lista_dataloggers_enuso_superadmin_'.$dataloggers_enuso[$i]['code'].'" method="POST" action="">';
                 echo '<input type="hidden" name="session_datalogger" value="'.$_GET['usu'].'">';
-                echo '<input type="hidden" name="codigo_datalogger" value="'.$dataloggers_enuso[$i]['codigo'].'">';
+                echo '<input type="hidden" name="codigo_datalogger" value="'.$dataloggers_enuso[$i]['code'].'">';
                 echo '<input type="hidden" name="entidad_datalogger" value="'.$_GET['entidad'].'">';
                 echo '<input type="hidden" name="tipo" value="dataloger">';
                 echo '<input class="btn_inv" name="inv_btn_push_dat" type="submit">';
@@ -81,18 +81,18 @@ require_once($_SERVER['DOCUMENT_ROOT']."/languages/es.php");
     <div class="seccion_oculta" id="div_lista_dataloggers_apagados_sa">
         <?php
         for ( $i = 0, $cant = count( $dataloggers_apagados ); $i < $cant; ++$i ) {
-            $enlace3 = fx_recoger_ultimo_enlace( $cn, $dataloggers_apagados[$i]['codigo'] );
+            $enlace3 = fx_recoger_ultimo_enlace( $cn, $dataloggers_apagados[$i]['code'] );
             echo '<div class="info_carga con_btn_inv">';
             if ( $enlace3['carga'] != null ) {
-                echo '<pre>'.datalogger.' '.$dataloggers_apagados[$i]['codigo'].'            '.ultima_carga.': '.$enlace3['carga'].
+                echo '<pre>'.datalogger.' '.$dataloggers_apagados[$i]['code'].'            '.ultima_carga.': '.$enlace3['carga'].
                 '            '.contenedor.': '.$enlace3['contenedor'].'</pre>';
             } else {
-                echo '<pre>'.datalogger.' '.$dataloggers_apagados[$i]['codigo'].'            '.datalogger_sin_cargas_registradas.'</pre>';
+                echo '<pre>'.datalogger.' '.$dataloggers_apagados[$i]['code'].'            '.datalogger_sin_cargas_registradas.'</pre>';
             }
 
-            echo '<form class="formulario" id="form_lista_dataloggers_apagados_superadmin_'.$dataloggers_apagados[$i]['codigo'].'" method="POST" action="">';
+            echo '<form class="formulario" id="form_lista_dataloggers_apagados_superadmin_'.$dataloggers_apagados[$i]['code'].'" method="POST" action="">';
                 echo '<input type="hidden" name="session_datalogger" value="'.$_GET['usu'].'">';
-                echo '<input type="hidden" name="codigo_datalogger" value="'.$dataloggers_apagados[$i]['codigo'].'">';
+                echo '<input type="hidden" name="codigo_datalogger" value="'.$dataloggers_apagados[$i]['code'].'">';
                 echo '<input type="hidden" name="entidad_datalogger" value="'.$_GET['entidad'].'">';
                 echo '<input type="hidden" name="tipo" value="dataloger">';
                 echo '<input class="btn_inv" name="inv_btn_push_dat" type="submit">';

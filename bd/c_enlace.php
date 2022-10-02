@@ -3,18 +3,18 @@
 // Función que recoge la última carga y contenedor en el que ha estado el datalogger
 // RETURN: Carga y código del contenedor últimos en los que ha estado el datalogger
 // ESTADO: Funciona
-function fx_recoger_ultimo_enlace( $cn, $datalogger ) {
-    $datalogger = mysqli_real_escape_string( $cn, $datalogger );
-
-    $sql = "SELECT carga, contenedor FROM enlace WHERE datalogger = '$datalogger' ORDER BY codigo DESC";
+function fx_recoger_ultimo_enlace($cn, $datalogger) {
+    $datalogger = mysqli_real_escape_string($cn, $datalogger);
+    $datalogger_id = fx_recoger_datalogger($cn, $datalogger);
+    $sql = "SELECT load_id, code FROM container WHERE datalogger_id = ".$datalogger_id['id']." ORDER BY id DESC";
     
     // Probar el siguiente para solucionar el problema descrito en "notas.txt"
     /* $sql = "SELECT carga, contenedor FROM enlace WHERE datalogger = '$datalogger' AND carga IN (
         SELECT codigo FROM carga WHERE fecha_inicio < NOW() AND fecha_final < NOW() ORDER BY codigo DESC
     )"; */
 
-    $result = mysqli_query( $cn, $sql );
-    $array = mysqli_fetch_array( $result );
+    $result = mysqli_query($cn, $sql);
+    $array = mysqli_fetch_array($result);
     return $array;
 }
 

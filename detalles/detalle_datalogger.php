@@ -31,12 +31,12 @@ require($_SERVER['DOCUMENT_ROOT']."/headers_footers/header_principal.php");
         <?php echo '<h2>'.datalogger.' '.$_SESSION['cod_datalogger'].'</h2>'; ?>
     </div>
     <?php
-    $datalogger = fx_recoger_datalogger( $cn, $_SESSION['cod_datalogger'] );
-    $enlace = fx_recoger_ultimo_enlace( $cn, $datalogger['code'] );
-    if ( ($datalogger['estado'] == 'De baja' || $datalogger['estado'] == 'Disponible') && !( isset( $_SESSION['entidad_dat'] ) ) ) {
+    $datalogger = fx_recoger_datalogger($cn, $_SESSION['cod_datalogger']);
+    $enlace = fx_recoger_ultimo_enlace( $cn, $datalogger['code']);
+    if ( ($datalogger['is_active'] == 0) && !( isset( $_SESSION['entidad_dat'] ) ) ) {
         echo '<ul class="menu menu_superior btns_dar_baja centered">';
             echo '<li>';
-            if ( $datalogger['estado'] != 'De baja' ) {
+            if ( $datalogger['is_active'] != 0 ) {
                 echo '<a class="a_des" id="btn_dar_baja" href="#">&#10008;';
                     echo '<form class="formulario form2" id="form_dar_baja_dat" method="POST" action="">';
                         echo '<input type="hidden" name="session" value="'.$_SESSION['ss_usuario'].'">';
@@ -67,22 +67,27 @@ require($_SERVER['DOCUMENT_ROOT']."/headers_footers/header_principal.php");
         <?php
         echo '<div class="label_form">';
             echo '<h4>&#128269;&#65038;   '.estado.':</h4>';
-            echo '<input class="input" type="text" value="'.$datalogger['estado'].'" disabled>';
+            if($datalogger['is_active'] == 1){
+                $estadoDataLogger = "Activado";
+            }else{
+                $estadoDataLogger = "Desactivado";
+            }
+            echo '<input class="input" type="text" value="'.$estadoDataLogger.'" disabled>';
         echo '</div>';
         echo '<div class="label_form">';
-            if ( $datalogger['estado'] == "En uso" ) {
+            if ( $datalogger['is_active'] == 1 ) {
                 echo '<h4>&#128234;&#65038;   '.carga_activa.':</h4>';
             } else {
                 echo '<h4>&#128235;&#65038;   '.ultima_carga.':</h4>';
             }
-            if(isset($enlace['carga'])){
-                echo '<input class="input" type="text" value="'.$enlace['carga'].'" disabled>';
+            if(isset($enlace['load_id'])){
+                echo '<input class="input" type="text" value="'.$enlace['load_id'].'" disabled>';
             }
         echo '</div>';
         echo '<div class="label_form">';
             echo '<h4>&#128274;&#65038;   '.contenedor.':</h4>';
-            if(isset($enlace['contenedor'])){
-                echo '<input class="input" type="text" value="'.$enlace['contenedor'].'" disabled>';
+            if(isset($enlace['code'])){
+                echo '<input class="input" type="text" value="'.$enlace['code'].'" disabled>';
             }
         echo '</div>';
         ?>
@@ -97,66 +102,74 @@ require($_SERVER['DOCUMENT_ROOT']."/headers_footers/header_principal.php");
             <h2><?php echo lista_cargas_M ?></h2>
         </div>
         <?php
+        //$cargas = array();
         if ( !( isset( $_SESSION['entidad_dat'] ) ) ) {
             $cargas = fx_recoger_cargas_datalogger( $cn, $_SESSION['cod_datalogger'], $_SESSION['ss_usuario'] );
         } else {
+            echo $_SESSION['entidad_dat'];
             $cargas = fx_recoger_cargas_datalogger_entidad( $cn, $_SESSION['cod_datalogger'], $_SESSION['entidad_dat'] );
         }
-        for ( $i = 0, $cant = count( $cargas ); $i < $cant; ++$i ) {
-            echo '<div class="info_carga con_btn_inv" id="car_com_detda_'.$cargas[ $i ][ 'codigo' ].'"'.
-            ' onmouseenter="cambiarColorPrivi(\'info_ca_com1_detda_'.$cargas[ $i ][ 'codigo' ].'\', \''.$cargas[$i]['lvl_privilegios'].'\')"'.
-            ' onmouseover="mostrarDetalles(\'info_ca_com1_detda_'.$cargas[ $i ][ 'codigo' ].'\')"'.
-            ' onmouseout="esconderDetalles(\'info_ca_com1_detda_'.$cargas[ $i ][ 'codigo' ].'\')">';
-            if ( $cargas[$i]['producto'] != null ) {
-                echo '<a id="ca_detda_'.$cargas[ $i ][ 'codigo' ].'" href="#">'.carga.' '.$cargas[ $i ][ 'codigo' ].
-                ' - '.producto.': '.fx_recoger_nombre_producto( $cn, $cargas[ $i ][ 'producto' ] ).' - '.responsable.': '.
-                fx_recoger_nombre( $cn, $cargas[ $i ][ 'responsable' ] ).'</a>';
-            } else {
-                echo '<a id="ca_detda_'.$cargas[ $i ][ 'codigo' ].'" href="#">'.carga.' '.$cargas[ $i ][ 'codigo' ].
-                ' - '.responsable.': '.fx_recoger_nombre( $cn, $cargas[ $i ][ 'responsable' ] ).'</a>';
-            }
-            echo '<form class="formulario" id="form_lista_cargas_detalle_datalogger_'.$cargas[ $i ][ 'codigo' ].'" method='.'"POST" action="">';
-                echo '<input type="hidden" name="session_carga" value="'.$_SESSION['ss_usuario'].'">';
-                echo '<input type="hidden" name="codigo_carga" value="'.$cargas[$i]['codigo'].'">';
-                echo '<input type="hidden" name="lvl_privilegios_carga" value="'.$cargas[$i]['lvl_privilegios'].'">';
-                echo '<input class="btn_inv" name="inv_btn_push" type="submit">'; // Mirar aquí detalles para botón invisible
-            echo '</form>';
-            echo '</div>';
 
-            echo '<div class="info_c" id="info_ca_com1_detda_'.$cargas[ $i ][ 'codigo' ].'">';
-            $pre = '<pre>'.fecha_inicio.': ';
-            if ( $cargas[ $i ][ 'fecha_inicio' ] != null ) {
-                $pre .= $cargas[ $i ][ 'fecha_inicio' ].'        '.fecha_final.': ';
-            } else {
-                $pre .= sin_establecer_m.'        '.fecha_final.': ';
-            } if ( $cargas[ $i ][ 'fecha_final' ] != null ) {
-                $pre .= $cargas[ $i ][ 'fecha_final' ].'        '.fecha_caducidad.': ';
-            } else {
-                $pre .= sin_establecer_m.'        '.fecha_caducidad.': ';
-            } if ( $cargas[ $i ][ 'fecha_caducidad' ] != null ) {
-                $pre .= $cargas[ $i ][ 'fecha_caducidad' ].'</pre>';
-            } else {
-                $pre .= sin_establecer_m.'</pre>';
+        
+        if (isset($cargas)){
+            if(count($cargas) >0){
+                for ($i = 0, $cant = count($cargas); $i < $cant; ++$i) {
+                    echo '<div class="info_carga con_btn_inv" id="car_com_detda_'.$cargas[$i]['code'].'"'.
+                    ' onmouseenter="cambiarColorPrivi(\'info_ca_com1_detda_'.$cargas[$i][ 'code'].'\', \''.$cargas[$i]['lvl_privilegios'].'\')"'.
+                    ' onmouseover="mostrarDetalles(\'info_ca_com1_detda_'.$cargas[$i]['code'].'\')"'.
+                    ' onmouseout="esconderDetalles(\'info_ca_com1_detda_'.$cargas[$i]['code'].'\')">';
+                    if ( $cargas[$i]['product_id'] != null ) {
+                        echo '<a id="ca_detda_'.$cargas[$i]['code'].'" href="#">'.carga.' '.$cargas[$i]['code'].
+                        ' - '.producto.': '.fx_recoger_nombre_producto( $cn, $cargas[$i]['product_id'] ).' - '.responsable.': '.
+                        fx_recoger_nombre( $cn, $cargas[$i][ 'supervisor_id' ] ).'</a>';
+                    } else {
+                        echo '<a id="ca_detda_'.$cargas[$i]['code'].'" href="#">'.carga.' '.$cargas[ $i ][ 'code' ].
+                        ' - '.responsable.': '.fx_recoger_nombre( $cn, $cargas[ $i ][ 'supervisor_id' ] ).'</a>';
+                    }
+                    echo '<form class="formulario" id="form_lista_cargas_detalle_datalogger_'.$cargas[ $i ][ 'code' ].'" method='.'"POST" action="">';
+                        echo '<input type="hidden" name="session_carga" value="'.$_SESSION['ss_usuario'].'">';
+                        echo '<input type="hidden" name="codigo_carga" value="'.$cargas[$i]['code'].'">';
+                        echo '<input type="hidden" name="lvl_privilegios_carga" value="'.$cargas[$i]['lvl_privilegios'].'">';
+                        echo '<input class="btn_inv" name="inv_btn_push" type="submit">'; // Mirar aquí detalles para botón invisible
+                    echo '</form>';
+                    echo '</div>';
+        
+                    echo '<div class="info_c" id="info_ca_com1_detda_'.$cargas[ $i ][ 'code' ].'">';
+                    $pre = '<pre>'.fecha_inicio.': ';
+                    if ( $cargas[ $i ][ 'start' ] != null ) {
+                        $pre .= $cargas[ $i ][ 'start' ].'        '.fecha_final.': ';
+                    } else {
+                        $pre .= sin_establecer_m.'        '.fecha_final.': ';
+                    } if ( $cargas[ $i ][ 'end' ] != null ) {
+                        $pre .= $cargas[ $i ][ 'end' ].'        '.fecha_caducidad.': ';
+                    } else {
+                        $pre .= sin_establecer_m.'        '.fecha_caducidad.': ';
+                    } if ( $cargas[ $i ][ 'expiry' ] != null ) {
+                        $pre .= $cargas[ $i ][ 'expiry' ].'</pre>';
+                    } else {
+                        $pre .= sin_establecer_m.'</pre>';
+                    }
+                    echo $pre;
+                    echo '</div>';
+                }
+                echo '<div class="permisos">
+                    <pre class="permisos_titulo">'.permisos.': </pre>
+                    <div>
+                        <img src="../images/cuadrado_azul.png" alt="'.azul.'">
+                        <pre>'.ver.'</pre>
+                    </div>
+                    <div>
+                        <img src="../images/cuadrado_verde.png" alt="'.verde.'">
+                        <pre>'.ver_editar_dataloggers.'</pre>
+                    </div>
+                    <div>
+                        <img src="../images/cuadrado_rojo.png" alt="'.rojo.'">
+                        <pre>'.ver_editar_borrar.'</pre>
+                    </div>
+                </div>';
+            }else{
+                echo "Lista de cargas del datalogger vacía";
             }
-            echo $pre;
-            echo '</div>';
-        }
-        if ( count( $cargas ) != 0 ) {
-            echo '<div class="permisos">
-                <pre class="permisos_titulo">'.permisos.': </pre>
-                <div>
-                    <img src="../images/cuadrado_azul.png" alt="'.azul.'">
-                    <pre>'.ver.'</pre>
-                </div>
-                <div>
-                    <img src="../images/cuadrado_verde.png" alt="'.verde.'">
-                    <pre>'.ver_editar_dataloggers.'</pre>
-                </div>
-                <div>
-                    <img src="../images/cuadrado_rojo.png" alt="'.rojo.'">
-                    <pre>'.ver_editar_borrar.'</pre>
-                </div>
-            </div>';
         }
         ?>
     </div>
@@ -195,7 +208,7 @@ require($_SERVER['DOCUMENT_ROOT']."/headers_footers/header_principal.php");
         </div>
         <div style="width:100%;">
             LISTA DE ALERTAS
-
+            <?php echo $_SESSION['cod_datalogger']; ?>
         </div>
     </div>
 </section>

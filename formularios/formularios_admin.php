@@ -2,33 +2,38 @@
 
 if ( isset( $_POST ) ) {
     if ( isset( $_POST['sig_btn'] ) ) { // Alta carga
-        //session_start();
         $_SESSION['ss_usuario'] = $_POST['session'];
         $_SESSION['cod_carga'] = $_POST['codigo'];
         $_SESSION['num_cont_carga'] = $_POST['contenedores'];
         $_SESSION['fecha_ini'] = $_POST['fecha_ini'];
         $_SESSION['fecha_fin'] = $_POST['fecha_fin'];
 
+        
         if ( $_POST['sel_prod'] != null && $_POST['temp_max'] != null && $_POST['temp_min'] != null ) {
+            
             list($cod_prod, $tmin_prod, $tmax_prod) = explode("/", $_POST['sel_prod']);
-            $producto_elegido = fx_recoger_producto( $cn, $cod_prod );
+            $producto_elegido = fx_recoger_producto($cn, $cod_prod);
+            $cod_producto_el = fx_comparar_producto($cn, $_POST['session'], $producto_elegido['name'],
+            $producto_elegido['variety'], $_POST['temp_min'], $_POST['temp_max']);
 
-            $cod_producto_el = fx_comparar_producto( $cn, $_POST['session'], $producto_elegido['nombre'],
-            $producto_elegido['variedad'], $_POST['temp_min'], $_POST['temp_max'] );
-
-            if ( $cod_producto_el == 0 ) {
-                $cod_producto_el = fx_registrar_producto( $cn, $_POST['session'], $producto_elegido['nombre'], 
-                $producto_elegido['variedad'], $_POST['temp_min'], $_POST['temp_max'] );
+            if ($cod_producto_el == 0) {
+                $cod_producto_el = fx_registrar_producto( $cn, $_POST['session'], $producto_elegido['name'], 
+                $producto_elegido['variety'], $_POST['temp_min'], $_POST['temp_max'] );
             }
         } else {
             $cod_producto_el = null;
         }
 
+        $user_id = fx_recoger_usuario_id($cn, $_POST['sel_usu5']);
+        if(isset($cod_producto_el)){
+            $cod_producto_el = fx_recoger_producto_id($cn, $cod_producto_el);
+        }
         fx_crear_carga( $cn, $_POST['codigo'], $_POST['kilos'], $_POST['contenedores'], $_POST['fecha_ini'], $_POST['fecha_fin'],
-        $_POST['fecha_cadu'], $cod_producto_el, fx_recoger_entidad( $cn, $_POST['session'] ), $_POST['sel_usu5'] );
+        $_POST['fecha_cadu'], $cod_producto_el, fx_recoger_entidad( $cn, $_POST['session'] ), $user_id);
 
-        $msgAltaProducto = "Carga dado de alta correctamente."; 
+        //$msgAltaProducto = "Carga dado de alta correctamente."; 
         include($_SERVER['DOCUMENT_ROOT']."/cargas/alta_mapas.php");
+        
 
     } else if ( isset( $_POST['sig_alta_subruta_prin'] ) ) { // Alta subruta
         $_SESSION['ss_usuario'] = $_POST['session'];
@@ -47,7 +52,7 @@ if ( isset( $_POST ) ) {
         include($_SERVER['DOCUMENT_ROOT']."/inicio_admin.php");  
     } else if ( isset( $_POST['prod_btn'] ) ) { // Alta producto
         $_SESSION['ss_usuario'] = $_POST['session6'];
-        if ( empty( $_POST['variedad6'] ) ) {
+        if (empty($_POST['variedad6'])) {
             $msg = fx_registrar_producto($cn, $_POST['session6'], $_POST['nombre6'],
             null, $_POST['t_min6'], $_POST['t_max6'] );
         } else {
@@ -56,7 +61,19 @@ if ( isset( $_POST ) ) {
         }
         $_POST['nombre6'] = null;
         $msgProducto = "Producto creado correctamente.";
-    } else if ( isset( $_POST['usu_btn'] ) ) { // Alta usuario
+    }else if ( isset( $_POST['alta_dataloggers_btn'] ) ) { 
+        $entidad = fx_recoger_datos_entidad( $cn, $_POST['session'] )['id'];
+    
+        if(isset($_POST['num_cont_carga'])){
+            for($i=0;$i<$_POST['num_cont_carga']; $i++){
+                if(isset($_POST['dat_'.$i])){
+                    $load_id = fx_recoger_carga($cn, $_POST['cod_carga']);
+                    $msg = fx_alta_container_datalogger($cn, $_POST['cont_'.$i], $entidad, $load_id['id'], $_POST['dat_'.$i]);
+                }  
+            }
+        }
+        
+    }else if ( isset( $_POST['usu_btn'] ) ) { // Alta usuario
         $_SESSION['ss_usuario'] = $_POST['session_usu'];
         $msg = fx_registrar_usuario( $cn, $_POST['nombre4'], $_POST['cargo4'], $_POST['email4'],
         $_POST['rol_usu4'], $_POST['password4'], fx_recoger_entidad( $cn, $_POST['session_usu'] ) );
@@ -94,11 +111,13 @@ if ( isset( $_POST ) ) {
             $_SESSION['lvl_privilegios_subr'] = $_POST['lvl_privilegios_subr'];
         }
     }else if(isset($_POST['dat_btn_adm'])){
-        if(isset($_SESSION['session_dat'])){
-            $_SESSION['ss_usuario'] = $_SESSION['session_dat'];
+        if(isset($_POST['session_dat']) && isset($_POST['cod_dat_adm'])){
+            $_SESSION['ss_usuario'] = $_POST['session_dat'];
+            $_SESSION['cod_datalogger'] = $_POST['cod_dat_adm'];
+            $entidad = fx_recoger_entidad($cn, $_POST['session_dat']);
+            fx_update_datalogger($cn, $_POST['cod_dat_adm'], $_POST['dat_ex_adm'], $entidad);
+            include($_SERVER['DOCUMENT_ROOT']."/detalles/detalle_datalogger.php");    
         }
-        $msgData = "Datalogger creado correctamente.";
-        //include($_SERVER['DOCUMENT_ROOT']."/detalles/detalle_datalogger.php");
     }
 }
 

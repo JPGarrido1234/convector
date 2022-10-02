@@ -2,11 +2,11 @@
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
-        if(!isset($_POST['cod_carga']) && !isset($_POST['codigo']) && !isset($_POST['nombre6']) && !isset($_POST['session_carga']) && !isset($_POST['codigo_datalogger']) && !isset($_POST['cod_subruta'])){
-            require("headers_footers/header_principal.php");
-        }
+//if(!isset($_POST['cod_carga']) && !isset($_POST['codigo']) && !isset($_POST['nombre6']) && !isset($_POST['session_carga']) && !isset($_POST['codigo_datalogger']) && !isset($_POST['cod_subruta'])){
+    if(!isset($_SESSION['cod_carga'])){
+    require("headers_footers/header_principal.php");
+
         ?>
-        <?php if(!isset($_POST['cod_carga']) && !isset($_POST['codigo']) && !isset($_POST['nombre6']) && !isset($_POST['session_carga']) && !isset($_POST['codigo_datalogger']) && !isset($_POST['cod_subruta'])){ ?>
         <section class="menu_opciones_admin">
             <ul class="menu menu_superior_aviso" id="menu_admin">
                 <li><a id="opcion1_admin" href="javascript:cambiarMenuAdmin(1)"><?php echo dar_alta ?></a></li>
@@ -41,14 +41,17 @@ error_reporting(E_ALL);
                 </ul>
             </section>
         </section>
-        <?php } ?>
-        <!-- ======================================================================================================================================
-                                                                1. ALTA DE CARGA
-            ====================================================================================================================================== -->
+<?php }else if(isset($_SESSION['alta_subruta'])){
+    if($_SESSION['alta_subruta'] == "alta"){
+        
+        //$_SESSION['alta_subruta'] = null;
+    }
+} ?>
         <section class="seccion_oculta" id="alta_carga_admin">
             <div class="titulo" id="titulo_alta_carga_admin">
                 <h2><?php echo alta_carga_M ?></h2>
             </div>
+            
             <form class="formulario" id="form_alta_carga_admin" method="POST" action="">
                 <div class="label_form">
                     <h4>&#169;   <?php echo codigo ?>:</h4>
@@ -59,10 +62,10 @@ error_reporting(E_ALL);
                     <select id="select_usuario" name="sel_usu5" required>
                         <option value=""><?php echo selecciona_responsable ?>:</option>
                         <?php
-                        $usuarios = fx_recoger_usuarios( $cn, $_SESSION['ss_usuario'] );
-                        for ( $i = 0, $cant = count( $usuarios ); $i < $cant; ++$i ) {
-                            echo '<option value="'.$usuarios[ $i ][ 'email' ].'">'.usuario.' '.($i+1).' - '.$usuarios[ $i ][ 'nombre' ].' ('.
-                            $usuarios[ $i ][ 'rol' ].')</option>';
+                        $usuarios = fx_recoger_usuarios($cn, $_SESSION['ss_usuario']);
+                        for ( $i = 0, $cant = count($usuarios); $i < $cant; ++$i ) {
+                            echo '<option value="'.$usuarios[$i]['email'].'">'.usuario.' '.($i+1).' - '.$usuarios[$i]['first_name'].' ('.
+                            $usuarios[$i]['role'].')</option>';
                         }
                         ?>
                     </select>
@@ -94,15 +97,15 @@ error_reporting(E_ALL);
                     <select id="select_producto_alta_carga" name="sel_prod">
                         <option value=""><?php echo selecciona_producto ?></option>
                         <?php
-                        $productos = fx_recoger_productos_entidad_unique( $cn, fx_recoger_datos_entidad( $cn, $_SESSION['ss_usuario'] )['nombre'] );
+                        $productos = fx_recoger_productos_entidad_unique( $cn, fx_recoger_datos_entidad( $cn, $_SESSION['ss_usuario'] )['id'] );
                         for ( $i = 0, $cant = count( $productos ); $i < $cant; ++$i ) {
 
-                            if ( $productos[$i]['variedad'] != null ) {
-                                echo '<option value="'.$productos[$i]['codigo']."/".$productos[$i]["t_max"]."/".$productos[$i]["t_min"].'">'.
-                                $productos[$i]['nombre'].' - '.variedad.': '.$productos[$i]['variedad'].'</option>';
+                            if ( $productos[$i]['variety'] != null ) {
+                                echo '<option value="'.$productos[$i]['code']."/".$productos[$i]["max_temp"]."/".$productos[$i]["min_temp"].'">'.
+                                $productos[$i]['name'].' - '.variedad.': '.$productos[$i]['variety'].'</option>';
                             } else {
-                                echo '<option value="'.$productos[$i]['codigo']."/".$productos[$i]["t_max"]."/".$productos[$i]["t_min"].'">'.
-                                $productos[$i]['nombre'].' - '.variedad.': '.sin_establecer_m.'</option>';
+                                echo '<option value="'.$productos[$i]['code']."/".$productos[$i]["max_temp"]."/".$productos[$i]["min_temp"].'">'.
+                                $productos[$i]['name'].' - '.variedad.': '.sin_establecer_m.'</option>';
                             }
                         }
                         ?>
@@ -122,27 +125,23 @@ error_reporting(E_ALL);
                 </div>
             </form>
         </section>
-
-        <!-- ======================================================================================================================================
-                                                                1. ALTA DE SUBRUTA
-            ====================================================================================================================================== -->
         <section class="seccion_oculta" id="alta_subruta_admin">
             <div class="titulo" id="titulo_alta_subruta_admin">
                 <h2><?php echo alta_subruta_M ?></h2>
             </div>
             <form class="formulario" id="form_alta_subruta_admin" method="POST" action="">
                 <?php
-                $cargas_subruta = recoger_cargas_disponibles_subruta( $cn, $_SESSION['ss_usuario'] );
+                $cargas_subruta = recoger_cargas_disponibles_subruta($cn, $_SESSION['ss_usuario']);
                 ?>
                 <div class="label_form" id="label_carga_subr"> 
                     <h4>&#128234;&#65038;   <?php echo carga ?>:</h4>
                     <select id="select_carga_alta_subruta" name="sel_car_subr" required>
                         <?php
-                        if ( count( $cargas_subruta ) == 0 ) {
+                        if ( count($cargas_subruta) == 0 ) {
                             echo '<option value="">'.no_cargas_disponibles.'</option>';
                         }
-                        for ( $i = 0, $cont = count( $cargas_subruta ); $i < $cont; ++$i ) {
-                            echo '<option value="'.$cargas_subruta[$i]['codigo'].'">'.carga.' '.$cargas_subruta[$i]['codigo'].'</option>';
+                        for ( $i = 0, $cont = count($cargas_subruta); $i < $cont; ++$i ) {
+                            echo '<option value="'.$cargas_subruta[$i]['code'].'">'.carga.' '.$cargas_subruta[$i]['code'].'</option>';
                         }
                         ?>
                     </select>
@@ -158,8 +157,8 @@ error_reporting(E_ALL);
                         <?php
                             $entidades = fx_recoger_entidades( $cn );
                             for ( $i = 0, $cant = count( $entidades ); $i < $cant; ++$i ) {
-                                if ( $entidades[$i]['nombre'] != fx_recoger_entidad( $cn, $_SESSION['ss_usuario'] ) ) {
-                                    echo '<option value="'.$entidades[$i]['nombre'].'">'.$entidades[$i]['nombre'].'</option>';
+                                if ( $entidades[$i]['name'] != fx_recoger_entidad( $cn, $_SESSION['ss_usuario'] ) ) {
+                                    echo '<option value="'.$entidades[$i]['name'].'">'.$entidades[$i]['name'].'</option>';
                                 }
                             }
                         ?>
@@ -185,9 +184,6 @@ error_reporting(E_ALL);
             </form>
         </section>
 
-        <!-- ======================================================================================================================================
-                                                                1. ALTA DE DATALOGGER
-            ====================================================================================================================================== -->
         <section class="seccion_oculta" id="alta_datalogger_admin">
             <div class="titulo" id="titulo_alta_datalogger_admin">
                 <h2><?php echo alta_datalogger_M ?></h2>
@@ -199,15 +195,15 @@ error_reporting(E_ALL);
                         <?php
                         $dats = fx_recoger_dataloggers_entidad( $cn, fx_recoger_entidad( $cn, $_SESSION['ss_usuario'] ) );
                         for ( $i = 0, $cant = count( $dats ); $i < $cant; ++$i ) {
-                            echo '<option value="'.$dats[$i]['codigo'].'">'.$dats[$i]['codigo'].'</option>';
+                            echo '<option value="'.$dats[$i]['code'].'">'.$dats[$i]['code'].'</option>';
                         }
                         ?>
                     </select>
                     <select class="seccion_oculta" id="dat_ex_adm" name="dat_ex_adm2">
                         <?php
-                        $dats2 = fx_recoger_dataloggers( $cn );
+                        $dats2 = fx_recoger_dataloggers($cn);
                         for ( $j = 0, $cont = count( $dats2 ); $j < $cont; ++$j ) {
-                            echo '<option value="'.$dats2[$j]['codigo'].'">'.$dats2[$j]['codigo'].'</option>';
+                            echo '<option value="'.$dats2[$j]['code'].'">'.$dats2[$j]['code'].'</option>';
                         }
                         ?>
                     </select>
@@ -225,9 +221,6 @@ error_reporting(E_ALL);
             </form>
         </section>
 
-        <!-- ======================================================================================================================================
-                                                                1. ALTA DE PRODUCTO
-            ====================================================================================================================================== -->
         <section class="seccion_oculta" id="alta_producto_admin">
             <div class="titulo" id="titulo_alta_producto_admin">
                 <h2><?php echo alta_producto_M ?></h2>
@@ -256,9 +249,6 @@ error_reporting(E_ALL);
             </form>
         </section>
 
-        <!-- ======================================================================================================================================
-                                                                1. ALTA DE USUARIO
-            ====================================================================================================================================== -->
         <section class="seccion_oculta" id="alta_usuario_admin">
             <div class="titulo" id="titulo_alta_usuario_admin">
                 <h2><?php echo alta_usuario_M ?></h2>
@@ -280,8 +270,8 @@ error_reporting(E_ALL);
                     <h4>&#9734;   <?php echo rol ?>:</h4>
                     <select name="rol_usu4">
                         <option value=""><?php echo selecciona_rol ?></option>
-                        <option value="Administrador"><?php echo administrador ?></option>
-                        <option value="Técnico"><?php echo tecnico ?></option>
+                        <option value="ROLE_ADMIN"><?php echo administrador ?></option>
+                        <option value="ROLE_TECHNICIAN"><?php echo tecnico ?></option>
                     </select>
                 </div>
                 <div class="label_form">
@@ -295,9 +285,6 @@ error_reporting(E_ALL);
             </form>
         </section>
 
-        <!-- ======================================================================================================================================
-                                                                2. LISTA DE CARGAS
-            ====================================================================================================================================== -->
         <section class="seccion_oculta" id="lista_cargas_admin">
             <div class="titulo titulo_filtros" id="titulo_lista_cargas_admin">
                 <h2><?php echo lista_cargas_M ?></h2>
@@ -362,10 +349,6 @@ error_reporting(E_ALL);
             <section id="lista_cargas_ajax_admin">
             </section>
         </section>
-   
-        <!-- ======================================================================================================================================
-                                                                2. LISTA DE SUBRUTAS
-        ====================================================================================================================================== -->
         <section class="seccion_oculta" id="lista_subrutas_admin">
             <div class="titulo titulo_filtros" id="titulo_lista_subrutas_admin">
                 <h2><?php echo lista_subrutas_M ?></h2>
@@ -427,125 +410,18 @@ error_reporting(E_ALL);
             </section>
         </section>
 
-        <!-- ======================================================================================================================================
-                                                                2. LISTA DE DATALOGGERS
-        ====================================================================================================================================== -->
         <section class="seccion_oculta" id="lista_dataloggers_admin">
             <div class="titulo titulo_filtros" id="titulo_info_dataloggers_admin">
                 <h2><?php echo lista_dataloggers_M ?></h2>
             </div>
-            <div class="filtros" id="filtros_lista_dataloggers_admin">
-                <pre><?php echo filtros ?>:</pre>
-                <ul class="menu menu_superior" id="menu_filtros_dataloggers_admin">
-                    <li><a href="javascript:cambiarFiltrosDataloggersAdmin(1)"><?php echo en_uso ?></a></li>
-                    <li><a href="javascript:cambiarFiltrosDataloggersAdmin(2)"><?php echo apagado ?></a></li>
-                    <li><a href="javascript:cambiarFiltrosDataloggersAdmin(0)"><?php echo borrar ?></a></li>
-                </ul>
-            </div>
-            <div id="div_lista_dataloggers_completa">
-                <?php
-                $dataloggers = fx_recoger_dataloggers_entidad( $cn, fx_recoger_entidad( $cn, $_SESSION['ss_usuario'] ) );
-                $dataloggers_enuso = array();
-                $dataloggers_apagados = array();
-                for ( $i = 0, $cant = count( $dataloggers ); $i < $cant; ++$i ) {
-                    if ( $dataloggers[$i]['estado'] == 'En uso' ) {
-                        array_push( $dataloggers_enuso, $dataloggers[$i] );
-                    } else if ( $dataloggers[$i]['estado'] == 'Apagado' ) {
-                        array_push( $dataloggers_apagados, $dataloggers[$i] );
-                    }
-                    echo '<div class="info_carga con_btn_inv" onmouseover="mostrarDetalles(\'info_dat_'.$dataloggers[$i]['code'].
-                    '\')"'.' onmouseout="esconderDetalles(\'info_dat_'.$dataloggers[$i]['code'].'\')">';
-                    echo '<pre>'.datalogger.' '.$dataloggers[$i]['code'].'            '.estado.': '.$dataloggers[$i]['estado'].'</pre>';
-                    
-                    echo '<form class="formulario" id="form_lista_dataloggers_admin_'.$dataloggers[$i]['code'].'" method="POST" action="">';
-                        echo '<input type="hidden" name="session_datalogger" value="'.$_SESSION['ss_usuario'].'">';
-                        echo '<input type="hidden" name="codigo_datalogger" value="'.$dataloggers[$i]['code'].'">';
-                        echo '<input type="hidden" name="tipo" value="dataloger">';
-                        echo '<input class="btn_inv" name="inv_btn_push_dat" type="submit">';
-                    echo '</form>';
-                    echo '</div>';
-                    
-                    echo '<div class="info_c" id="info_dat_'.$dataloggers[$i]['code'].'">';
-                    $enlace = fx_recoger_ultimo_enlace( $cn, $dataloggers[$i]['code'] );
-                    if ( $dataloggers[$i]['estado'] != "Apagado" ) {
-                        echo '<pre>'.carga_actual.': '.$enlace['carga'].' - '.contenedor.': '.$enlace['contenedor'].'</pre>';
-                    } elseif ( $enlace['carga'] != null ) {
-                        echo '<pre>'.ultima_carga.': '.$enlace['carga'].' - '.contenedor.': '.$enlace['contenedor'].'</pre>';
-                    } else {
-                        echo '<pre>'.datalogger_sin_cargas_registradas.'</pre>';
-                    }
-                    echo '</div>';
-                }
-                ?>
-            </div>
-            <div class="seccion_oculta" id="div_lista_dataloggers_enuso">
-                <?php
-                for ( $i = 0, $cant = count( $dataloggers_enuso ); $i < $cant; ++$i ) {
-                    $enlace2 = fx_recoger_ultimo_enlace( $cn, $dataloggers_enuso[$i]['code'] );
-                    echo '<div class="info_carga con_btn_inv">';
-                    echo '<pre>'.datalogger.' '.$dataloggers_enuso[$i]['code'].'            '.carga_actual.': '.$enlace2['carga'].
-                    '           '.contenedor.': '.$enlace2['contenedor'].'</pre>';
-
-                    echo '<form class="formulario" id="form_lista_dataloggers_enuso_admin_'.$dataloggers_enuso[$i]['code'].'" method="POST" action="">';
-                        echo '<input type="hidden" name="session_datalogger" value="'.$_SESSION['ss_usuario'].'">';
-                        echo '<input type="hidden" name="codigo_datalogger" value="'.$dataloggers_enuso[$i]['code'].'">';
-                        echo '<input type="hidden" name="tipo" value="dataloger">';
-                        echo '<input class="btn_inv" name="inv_btn_push_dat" type="submit">';
-                    echo '</form>';
-
-                    echo '</div>';
-                }
-                ?>
-            </div>
-            <div class="seccion_oculta" id="div_lista_dataloggers_apagados">
-                <?php
-                for ( $i = 0, $cant = count( $dataloggers_apagados ); $i < $cant; ++$i ) {
-                    $enlace3 = fx_recoger_ultimo_enlace( $cn, $dataloggers_apagados[$i]['codigo'] );
-                    echo '<div class="info_carga con_btn_inv">';
-                    if ( $enlace3['carga'] != null ) {
-                        echo '<pre>'.datalogger.' '.$dataloggers_apagados[$i]['codigo'].'            '.ultima_carga.': '.$enlace3['carga'].
-                        '            '.contenedor.': '.$enlace3['contenedor'].'</pre>';
-                    } else {
-                        echo '<pre>'.datalogger.' '.$dataloggers_apagados[$i]['codigo'].'            '.datalogger_sin_cargas_registradas.'</pre>';
-                    }
-
-                    echo '<form class="formulario" id="form_lista_dataloggers_apagado_admin_'.$dataloggers_apagados[$i]['codigo'].'" method="POST" action="">';
-                        echo '<input type="hidden" name="session_datalogger" value="'.$_SESSION['ss_usuario'].'">';
-                        echo '<input type="hidden" name="codigo_datalogger" value="'.$dataloggers_apagados[$i]['codigo'].'">';
-                        echo '<input type="hidden" name="tipo" value="dataloger">';
-                        echo '<input class="btn_inv" name="inv_btn_push_dat" type="submit">';
-                    echo '</form>';
-
-                    echo '</div>';
-                }
-                ?>
-            </div>
         </section>
 
-        <!-- ======================================================================================================================================
-                                                                2. LISTA DE PRODUCTOS
-        ====================================================================================================================================== -->
         <section class="seccion_oculta" id="lista_productos_admin">
             <div class="titulo" id="titulo_lista_productos_admin">
                 <h2><?php echo lista_productos_M ?></h2>
             </div>
-            <?php
-            $productos = fx_recoger_productos_entidad_unique( $cn, fx_recoger_entidad( $cn, $_SESSION['ss_usuario'] ) );
-            for ( $i = 0, $cant = count( $productos ); $i < $cant; ++$i ) {
-                echo '<div class="info_carga">';
-                $l = '<pre>'.$productos[$i]['nombre'].'         ';
-                if ( $productos[$i]['variedad'] != null ) {
-                    $l .= variedad.': '.$productos[$i]['variedad'].'         ';
-                }
-                echo $l.t_minima.': '.$productos[$i]['t_min'].'ºC           '.t_maxima.': '.$productos[$i]['t_max'].'ºC</pre>';
-                echo '</div>';
-            }
-            ?>
         </section>
 
-        <!-- ======================================================================================================================================
-                                                                3. INFORMACIÓN DE LA ENTIDAD
-        ====================================================================================================================================== -->
         <section class="seccion_oculta" id="seccion_info_entidad">
             <div class="titulo" id="titulo_info_entidad_admin">
                 <h2><?php echo informacion_entidad_M ?></h2>
@@ -554,12 +430,12 @@ error_reporting(E_ALL);
             <?php
                 $entidad = fx_recoger_datos_entidad( $cn, $_SESSION['ss_usuario'] );
                 if(isset($entidad)){
-                    echo '<input class="input" type="text" value="&#127963;  '.nombre_entidad.':     '.$entidad['nombre'].'" disabled>';
-                    echo '<input class="input" type="text" value="&#128712;  '.tipo.':        '.$entidad['tipo'].'" disabled>';
-                    echo '<input class="input" type="text" value="&#9872;  '.direccion_1.':     '.$entidad['direccion1'].'" disabled>';
-                    echo '<input class="input" type="text" value="&#9873;  '.direccion_2.':     '.$entidad['direccion2'].'" disabled>';
-                    echo '<input class="input" type="text" value="&#127968;&#65038;  '.poblacion.':     '.$entidad['poblacion'].'" disabled>';
-                    echo '<input class="input" type="text" value="&#127757;&#65038;  '.pais.':     '.$entidad['pais'].'" disabled>';
+                    echo '<input class="input" type="text" value="&#127963;  '.nombre_entidad.':     '.$entidad['name'].'" disabled>';
+                    echo '<input class="input" type="text" value="&#128712;  '.tipo.':        '.$entidad['type'].'" disabled>';
+                    echo '<input class="input" type="text" value="&#9872;  '.direccion_1.':     '.$entidad['address_1'].'" disabled>';
+                    echo '<input class="input" type="text" value="&#9873;  '.direccion_2.':     '.$entidad['address_2'].'" disabled>';
+                    echo '<input class="input" type="text" value="&#127968;&#65038;  '.poblacion.':     '.$entidad['population'].'" disabled>';
+                    echo '<input class="input" type="text" value="&#127757;&#65038;  '.pais.':     '.$entidad['country'].'" disabled>';
                 }
             ?>
             </form>
@@ -576,53 +452,50 @@ error_reporting(E_ALL);
             </div>
             <div id="div_lista_empleados_completa">
             <?php
-                $usuarios = fx_recoger_usuarios_entidad( $cn, $entidad['nombre'] );
+                $usuarios = fx_recoger_usuarios_entidad( $cn, $entidad['id']);
                 $usuarios_admins = array();
                 $usuarios_tecs = array();
-                for ( $i = 0, $cant = count( $usuarios ); $i < $cant; ++$i ) {
-                    if ( $usuarios[$i]['rol'] == 'Administrador' ) {
-                        array_push( $usuarios_admins, $usuarios[$i] );
+                for ($i = 0, $cant = count($usuarios); $i < $cant; ++$i) {
+                    if ($usuarios[$i]['role'] == 'ROLE_ADMIN') {
+                        array_push($usuarios_admins, $usuarios[$i]);
                     } else {
-                        array_push( $usuarios_tecs, $usuarios[$i] );
+                        array_push($usuarios_tecs, $usuarios[$i]);
                     }
                     echo '<div class="info_carga" onmouseover="mostrarDetalles(\'info_usu_'.$i.
                     '\')"'.' onmouseout="esconderDetalles(\'info_usu_'.$i.'\')">';
-                    echo '<pre>'.$usuarios[$i]['nombre'].'          '.rol.': '.$usuarios[$i]['rol'].'</pre>';
+                    echo '<pre>'.$usuarios[$i]['first_name'].'          '.rol.': '.$usuarios[$i]['role'].'</pre>';
                     echo '</div>';
 
                     echo '<div class="info_c" id="info_usu_'.$i.'">';
-                    echo '<pre>'.email.': '.$usuarios[$i]['email'].'          '.cargo.': '.$usuarios[$i]['cargo'].'</pre>';
+                    echo '<pre>'.email.': '.$usuarios[$i]['email'].'          '.cargo.': '.$usuarios[$i]['position'].'</pre>';
                     echo '</div>';
                 }
                 ?>
             </div>
             <div class="seccion_oculta" id="div_lista_empleados_admins">
                 <?php
-                for ( $i = 0, $cant = count( $usuarios_admins ); $i < $cant; ++$i ) {
+                for ($i = 0, $cant = count($usuarios_admins); $i < $cant; ++$i) {
                     echo '<div class="info_carga">';
-                    echo '<pre>'.$usuarios_admins[$i]['nombre'].'           '.email.': '.$usuarios_admins[$i]['email'].'            Cargo: '.$usuarios_admins[$i]['cargo'].'</pre>';
+                    echo '<pre>'.$usuarios_admins[$i]['first_name'].'           '.email.': '.$usuarios_admins[$i]['email'].'            Cargo: '.$usuarios_admins[$i]['position'].'</pre>';
                     echo '</div>';
                 }
                 ?>
             </div>
             <div class="seccion_oculta" id="div_lista_empleados_tecs">
                 <?php
-                for ( $i = 0, $cant = count( $usuarios_tecs ); $i < $cant; ++$i ) {
+                for ( $i = 0, $cant = count($usuarios_tecs); $i < $cant; ++$i ) {
                     echo '<div class="info_carga">';
-                    echo '<pre>'.$usuarios_tecs[$i]['nombre'].'           '.email.': '.$usuarios_tecs[$i]['email'].'            Cargo: '.$usuarios_tecs[$i]['cargo'].'</pre>';
+                    echo '<pre>'.$usuarios_tecs[$i]['first_name'].'           '.email.': '.$usuarios_tecs[$i]['email'].'            Cargo: '.$usuarios_tecs[$i]['position'].'</pre>';
                     echo '</div>';
                 }
                 ?>
             </div>
         </section>
+
         <?php
-        if(!isset($_POST['enviado'])){
-            if(!isset($_POST['cod_carga']) && !isset($_POST['codigo']) && !isset($_POST['nombre6']) && !isset($_POST['session_carga']) && !isset($_POST['codigo_datalogger']) && !isset($_POST['cod_subruta'])){
-                require("headers_footers/footer.php");
-            }
-        }
-        ?>
-        <!--
-    </body>
-</html>
--->
+if(!isset($_POST['enviado'])){
+    if(!isset($_POST['cod_carga']) && !isset($_POST['codigo']) && !isset($_POST['nombre6']) && !isset($_POST['session_carga']) && !isset($_POST['codigo_datalogger']) && !isset($_POST['cod_subruta'])){
+        require("headers_footers/footer.php");
+    }
+}
+?>

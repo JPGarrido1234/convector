@@ -26,10 +26,11 @@ require($_SERVER['DOCUMENT_ROOT']."/headers_footers/header_principal.php");
         ?>
     </div>
     <?php
-    $dataloggers = fx_recoger_dataloggers_off_entidad( $cn, fx_recoger_datos_entidad( $cn, $_SESSION['ss_usuario'] )['nombre'], $_SESSION['cod_carga'] );
+    $dataloggers = fx_recoger_dataloggers_off_entidad( $cn, fx_recoger_datos_entidad( $cn, $_SESSION['ss_usuario'] )['id'], $_SESSION['cod_carga'] );
     ?>
     <form class="formulario" id="form_alta_dataloggers_admin" method="POST" action="">
         <?php
+        
         if ( !empty( $_SESSION['num_cont_carga'] ) ) {
             $c = $_SESSION['num_cont_carga'];
         } else {
@@ -61,6 +62,7 @@ require($_SERVER['DOCUMENT_ROOT']."/headers_footers/header_principal.php");
         echo '<input type="hidden" name="session" value="'.$_SESSION['ss_usuario'].'">';
         echo '<input type="hidden" name="cod_carga" value="'.$_SESSION['cod_carga'].'">';
         echo '<input type="hidden" name="num_cont_carga" value="'.$_SESSION['num_cont_carga'].'">';
+        
         ?>
         <div class="boton">
             <input class="submit" type="submit" name="alta_dataloggers_btn" value="<?php echo siguiente ?>">
