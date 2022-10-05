@@ -40,7 +40,7 @@ require($_SERVER['DOCUMENT_ROOT']."/headers_footers/header_principal.php");
         <div class="label_form">
             <h4>&#128104;&#65038;   <?php echo responsable ?>:</h4>
             <?php if ( $subruta['responsable'] != null ) { ?>
-                <input class="input" type="email" value="<?php echo $subruta['responsable'] ?>" name="responsable" required>
+                <input class="input" type="email" value="<?php echo fx_recoger_usuario__id($cn, $subruta['responsable']) ?>" name="responsable" required>
             <?php } else { ?>
                 <input class="input" type="email" placeholder="<?php echo sin_establecer_m ?>" name="responsable">
             <?php } ?>

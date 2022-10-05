@@ -91,6 +91,84 @@ function fx_recoger_usuarios($cn, $email) {
     }
 }
 
+function fx_recoger_entidad__id($cn, $entity_id){
+    $msg = null;
+    $sql = "SELECT name FROM entity WHERE id = '$entity_id'";
+    $result = mysqli_query($cn, $sql);
+    $msg = mysqli_fetch_array($result);
+
+    if(isset($msg)){
+        return $msg[0];
+    }
+
+    return $msg;
+}
+
+function fx_recoger_usuario__id($cn, $user_id){
+    $msg = null;
+    $sql = "SELECT first_name FROM user WHERE id = '$user_id'";
+    $result = mysqli_query($cn, $sql);
+    $msg = mysqli_fetch_array($result);
+
+    if(isset($msg)){
+        return $msg[0];
+    }
+
+    return $msg;
+}
+
+function fx_recoger_datalogger__id($cn, $datalogger_id){
+    $msg = null;
+    $sql = "SELECT code FROM datalogger WHERE id = '$datalogger_id'";
+    $result = mysqli_query($cn, $sql);
+    $msg = mysqli_fetch_array($result);
+
+    if(isset($msg)){
+        return $msg[0];
+    }
+
+    return $msg;
+}
+
+function fx_recoger_loadding__id($cn, $load_id){
+    $msg = null;
+    $sql = "SELECT code FROM loading WHERE id = '$load_id'";
+    $result = mysqli_query($cn, $sql);
+    $msg = mysqli_fetch_array($result);
+
+    if(isset($msg)){
+        return $msg[0];
+    }
+
+    return $msg;
+}
+
+function fx_recoger_vehicleType__id($cn, $vehicle_id){
+    $msg = null;
+    $sql = "SELECT type_car FROM vehicle WHERE id = '$vehicle_id'";
+    $result = mysqli_query($cn, $sql);
+    $msg = mysqli_fetch_array($result);
+
+    if(isset($msg)){
+        return $msg[0];
+    }
+
+    return $msg;
+}
+
+function fx_recoger_vehicleMatricula__id($cn, $vehicle_id){
+    $msg = null;
+    $sql = "SELECT license_number FROM vehicle WHERE id = '$vehicle_id'";
+    $result = mysqli_query($cn, $sql);
+    $msg = mysqli_fetch_array($result);
+
+    if(isset($msg)){
+        return $msg[0];
+    }
+
+    return $msg;
+}
+
 // Función que sirve para recoger todos los usuarios que pertenecen a una entidad en base a esta
 // RETURN: Array de arrays con los datos de los usuarios de la entidad
 // ESTADO: Funciona
@@ -170,7 +248,7 @@ function fx_recoger_dataloggers_entidad( $cn, $entidad ) {
 function fx_recoger_info_entidad( $cn, $nombre_entidad ) {
     $nombre_entidad = mysqli_real_escape_string( $cn, $nombre_entidad );
 
-    $sql = "SELECT * FROM entidad WHERE nombre = '$nombre_entidad'";
+    $sql = "SELECT * FROM entity WHERE name = '$nombre_entidad'";
     $result = mysqli_query( $cn, $sql );
     $array = mysqli_fetch_array( $result );
     return $array;
@@ -287,7 +365,7 @@ function fx_alta_container_datalogger($cn, $code, $entidad, $load_id, $sel_datal
     $info_datalogger = fx_recoger_datalogger($cn, $sel_datalogger);
     $sql = "INSERT INTO container (entity_id, load_id, datalogger_id, code) VALUES ('$entidad', ".$load_id.", ".$info_datalogger['id'].", '$cod_datalogger')";
     //echo "sql :".$sql."<br>";
-    $msg = mysqli_query($cn, $sql) or die( mysqli_error( $cn ) );
+    //$msg = mysqli_query($cn, $sql) or die( mysqli_error( $cn ) );
 }
 
 ?>

@@ -60,7 +60,7 @@ function fx_crear_subruta_incompleta( $cn, $cod_subruta, $fh_ini, $fh_fin, $enti
         $sql_suj .= "end, "; $sql_pre .= $fh_fin."', '";
     }
     $sql_suj .= "entity_id, load_id) ";
-    $sql_pre .= $entidad_id."', '".$load_id['id']."');";
+    $sql_pre .= $entidad_id."', '".$load_id."');";
     $sql_suj .= $sql_pre;
 
     mysqli_query($cn, $sql_suj);

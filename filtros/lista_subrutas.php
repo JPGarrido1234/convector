@@ -44,7 +44,7 @@ require_once($_SERVER['DOCUMENT_ROOT']."/languages/es.php");
             ' onmouseover="mostrarDetalles(\'info_subr_com1_'.$subrutas[$i]['code'].'\')"'.
             ' onmouseout="esconderDetalles(\'info_subr_com1_'.$subrutas[$i]['code'].'\')">';
                 echo '<a id="subr_'.$subrutas[$i]['code'].'" href="#">'.subruta.' '.$subrutas[$i]['code'].
-                ' - '.carga.' '.$subrutas[$i]['load_id'].' - '.responsable.': '.$subrutas[$i]['managing_entity_id'].'</a>';
+                ' - '.carga.' '.fx_recoger_loadding__id($cn, $subrutas[$i]['load_id']).' - '.responsable.': '.fx_recoger_entidad__id($cn, $subrutas[$i]['managing_entity_id']).'</a>';
 
                 echo '<form class="formulario" id="form_lista_subrutas_admin_'.$subrutas[$i]['code'].'" method='.'"POST" action="">';
                     if ( isset( $_GET['usu'] ) ) {

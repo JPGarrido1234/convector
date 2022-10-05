@@ -30,7 +30,7 @@ if(!isset($_POST['codigo_carga']) && !isset($_POST['cod_subruta']) && !isset($_P
                 <?php
                 $entidades = fx_recoger_entidades( $cn );
                 for ( $i = 0, $cant = count( $entidades ); $i < $cant; ++$i ) {
-                    echo '<option value="'.$entidades[ $i ][ 'nombre' ].'">'.$entidades[ $i ][ 'nombre' ].'  -  '.$entidades[ $i ][ 'tipo' ].'</option>';
+                    echo '<option value="'.$entidades[ $i ][ 'name' ].'">'.$entidades[ $i ][ 'name' ].'  -  '.$entidades[ $i ][ 'type' ].'</option>';
                 }
                 ?>
             </select>
@@ -127,7 +127,7 @@ if(!isset($_POST['codigo_carga']) && !isset($_POST['cod_subruta']) && !isset($_P
             <select name="entidad2" required>
                 <option value=""><?php echo selecciona_entidad ?></option>
                 <?php for ( $i = 0, $cant = count( $entidades ); $i < $cant; ++$i ) {
-                        echo '<option value="'.$entidades[$i]['nombre'].'">'.$entidades[$i]['nombre'].'</option>';
+                        echo '<option value="'.$entidades[$i]['name'].'">'.$entidades[$i]['name'].'</option>';
                     } ?>
             </select>
         </div>

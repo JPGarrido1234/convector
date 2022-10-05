@@ -2,11 +2,13 @@
 require_once($_SERVER['DOCUMENT_ROOT']."/bd/cn.php");
 require_once($_SERVER['DOCUMENT_ROOT']."/bd/clases.php");
 require_once($_SERVER['DOCUMENT_ROOT']."/languages/es.php");
+
 ?>
-<!DOCTYPE html>
+<!--<!DOCTYPE html>
 <html>
 <head></head>
 <body>
+-->
     <?php
     $entidad = fx_recoger_info_entidad( $cn, $_GET['entidad'] );
     echo '<div class="titulo" id="titulo_informacion_entidad_superadmin">';
@@ -14,12 +16,12 @@ require_once($_SERVER['DOCUMENT_ROOT']."/languages/es.php");
     echo '</div>';
 
     echo '<form class="formulario" id="form_info_entidad_admin" method="POST" action="">';
-        echo '<input class="input" type="text" value="&#127963;  '.nombre_entidad.':     '.$entidad['nombre'].'" disabled>';
-        echo '<input class="input" type="text" value="&#128712;  '.tipo.':        '.$entidad['tipo'].'" disabled>';
-        echo '<input class="input" type="text" value="&#9872;  '.direccion_1.':     '.$entidad['direccion1'].'" disabled>';
-        echo '<input class="input" type="text" value="&#9873;  '.direccion_2.':     '.$entidad['direccion2'].'" disabled>';
-        echo '<input class="input" type="text" value="&#127968;&#65038;  '.poblacion.':     '.$entidad['poblacion'].'" disabled>';
-        echo '<input class="input" type="text" value="&#127757;&#65038;  '.pais.':     '.$entidad['pais'].'" disabled>';
+        echo '<input class="input" type="text" value="&#127963;  '.nombre_entidad.':     '.$entidad['name'].'" disabled>';
+        echo '<input class="input" type="text" value="&#128712;  '.tipo.':        '.$entidad['type'].'" disabled>';
+        echo '<input class="input" type="text" value="&#9872;  '.direccion_1.':     '.$entidad['address_1'].'" disabled>';
+        echo '<input class="input" type="text" value="&#9873;  '.direccion_2.':     '.$entidad['address_2'].'" disabled>';
+        echo '<input class="input" type="text" value="&#127968;&#65038;  '.poblacion.':     '.$entidad['population'].'" disabled>';
+        echo '<input class="input" type="text" value="&#127757;&#65038;  '.pais.':     '.$entidad['country'].'" disabled>';
     echo '</form>';
     ?>
 
@@ -38,22 +40,22 @@ require_once($_SERVER['DOCUMENT_ROOT']."/languages/es.php");
 
     <div id="div_lista_empleados_completa_sa">
         <?php
-        $usuarios = fx_recoger_usuarios_entidad( $cn, $entidad['nombre'] );
+        $usuarios = fx_recoger_usuarios_entidad( $cn, $entidad['name'] );
         $usuarios_admins = array();
         $usuarios_tecs = array();
         for ( $i = 0, $cant = count( $usuarios ); $i < $cant; ++$i ) {
-            if ( $usuarios[$i]['rol'] == 'Administrador' ) {
+            if ( $usuarios[$i]['role'] == 'ROLE_ADMIN' ) {
                 array_push( $usuarios_admins, $usuarios[$i] );
             } else {
                 array_push( $usuarios_tecs, $usuarios[$i] );
             }
             echo '<div class="info_carga" onmouseover="mostrarDetalles(\'info_usu_sa_'.$i.
             '\')"'.' onmouseout="esconderDetalles(\'info_usu_sa_'.$i.'\')">';
-            echo '<pre>'.$usuarios[$i]['nombre'].'          '.rol.': '.$usuarios[$i]['rol'].'</pre>';
+            echo '<pre>'.$usuarios[$i]['first_name'].'          '.rol.': '.$usuarios[$i]['role'].'</pre>';
             echo '</div>';
 
             echo '<div class="info_c" id="info_usu_sa_'.$i.'">';
-            echo '<pre>'.email.': '.$usuarios[$i]['email'].'          '.cargo.': '.$usuarios[$i]['cargo'].'</pre>';
+            echo '<pre>'.email.': '.$usuarios[$i]['email'].'          '.cargo.': '.$usuarios[$i]['position'].'</pre>';
             echo '</div>';
         }
         ?>
@@ -62,7 +64,7 @@ require_once($_SERVER['DOCUMENT_ROOT']."/languages/es.php");
         <?php
         for ( $i = 0, $cant = count( $usuarios_admins ); $i < $cant; ++$i ) {
             echo '<div class="info_carga">';
-            echo '<pre>'.$usuarios_admins[$i]['nombre'].'           '.email.': '.$usuarios_admins[$i]['email'].'            '.cargo.': '.$usuarios_admins[$i]['cargo'].'</pre>';
+            echo '<pre>'.$usuarios_admins[$i]['first_name'].'           '.email.': '.$usuarios_admins[$i]['email'].'            '.cargo.': '.$usuarios_admins[$i]['position'].'</pre>';
             echo '</div>';
         }
         ?>
@@ -71,10 +73,12 @@ require_once($_SERVER['DOCUMENT_ROOT']."/languages/es.php");
         <?php
         for ( $i = 0, $cant = count( $usuarios_tecs ); $i < $cant; ++$i ) {
             echo '<div class="info_carga">';
-            echo '<pre>'.$usuarios_tecs[$i]['nombre'].'           '.email.': '.$usuarios_tecs[$i]['email'].'            '.cargo.': '.$usuarios_tecs[$i]['cargo'].'</pre>';
+            echo '<pre>'.$usuarios_tecs[$i]['first_name'].'           '.email.': '.$usuarios_tecs[$i]['email'].'            '.cargo.': '.$usuarios_tecs[$i]['position'].'</pre>';
             echo '</div>';
         }
         ?>
     </div>
+    <!--
 </body>
 </html>
+    -->

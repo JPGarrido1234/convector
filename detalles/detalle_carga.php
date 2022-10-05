@@ -57,11 +57,11 @@ require($_SERVER['DOCUMENT_ROOT']."/headers_footers/header_principal.php");
         <?php
         echo '<div class="label_form">';
             echo '<h4>&#127963;  '.entidad.':</h4>';
-            echo '<input class="input" type="text" value="'.$carga['entity_id'].'" disabled>';
+            echo '<input class="input" type="text" value="'.fx_recoger_entidad__id($cn, $carga['entity_id']).'" disabled>';
         echo '</div>';
         echo '<div class="label_form">';
             echo '<h4>&#128104;&#65038;  '.responsable.':</h4>';
-            echo '<input class="input" type="text" value="'.$carga['supervisor_id'].'" disabled>';
+            echo '<input class="input" type="text" value="'.fx_recoger_usuario__id($cn, $carga['supervisor_id']).'" disabled>';
         echo '</div>';
         
         echo '<br><br>';
@@ -167,7 +167,7 @@ require($_SERVER['DOCUMENT_ROOT']."/headers_footers/header_principal.php");
         $enlaces = fx_recoger_dataloggers_carga($cn, $carga['id']);
         for ($i = 0, $cant = count($enlaces); $i < $cant; ++$i) {
             echo '<div class="info_carga con_btn_inv">';
-                echo '<pre>'.datalogger.' '.$enlaces[$i]['datalogger_id'].
+                echo '<pre>'.datalogger.' '.fx_recoger_datalogger__id($cn, $enlaces[$i]['datalogger_id']).
                 '            '.contenedor.' '.$enlaces[$i]['code'].'</pre>';
 
                 echo '<form class="formulario" id="form_lista_dataloggers_carga" method="POST" action="">';

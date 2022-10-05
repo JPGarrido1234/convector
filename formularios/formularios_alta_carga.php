@@ -82,7 +82,7 @@ if ( isset( $_POST ) ) {
         if ( !$incorrecto ) {
             fx_insertar_vehiculos_carga( $cn, $_POST['cod_carga'], $tipos, $matriculas );
         }
-
+        include($_SERVER['DOCUMENT_ROOT']."/inicio_admin.php");
         $_POST['cod_carga'] = null;
     }
 }

@@ -75,6 +75,15 @@ function fx_recoger_producto($cn, $cod_producto) {
     return $resultf;
 }
 
+function fx_recoger_producto_by_id($cn, $cod_producto) {
+    //$cod_producto = mysqli_real_escape_string( $cn, $cod_producto );
+
+    $sql = "SELECT * FROM product WHERE id = '$cod_producto'";
+    $result = mysqli_query($cn, $sql);
+    $resultf = mysqli_fetch_array($result);
+    return $resultf;
+}
+
 // Función que compara si hay algún registro de un producto ya metido en la BD y devuelve su código
 // RETURN: Código del producto existente si existe y 0 si no hay casos
 // ESTADO: Funciona

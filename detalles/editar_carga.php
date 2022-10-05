@@ -27,21 +27,21 @@ require($_SERVER['DOCUMENT_ROOT']."/headers_footers/header_principal.php");
     </div>
     <form class="formulario" id="form_editar_carga" method="POST" action="">
         <?php
-        $carga = fx_recoger_carga( $cn, $_SESSION['cod_carga'] );
+        $carga = fx_recoger_carga_all( $cn, $_SESSION['cod_carga'] );
         ?>
         <div class="label_form">
             <h4>&#127963;  <?php echo entidad ?>:</h4>
-            <input class="input" type="text" value="<?php echo $carga['entidad'] ?>" name="entidad" disabled>
+            <input class="input" type="text" value="<?php echo fx_recoger_entidad__id($cn, $carga['entity_id']) ?>" name="entidad" disabled>
         </div>
         <div class="label_form">
             <h4>&#128104;&#65038;   <?php echo responsable ?>:</h4>
             <select name="responsable">
                 <?php
-                $usuarios = fx_recoger_usuarios_entidad( $cn, $carga['entidad'] );
+                $usuarios = fx_recoger_usuarios_entidad( $cn, $carga['entity_id'] );
                 for ( $i = 0, $cant = count( $usuarios ); $i < $cant; ++$i ) {
-                    if ( $usuarios[$i]['email'] == $carga['responsable'] ) {
-                        echo '<option value="'.$usuarios[$i]['email'].'" selected>'.usuario.' '.($i+1).' - '.$usuarios[$i]['nombre'].' ('.$usuarios[$i]['rol'].')</option>';
-                    } else { echo '<option value="'.$usuarios[$i]['email'].'">'.usuario.' '.($i+1).' - '.$usuarios[$i]['nombre'].' ('.$usuarios[$i]['rol'].')</option>'; }
+                    if ( $usuarios[$i]['id'] == $carga['supervisor_id'] ) {
+                        echo '<option value="'.$usuarios[$i]['email'].'" selected>'.usuario.' '.($i+1).' - '.$usuarios[$i]['first_name'].' ('.$usuarios[$i]['role'].')</option>';
+                    } else { echo '<option value="'.$usuarios[$i]['email'].'">'.usuario.' '.($i+1).' - '.$usuarios[$i]['first_name'].' ('.$usuarios[$i]['role'].')</option>'; }
                 }
                 ?>
             </select>
@@ -49,67 +49,67 @@ require($_SERVER['DOCUMENT_ROOT']."/headers_footers/header_principal.php");
         <br><br>
         <div class="label_form">
             <h4>&#128467;   <?php echo fecha_inicio ?>:</h4>
-            <input class="input" type="date" value="<?php echo $carga['fecha_inicio'] ?>" name="fecha_ini">
+            <input class="input" type="date" value="<?php echo $carga['start'] ?>" name="fecha_ini">
         </div>
         <div class="label_form">
             <h4>&#128467;   <?php echo fecha_final ?>:</h4>
-            <input class="input" type="date" value="<?php echo $carga['fecha_final'] ?>" name="fecha_fin">
+            <input class="input" type="date" value="<?php echo $carga['end'] ?>" name="fecha_fin">
         </div>
         <div class="label_form">
             <h4>&#128467;   <?php echo fecha_caducidad ?>:</h4>
-            <input class="input" type="date" value="<?php echo $carga['fecha_caducidad'] ?>" name="fecha_cadu">
+            <input class="input" type="date" value="<?php echo $carga['expiry'] ?>" name="fecha_cadu">
         </div>
         <br><br>
         <div class="label_form">
             <h4>&#128505;  <?php echo numero_contenedores ?> (<?php echo unidades_m ?>):</h4>
-            <input class="input" type="number" step="1" value="<?php echo $carga['num_contenedores'] ?>" name="num_cont">
+            <input class="input" type="number" step="1" value="<?php echo $carga['containers'] ?>" name="num_cont">
         </div>
         <div class="label_form">
             <h4>&#128505;  <?php echo kilos_totales ?> (<?php echo kgs_m ?>):</h4>
-            <input class="input" type="number" step="1" value="<?php echo $carga['kgs_totales'] ?>" name="kgs_totales">
+            <input class="input" type="number" step="1" value="<?php echo $carga['weight'] ?>" name="kgs_totales">
         </div>
         <div class="label_form">
             <h4>&#128230;&#65038;  <?php echo producto ?>:</h4>
             <select id="select_producto_editar_carga" name="sel_prod">
                 <?php
-                $productos = fx_recoger_productos_entidad_unique( $cn, $carga['entidad'] );
-                if ( $carga['producto'] == null ) {
+                $productos = fx_recoger_productos_entidad_unique( $cn, $carga['entity_id'] );
+                if ( $carga['product_id'] == null ) {
                     echo '<option value="" selected></option>';
                 }
-                $prod_carga = fx_recoger_producto( $cn, $carga['producto'] );
+                $prod_carga = fx_recoger_producto( $cn, $carga['product_id'] );
                 $other = false;
                 for ( $i = 0, $cant = count($productos); $i < $cant; ++$i ) {
 
-                    if ( $productos[$i]['nombre'] == $prod_carga['nombre'] && $productos[$i]['variedad'] == $prod_carga['variedad'] && 
-                    ( $productos[$i]['t_min'] != $prod_carga['t_min'] || $productos[$i]['t_max'] != $prod_carga['t_max'] ) ) {
+                    if ( $productos[$i]['name'] == $prod_carga['name'] && $productos[$i]['variety'] == $prod_carga['variety'] && 
+                    ( $productos[$i]['min_temp'] != $prod_carga['min_temp'] || $productos[$i]['max_temp'] != $prod_carga['max_temp'] ) ) {
                         $other = true;
-                        $prod_rep = $productos[$i]['codigo'];
+                        $prod_rep = $productos[$i]['code'];
                     }
 
-                    if ( $prod_rep != $productos[$i]['codigo'] ) {
-                        if ( $productos[$i]['variedad'] != null ) {
-                            $pr = '<option value="'.$productos[$i]['codigo']."/".$productos[$i]["t_max"]."/".$productos[$i]["t_min"].'"';
-                            if ( $productos[$i]['codigo'] == $carga['producto'] ) {
+                    if ( $prod_rep != $productos[$i]['code'] ) {
+                        if ( $productos[$i]['variety'] != null ) {
+                            $pr = '<option value="'.$productos[$i]['code']."/".$productos[$i]["max_temp"]."/".$productos[$i]["min_temp"].'"';
+                            if ( $productos[$i]['id'] == $carga['product_id'] ) {
                                 $pr .= ' selected';
                             }
-                            $pr .= '>'.$productos[$i]['nombre'].' - '.variedad.': '.$productos[$i]['variedad'].'</option>';
+                            $pr .= '>'.$productos[$i]['name'].' - '.variedad.': '.$productos[$i]['variety'].'</option>';
                             echo $pr;
                         } else {
-                            $pr = '<option value="'.$productos[$i]['codigo']."/".$productos[$i]["t_max"]."/".$productos[$i]["t_min"].'"';
-                            if ( $productos[$i]['codigo'] == $carga['producto'] ) {
+                            $pr = '<option value="'.$productos[$i]['code']."/".$productos[$i]["max_temp"]."/".$productos[$i]["min_temp"].'"';
+                            if ( $productos[$i]['id'] == $carga['product_id'] ) {
                                 $pr .= ' selected';
                             }
-                            $pr .= '>'.$productos[$i]['nombre'].' - '.variedad.': '.sin_establecer_m.'</option>';
+                            $pr .= '>'.$productos[$i]['name'].' - '.variedad.': '.sin_establecer_m.'</option>';
                             echo $pr;
                         }
                     }
                 }
 
                 if ( $other ) {
-                    if ( $prod_carga['variedad'] != null ) {
-                        echo '<option value="'.$prod_carga['codigo']."/".$prod_carga["t_max"]."/".$prod_carga["t_min"].'" selected>'.$prod_carga['nombre'].' - '.variedad.': '.$prod_carga['variedad'].'</option>';
+                    if ( $prod_carga['variety'] != null ) {
+                        echo '<option value="'.$prod_carga['code']."/".$prod_carga["max_temp"]."/".$prod_carga["min_temp"].'" selected>'.$prod_carga['name'].' - '.variedad.': '.$prod_carga['variety'].'</option>';
                     } else {
-                        echo '<option value="'.$prod_carga['codigo']."/".$prod_carga["t_max"]."/".$prod_carga["t_min"].'" selected>'.$prod_carga['nombre'].' - '.variedad.': '.sin_establecer_m.'</option>';
+                        echo '<option value="'.$prod_carga['code']."/".$prod_carga["max_temp"]."/".$prod_carga["min_temp"].'" selected>'.$prod_carga['name'].' - '.variedad.': '.sin_establecer_m.'</option>';
                     }
                 }
                 ?>
@@ -117,14 +117,14 @@ require($_SERVER['DOCUMENT_ROOT']."/headers_footers/header_principal.php");
         </div>
         <div class="label_form">
             <h4>&#127777;&#11014;  <?php echo t_maxima ?> (<?php echo oc ?>):</h4>
-            <input class="input" type="number" step="0.01" value="<?php echo $prod_carga['t_max'] ?>" name="temp_max">
+            <input class="input" type="number" step="0.01" value="<?php echo $prod_carga['max_temp'] ?>" name="temp_max">
         </div>
         <div class="label_form">
             <h4>&#127777;&#11015;  <?php echo t_minima ?> (<?php echo oc ?>):</h4>
-            <input class="input" type="number" step="0.01" value="<?php echo $prod_carga['t_min'] ?>" name="temp_min">
+            <input class="input" type="number" step="0.01" value="<?php echo $prod_carga['min_temp'] ?>" name="temp_min">
         </div>
         <input type="hidden" name="session" value="<?php echo $_SESSION['ss_usuario'] ?>">
-        <input type="hidden" name="cod_carga" value="<?php echo $carga['codigo'] ?>">
+        <input type="hidden" name="cod_carga" value="<?php echo $carga['code'] ?>">
         <div class="boton" id="sig_editar_carga_btn">
             <input class="submit" type="submit" name="btn_sig1" value="<?php echo siguiente ?>">
         </div>

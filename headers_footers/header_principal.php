@@ -10,7 +10,7 @@
         </div>
         <div id="name_user" style="display:none;"><?php echo $_SESSION['ss_usuario']; ?></div>
         <div class="nombre_usuario">
-            <h3><?php echo entidad ?>:<?php echo fx_recoger_entidad( $cn, $_SESSION['ss_usuario'] ); ?></h3>
+            <h3><?php echo entidad ?>:<?php echo fx_recoger_entidad__id($cn, fx_recoger_entidad( $cn, $_SESSION['ss_usuario'] )); ?></h3>
         </div>
         <div id="logo_ministerio_peq">
             <img title="cdti_logo" src="../images/CDTI.png" alt="<?php echo cdti_M ?>">

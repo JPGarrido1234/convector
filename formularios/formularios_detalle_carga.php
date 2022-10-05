@@ -92,7 +92,7 @@ if ( isset( $_POST ) ) {
             fx_editar_lugares( $cn, $_POST['cod_carga'], $lat_or, $long_or, $_POST['origen'], $lat_dest, $long_dest, $_POST['destino'] );
         }
 
-        if ( $carga['fecha_inicio'] != null && $carga['fecha_final'] != null ) {
+        if ( $carga['start'] != null && $carga['end'] != null ) {
             include($_SERVER['DOCUMENT_ROOT']."/detalles/editar_carga_dataloggers.php");
         } else {
             if ( fx_recoger_rol( $cn, $_POST['session'] ) == 'ROLE_ADMIN' ) {

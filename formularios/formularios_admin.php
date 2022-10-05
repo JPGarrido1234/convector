@@ -68,7 +68,8 @@ if ( isset( $_POST ) ) {
             for($i=0;$i<$_POST['num_cont_carga']; $i++){
                 if(isset($_POST['dat_'.$i])){
                     $load_id = fx_recoger_carga($cn, $_POST['cod_carga']);
-                    $msg = fx_alta_container_datalogger($cn, $_POST['cont_'.$i], $entidad, $load_id['id'], $_POST['dat_'.$i]);
+                    echo $load_id;
+                    $msg = fx_alta_container_datalogger($cn, $_POST['cont_'.$i], $entidad, $load_id, $_POST['dat_'.$i]);
                 }  
             }
         }

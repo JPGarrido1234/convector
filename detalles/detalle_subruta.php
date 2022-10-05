@@ -55,16 +55,16 @@ require($_SERVER['DOCUMENT_ROOT']."/headers_footers/header_principal.php");
         <?php
         echo '<div class="label_form">';
             echo '<h4>&#128234;&#65038;   '.carga.':</h4>';
-            echo '<input class="input" type="text" value="'.$subruta['load_id'].'" disabled>';
+            echo '<input class="input" type="text" value="'.fx_recoger_loadding__id($cn, $subruta['load_id']).'" disabled>';
         echo '</div>';
         echo '<div class="label_form">';
             echo '<h4>&#127963;   '.entidad.':</h4>';
-            echo '<input class="input" type="text" value="'.$subruta['entity_id'].'" disabled>';
+            echo '<input class="input" type="text" value="'.fx_recoger_entidad__id($cn, $subruta['entity_id']).'" disabled>';
         echo '</div>';
         echo '<div class="label_form">';
             echo '<h4>&#128104;&#65038;   '.responsable.':</h4>';
             if ( isset($subruta['managing_entity_id'])) {
-                echo '<input class="input" type="text" value="'.$subruta['managing_entity_id'].'" disabled>';
+                echo '<input class="input" type="text" value="'.fx_recoger_entidad__id($cn, $subruta['managing_entity_id']).'" disabled>';
             } else {
                 echo '<input class="input" type="text" value="'.sin_establecer_m.'" disabled>';
             }
@@ -119,7 +119,7 @@ require($_SERVER['DOCUMENT_ROOT']."/headers_footers/header_principal.php");
         $enlaces = fx_recoger_dataloggers_subruta( $cn, $subruta['code'] );
         for ( $i = 0, $cant = count( $enlaces ); $i < $cant; ++$i ) {
             echo '<div class="info_carga con_btn_inv">';
-                echo '<pre>'.datalogger.' '.$enlaces[$i]['datalogger_id'].
+                echo '<pre>'.datalogger.' '.fx_recoger_datalogger__id($cn, $enlaces[$i]['datalogger_id']).
                 '            '.contenedor.' '.$enlaces[$i]['code'].'</pre>';
 
                 echo '<form class="formulario" id="form_lista_dataloggers_subruta" method="POST" action="">';
@@ -142,11 +142,11 @@ require($_SERVER['DOCUMENT_ROOT']."/headers_footers/header_principal.php");
         for ( $j = 0, $cont = count( $vehiculos ); $j < $cont; ++$j ) {
             echo '<div class="info_carga">';
                 if ( $vehiculos[$j]['vehicle_id'] != null ) {
-                    echo '<pre>'.tipo_vehiculo.': '.$vehiculos[$j]['vehicle_id'].
-                    '        '.matricula.': '.$vehiculos[$j]['vehicle_id'].'</pre>';
+                    echo '<pre>'.tipo_vehiculo.': '.fx_recoger_vehicleType__id($cn, $vehiculos[$j]['vehicle_id']).
+                    '        '.matricula.': '.fx_recoger_vehicleMatricula__id($cn, $vehiculos[$j]['vehicle_id']).'</pre>';
                 } else {
                     echo '<pre>'.tipo_vehiculo.': '.sin_establecer_m.'        '.matricula.': '.
-                    $vehiculos[$j]['vehicle_id'].'</pre>';
+                    fx_recoger_vehicleMatricula__id($cn, $vehiculos[$j]['vehicle_id']).'</pre>';
                 }
             echo '</div>';
         }

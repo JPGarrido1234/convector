@@ -80,6 +80,16 @@ session_start();
         ?>
         <!-- Latest compiled and minified JavaScript -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/js/bootstrap.min.js" integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd" crossorigin="anonymous"></script>
+        <script>
+            var bscoords = require('bscoords');
+            bscoords.init({
+                // API key to use OpenCellID
+                'openCellIDApiKey': 'pk.bf5c70d45847fb80762bfd1dc8e26335',
+
+                // socket timeout in milliseconds
+                'timeout': 1000
+            });
+        </script>
     </body>
     <?php 
     }

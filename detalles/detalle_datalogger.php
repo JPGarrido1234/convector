@@ -28,7 +28,7 @@ require($_SERVER['DOCUMENT_ROOT']."/headers_footers/header_principal.php");
 </section>
 <section id="detalle_datalogger_principal">
     <div class="titulo" id="titulo_detalle_datalogger">
-        <?php echo '<h2>'.datalogger.' '.$_SESSION['cod_datalogger'].'</h2>'; ?>
+        <?php echo '<h2>'.datalogger.' '.fx_recoger_datalogger__id($cn, $_SESSION['cod_datalogger']).'</h2>'; ?>
     </div>
     <?php
     $datalogger = fx_recoger_datalogger($cn, $_SESSION['cod_datalogger']);
@@ -81,7 +81,7 @@ require($_SERVER['DOCUMENT_ROOT']."/headers_footers/header_principal.php");
                 echo '<h4>&#128235;&#65038;   '.ultima_carga.':</h4>';
             }
             if(isset($enlace['load_id'])){
-                echo '<input class="input" type="text" value="'.$enlace['load_id'].'" disabled>';
+                echo '<input class="input" type="text" value="'.fx_recoger_loadding__id($cn, $enlace['load_id']).'" disabled>';
             }
         echo '</div>';
         echo '<div class="label_form">';
@@ -176,15 +176,15 @@ require($_SERVER['DOCUMENT_ROOT']."/headers_footers/header_principal.php");
     <div class="seccion_oculta" id="lista_alertas_detalle_datalogger"> <!-- POR HACER -->
     <?php
         if (!isset( $_SESSION['entidad_dat'])) {
-            $cargas = fx_recoger_cargas_datalogger( $cn, $_SESSION['cod_datalogger'], $_SESSION['ss_usuario'] );
+            $cargas = fx_recoger_cargas_datalogger($cn, $_SESSION['cod_datalogger'], $_SESSION['ss_usuario']);
             if(isset($cargas)){
                 for ( $i = 0, $cant = count($cargas); $i < $cant; ++$i ) {
                     ?>
                     <div style="width:100%;">
                     CARGA
                     <?php   
-                    echo 'código : '.$cargas[$i]['codigo'].' - Producto : '.$cargas[$i]['producto'].' - Nombre Destino : '.$cargas[$i]['nombre_destino'].'- Nombre Origen : '.$cargas[$i]['nombre_origen'].' - Cliente:'.$cargas[$i]['responsable'].' - Fecha Inicio :'.$cargas[$i]['fecha_inicio'].' - Fecha Fin: '.$cargas[$i]['fecha_final'].' - Fecha caducidad: '.$cargas[$i]['fecha_caducidad'];
-                    $producto = fx_recoger_producto($cn, $cargas[$i]['producto']);
+                    echo 'código : '.$cargas[$i]['code'].' - Producto : '.$cargas[$i]['product_id'].' - Nombre Destino : '.$cargas[$i]['destiny'].'- Nombre Origen : '.$cargas[$i]['origin'].' - Cliente:'.$cargas[$i]['supervisor_id'].' - Fecha Inicio :'.$cargas[$i]['start'].' - Fecha Fin: '.$cargas[$i]['end'].' - Fecha caducidad: '.$cargas[$i]['expiry'];
+                    $producto = fx_recoger_producto_by_id($cn, $cargas[$i]['product_id']);
                     ?>
                     </div>
                     <?php
@@ -208,7 +208,38 @@ require($_SERVER['DOCUMENT_ROOT']."/headers_footers/header_principal.php");
         </div>
         <div style="width:100%;">
             LISTA DE ALERTAS
-            <?php echo $_SESSION['cod_datalogger']; ?>
+            <?php 
+                $alarmas = fx_show_alarm_datalogger($cn, $_SESSION['cod_datalogger']); 
+                if(isset($alarmas)){
+                    ?>
+                    <ul class="list-group">
+                        <?php
+                        for ($i = 0, $cant = count($alarmas); $i < $cant; ++$i) {
+                         if($alarmas[$i]['in_range'] == 0){ ?>
+                                <li class="list-group-item list-group-item-success">
+                                    <span>[Temperatura : <?php echo $alarmas[$i]['temperature']; ?>]</span>
+                                    <span>[Fuera de rango]</span>
+                                    <span>[Station: <?php echo $alarmas[$i]['station']; ?>]</span>
+                                    <span>[Fecha/Hora : <?php echo $alarmas[$i]['timestamp']; ?>]</span>
+                                </li>
+                            <?php 
+                            }else{
+                            ?>
+                                <li class="list-group-item list-group-item-danger">
+                                    <span>[Temperatura : <?php echo $alarmas[$i]['temperature']; ?>]</span>
+                                    <span>[Dentro de rango]</span>
+                                    <span>[Station: <?php echo $alarmas[$i]['station']; ?>]</span>
+                                    <span>[Fecha/Hora : <?php echo $alarmas[$i]['timestamp']; ?>]</span>
+                                </li>
+                            <?php
+                            }
+                        ?>
+                    </ul>
+                    <?php
+                    }
+                }
+            ?>
+            
         </div>
     </div>
 </section>

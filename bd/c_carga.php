@@ -99,7 +99,20 @@ function fx_recoger_carga($cn, $cod_carga) {
     $sql = "SELECT * FROM loading WHERE code = '$cod_carga'";
     $result = mysqli_query($cn, $sql);
     $array = mysqli_fetch_array($result);
-    return $array[0];
+    if(isset($array[0])){
+        return $array[0];    
+    }else{
+        return null;
+    } 
+}
+
+function fx_recoger_carga_all($cn, $cod_carga) {
+    $cod_carga = mysqli_real_escape_string($cn, $cod_carga);
+
+    $sql = "SELECT * FROM loading WHERE code = '$cod_carga'";
+    $result = mysqli_query($cn, $sql);
+    $array = mysqli_fetch_array($result);
+    return $array;
 }
 
 // Función que recoge toda la información sobre una carga en base a su código con lvl de privilegios
@@ -191,6 +204,7 @@ function fx_recoger_cargas_datalogger( $cn, $cod_datalogger, $usuario ) {
         SELECT load_id FROM container WHERE datalogger_id = '$cod_datalogger'
     )";
 
+    //echo "Sql : ".$sql."<br>";
     $array = array();
     $result = mysqli_query( $cn, $sql );
     while ( $fila = mysqli_fetch_array( $result ) ) {
@@ -199,6 +213,18 @@ function fx_recoger_cargas_datalogger( $cn, $cod_datalogger, $usuario ) {
     }
     return $array;
     
+}
+
+function fx_show_alarm_datalogger($cn, $datalogger_id){
+    $sql = "SELECT * FROM alarm WHERE datalogger_id = ".$datalogger_id."";
+    $result = mysqli_query($cn, $sql);
+    $array = array();
+    if($result){
+        while ( $fila = mysqli_fetch_array( $result ) ) {
+            array_push( $array, $fila );
+        }
+    }
+    return $array;
 }
 
 // Función que recoge toda la información de una carga de una entidad en base a en las que ha estado
@@ -769,17 +795,21 @@ function recoger_cargas_disponibles_subruta( $cn, $usuario ) {
 // ESTADO: Funciona
 function fx_insertar_vehiculos_carga( $cn, $cod_carga, $lista_tipos, $lista_matriculas ) {
     $cod_carga = mysqli_real_escape_string( $cn, $cod_carga );
+    
     $load_id = fx_recoger_carga($cn, $cod_carga);
-    for ( $i = 0, $cont = count( $lista_tipos ); $i < $cont; ++$i ) {
-        $mat = mysqli_real_escape_string( $cn, $lista_matriculas[$i] );
-        if ($lista_tipos[$i] != null ) {
-            $tipo = mysqli_real_escape_string( $cn, $lista_tipos[$i] );
-            $sql = "INSERT INTO vehicle_load (license_number, type_car, load_id) VALUES ('$mat', '$tipo', ".$load_id['id'].")";
-        } else {
-            $sql = "INSERT INTO vehicle_load (license_number, load_id) VALUES ('$mat', '$load_id')";
+    if(isset($load_id)){
+        for ( $i = 0, $cont = count( $lista_tipos ); $i < $cont; ++$i ) {
+            $mat = mysqli_real_escape_string( $cn, $lista_matriculas[$i] );
+            if ($lista_tipos[$i] != null ) {
+                $tipo = mysqli_real_escape_string( $cn, $lista_tipos[$i] );
+                $sql = "INSERT INTO vehicle_load (license_number, type_car, load_id) VALUES ('$mat', '$tipo', ".$load_id.")";
+            } else {
+                $sql = "INSERT INTO vehicle_load (license_number, load_id) VALUES ('$mat', '$load_id')";
+            }
+            $msg = mysqli_query($cn, $sql) or die(mysqli_error($cn));
         }
-        $msg = mysqli_query($cn, $sql) or die(mysqli_error($cn));
     }
+    
 }
 
 // Función que recoge todos los vehículos de una carga
@@ -930,7 +960,7 @@ function fx_recoger_datalogger_random_carga($cn, $cod_carga) {
         $cod_carga = fx_recoger_carga($cn, $cod_carga);
     }
    
-    $sql = "SELECT datalogger_id FROM container WHERE load_id = ".$cod_carga['id'];
+    $sql = "SELECT datalogger_id FROM container WHERE load_id = ".$cod_carga;
     $result = mysqli_query($cn, $sql);
     $fila = mysqli_fetch_array($result);
     if($fila != null){    
