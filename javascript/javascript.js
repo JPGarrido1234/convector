@@ -206,17 +206,23 @@ function cambiarMenuAdmin(num) {
         if (num == 1) {
             submenu1.style.display = 'block';
             submenu2.style.display = 'none';
-            info_entidad.style.display = 'none';
+            if(info_entidad != undefined){
+                info_entidad.style.display = 'none';
+            }
             cambiarSubmenuGestionAdmin(0);
         } else if (num == 2) {
             submenu1.style.display = 'none';
             submenu2.style.display = 'block';
-            info_entidad.style.display = 'none';
+            if(info_entidad != undefined){
+                info_entidad.style.display = 'none';
+            }
             cambiarSubmenuAltaAdmin(0);
         } else if (num == 3) {
             submenu1.style.display = 'none';
             submenu2.style.display = 'none';
-            info_entidad.style.display = 'block';
+            if(info_entidad != undefined){
+                info_entidad.style.display = 'block';
+            }
             cambiarSubmenuAltaAdmin(0);
             cambiarSubmenuGestionAdmin(0);
         }

@@ -351,14 +351,6 @@ function fx_recoger_dataloggers_off_entidad( $cn, $entidad, $carga ) {
 
 }
 
-function fx_alta_datalogger($cn, $cod_datalogger, $entidad){
-    $cod_datalogger = mysqli_real_escape_string( $cn, $cod_datalogger );
-
-    $sql = "INSERT INTO datalogger (entity_id, code, is_active) VALUES ('$entidad', '$cod_datalogger', 0)";
-    //echo "sql : ".$sql."<br>";
-    //$msg = mysqli_query($cn, $sql) or die( mysqli_error($cn) );
-}
-
 function fx_alta_container_datalogger($cn, $code, $entidad, $load_id, $sel_datalogger) {
     $cod_datalogger = mysqli_real_escape_string( $cn, $code );
 

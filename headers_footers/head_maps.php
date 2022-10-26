@@ -15,3 +15,34 @@
     <script type="text/javascript" src="../javascript/maps.js"></script>
     <script type="text/javascript" src="../javascript/ajax.js"></script>
     <script type="text/javascript" src="../javascript/funcs_jquery.js"></script>
+    <script type="text/javascript">
+    //mcc 257,
+    //mnc 216,
+    //lac 22,
+    //cid 24
+        /*
+        var settings = {
+            "async": true,
+            "crossDomain": true,
+            "url": "https://us1.unwiredlabs.com/v2/process.php",
+            "method": "POST",
+            "headers": {},
+            "processData": false,
+            "data": "{\"token\": \"pk.29c13934e838783fb384b684eebdd7ec\",\"radio\": \"gsm\",\"mcc\": 257,\"mnc\": 216,\"cells\": [{\"lac\": 22,\"cid\":24}]}"
+        }
+
+        $.ajax(settings).done(function (response) {
+            if(response){
+                console.log(response);
+            }
+        });
+        */
+    </script>
+<script type="text/javascript">
+    const alarms_class = document.querySelectorAll(".ubi_alarm");
+    if(alarms_class != null){
+        alarms_class.forEach(function (element) {
+            console.log('Ubicacion alarma : '+element.innerHTML);
+        });
+    }
+</script>

@@ -15,6 +15,20 @@ function fx_recoger_datalogger($cn, $cod_datalogger) {
     return $array;
 }
 
+function fx_recoger_datalogger_code($cn, $cod_datalogger) {
+    $array = array();
+    $cod_datalogger = mysqli_real_escape_string( $cn, $cod_datalogger);
+
+    $sql = "SELECT * FROM datalogger WHERE code = '$cod_datalogger'";
+     
+    $result = mysqli_query($cn, $sql);
+    while ( $fila = mysqli_fetch_array( $result ) ) {
+        array_push( $array, $fila );
+    }
+
+    return $array;
+}
+
 // Función que recoge todos los dataloggers registrados en la aplicación
 function fx_recoger_dataloggers( $cn ) {
     $sql = "SELECT * FROM datalogger";
@@ -96,6 +110,23 @@ function fx_baja_datalogger( $cn, $cod_datalogger, $baja ) {
         $sql = "UPDATE datalogger SET is_active = 1 WHERE code = '$cod_datalogger'";
     }
     $msg = mysqli_query( $cn, $sql ) or die( mysqli_error( $cn ) );
+}
+
+function fx_alta_datalogger($cn, $cod_datalogger, $entidad){
+    $arr_datalogger = array();
+    $msg = '';
+    $insert = false;
+    $cod_datalogger = mysqli_real_escape_string( $cn, $cod_datalogger );
+
+    $arr_datalogger = count(fx_recoger_datalogger_code($cn, $cod_datalogger));   
+    if($arr_datalogger == 0){   
+        //$sql = "INSERT INTO datalogger (entity_id, code, is_active) VALUES ('$entidad', '$cod_datalogger', 0)";
+        //$msg = mysqli_query($cn, $sql);
+        $insert = true;
+    }
+    
+    
+    return $insert;
 }
 
 function fx_update_datalogger($cn, $tochange, $cod_datalogger, $entidad){

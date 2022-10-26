@@ -24,6 +24,9 @@ require($_SERVER['DOCUMENT_ROOT']."/headers_footers/header_principal.php");
     if(isset($_POST['msgData'])){
         echo '<span>'.$_POST['msgData'].'</span>';
     }
+    if($insert){
+        echo "Datalogger insertado con éxito.";
+    }
     ?>
 </section>
 <section id="detalle_datalogger_principal">
@@ -31,67 +34,71 @@ require($_SERVER['DOCUMENT_ROOT']."/headers_footers/header_principal.php");
         <?php echo '<h2>'.datalogger.' '.fx_recoger_datalogger__id($cn, $_SESSION['cod_datalogger']).'</h2>'; ?>
     </div>
     <?php
-    $datalogger = fx_recoger_datalogger($cn, $_SESSION['cod_datalogger']);
-    $enlace = fx_recoger_ultimo_enlace( $cn, $datalogger['code']);
-    if ( ($datalogger['is_active'] == 0) && !( isset( $_SESSION['entidad_dat'] ) ) ) {
-        echo '<ul class="menu menu_superior btns_dar_baja centered">';
-            echo '<li>';
-            if ( $datalogger['is_active'] != 0 ) {
-                echo '<a class="a_des" id="btn_dar_baja" href="#">&#10008;';
-                    echo '<form class="formulario form2" id="form_dar_baja_dat" method="POST" action="">';
-                        echo '<input type="hidden" name="session" value="'.$_SESSION['ss_usuario'].'">';
-                        echo '<input type="hidden" name="cod_datalogger" value="'.$datalogger['code'].'">';
-                        if ( isset( $_SESSION['entidad_dat'] ) ) {
-                            echo '<input type="hidden" name="entidad_dat" value="'.$_SESSION['entidad_dat'].'">';
-                        }
-                        echo '<input class="submit_esp" name="inv_btn_baja" type="submit" value="'.dar_baja.'">';
-                    echo '</form>';
-                echo '</a>';
-            } else {
-                echo '<a class="a_des" id="btn_dar_alta" href="#">&#10004;';
-                    echo '<form class="formulario form2" id="form_dar_baja_dat" method="POST" action="">';
-                        echo '<input type="hidden" name="session" value="'.$_SESSION['ss_usuario'].'">';
-                        echo '<input type="hidden" name="cod_datalogger" value="'.$datalogger['code'].'">';
-                        if ( isset( $_SESSION['entidad_dat'] ) ) {
-                            echo '<input type="hidden" name="entidad_dat" value="'.$_SESSION['entidad_dat'].'">';
-                        }
-                        echo '<input class="submit_esp" name="inv_btn_alta" type="submit" value="'.dar_alta.'">';
-                    echo '</form>';
-                echo '</a>';
-            }
-            echo '</li>';
-        echo '</ul>';
-    }
-    ?>
-    <form class="formulario" id="form_detalle_datalogger" method="POST" action="">
-        <?php
-        echo '<div class="label_form">';
-            echo '<h4>&#128269;&#65038;   '.estado.':</h4>';
-            if($datalogger['is_active'] == 1){
-                $estadoDataLogger = "Activado";
-            }else{
-                $estadoDataLogger = "Desactivado";
-            }
-            echo '<input class="input" type="text" value="'.$estadoDataLogger.'" disabled>';
-        echo '</div>';
-        echo '<div class="label_form">';
-            if ( $datalogger['is_active'] == 1 ) {
-                echo '<h4>&#128234;&#65038;   '.carga_activa.':</h4>';
-            } else {
-                echo '<h4>&#128235;&#65038;   '.ultima_carga.':</h4>';
-            }
-            if(isset($enlace['load_id'])){
-                echo '<input class="input" type="text" value="'.fx_recoger_loadding__id($cn, $enlace['load_id']).'" disabled>';
-            }
-        echo '</div>';
-        echo '<div class="label_form">';
-            echo '<h4>&#128274;&#65038;   '.contenedor.':</h4>';
-            if(isset($enlace['code'])){
-                echo '<input class="input" type="text" value="'.$enlace['code'].'" disabled>';
-            }
-        echo '</div>';
+    $datalogger = fx_recoger_datalogger_code($cn, $_SESSION['cod_datalogger']);
+    if(isset($datalogger[0])){
+        $enlace = fx_recoger_ultimo_enlace( $cn, $datalogger[0]['code']);
+        if ( ($datalogger[0]['is_active'] == 0) && !( isset( $_SESSION['entidad_dat'] ) ) ) {
+            echo '<ul class="menu menu_superior btns_dar_baja centered">';
+                echo '<li>';
+                if ( $datalogger[0]['is_active'] != 0 ) {
+                    echo '<a class="a_des" id="btn_dar_baja" href="#">&#10008;';
+                        echo '<form class="formulario form2" id="form_dar_baja_dat" method="POST" action="">';
+                            echo '<input type="hidden" name="session" value="'.$_SESSION['ss_usuario'].'">';
+                            echo '<input type="hidden" name="cod_datalogger" value="'.$datalogger[0]['code'].'">';
+                            if ( isset( $_SESSION['entidad_dat'] ) ) {
+                                echo '<input type="hidden" name="entidad_dat" value="'.$_SESSION['entidad_dat'].'">';
+                            }
+                            echo '<input class="submit_esp" name="inv_btn_baja" type="submit" value="'.dar_baja.'">';
+                        echo '</form>';
+                    echo '</a>';
+                } else {
+                    echo '<a class="a_des" id="btn_dar_alta" href="#">&#10004;';
+                        echo '<form class="formulario form2" id="form_dar_baja_dat" method="POST" action="">';
+                            echo '<input type="hidden" name="session" value="'.$_SESSION['ss_usuario'].'">';
+                            echo '<input type="hidden" name="cod_datalogger" value="'.$datalogger[0]['code'].'">';
+                            if ( isset( $_SESSION['entidad_dat'] ) ) {
+                                echo '<input type="hidden" name="entidad_dat" value="'.$_SESSION['entidad_dat'].'">';
+                            }
+                            echo '<input class="submit_esp" name="inv_btn_alta" type="submit" value="'.dar_alta.'">';
+                        echo '</form>';
+                    echo '</a>';
+                }
+                echo '</li>';
+            echo '</ul>';
+        }
         ?>
-    </form>
+        <form class="formulario" id="form_detalle_datalogger" method="POST" action="">
+            <?php
+            echo '<div class="label_form">';
+                echo '<h4>&#128269;&#65038;   '.estado.':</h4>';
+                if($datalogger[0]['is_active'] == 1){
+                    $estadoDataLogger = "Activado";
+                }else{
+                    $estadoDataLogger = "Desactivado";
+                }
+                echo '<input class="input" type="text" value="'.$estadoDataLogger.'" disabled>';
+            echo '</div>';
+            echo '<div class="label_form">';
+                if ( $datalogger[0]['is_active'] == 1 ) {
+                    echo '<h4>&#128234;&#65038;   '.carga_activa.':</h4>';
+                } else {
+                    echo '<h4>&#128235;&#65038;   '.ultima_carga.':</h4>';
+                }
+                if(isset($enlace['load_id'])){
+                    echo '<input class="input" type="text" value="'.fx_recoger_loadding__id($cn, $enlace['load_id']).'" disabled>';
+                }
+            echo '</div>';
+            echo '<div class="label_form">';
+                echo '<h4>&#128274;&#65038;   '.contenedor.':</h4>';
+                if(isset($enlace['code'])){
+                    echo '<input class="input" type="text" value="'.$enlace['code'].'" disabled>';
+                }
+            echo '</div>';
+            ?>
+        </form>
+        <?php
+    }
+?>    
     <br><br><br>
     <ul class="menu menu_centrado" id="submenu_detalles_datalogger">
         <li><a id="opcion1_submenu_detalle_datalogger" href="javascript:cambiarApartadoDetalleDatalogger(1)"><?php echo ver_cargas ?></a></li>
@@ -174,24 +181,24 @@ require($_SERVER['DOCUMENT_ROOT']."/headers_footers/header_principal.php");
         ?>
     </div>
     <div class="seccion_oculta" id="lista_alertas_detalle_datalogger"> <!-- POR HACER -->
-    <?php
-        if (!isset( $_SESSION['entidad_dat'])) {
-            $cargas = fx_recoger_cargas_datalogger($cn, $_SESSION['cod_datalogger'], $_SESSION['ss_usuario']);
-            if(isset($cargas)){
-                for ( $i = 0, $cant = count($cargas); $i < $cant; ++$i ) {
-                    ?>
-                    <div style="width:100%;">
-                    CARGA
-                    <?php   
-                    echo 'código : '.$cargas[$i]['code'].' - Producto : '.$cargas[$i]['product_id'].' - Nombre Destino : '.$cargas[$i]['destiny'].'- Nombre Origen : '.$cargas[$i]['origin'].' - Cliente:'.$cargas[$i]['supervisor_id'].' - Fecha Inicio :'.$cargas[$i]['start'].' - Fecha Fin: '.$cargas[$i]['end'].' - Fecha caducidad: '.$cargas[$i]['expiry'];
-                    $producto = fx_recoger_producto_by_id($cn, $cargas[$i]['product_id']);
-                    ?>
-                    </div>
-                    <?php
+        <?php
+            if (!isset( $_SESSION['entidad_dat'])) {
+                $cargas = fx_recoger_cargas_datalogger($cn, $_SESSION['cod_datalogger'], $_SESSION['ss_usuario']);
+                if(isset($cargas)){
+                    for ( $i = 0, $cant = count($cargas); $i < $cant; ++$i ) {
+                        ?>
+                        <div style="width:100%;">
+                        CARGA
+                        <?php   
+                        echo 'código : '.$cargas[$i]['code'].' - Producto : '.$cargas[$i]['product_id'].' - Nombre Destino : '.$cargas[$i]['destiny'].'- Nombre Origen : '.$cargas[$i]['origin'].' - Cliente:'.$cargas[$i]['supervisor_id'].' - Fecha Inicio :'.$cargas[$i]['start'].' - Fecha Fin: '.$cargas[$i]['end'].' - Fecha caducidad: '.$cargas[$i]['expiry'];
+                        $producto = fx_recoger_producto_by_id($cn, $cargas[$i]['product_id']);
+                        ?>
+                        </div>
+                        <?php
+                    }
                 }
-            }
-        } 
-    ?>   
+            } 
+        ?>   
         </div>
         <div style="width:100%;">
             DATALOGGER
@@ -219,7 +226,7 @@ require($_SERVER['DOCUMENT_ROOT']."/headers_footers/header_principal.php");
                                 <li class="list-group-item list-group-item-success">
                                     <span>[Temperatura : <?php echo $alarmas[$i]['temperature']; ?>]</span>
                                     <span>[Fuera de rango]</span>
-                                    <span>[Station: <?php echo $alarmas[$i]['station']; ?>]</span>
+                                    <span class="ubi_alarm">[Station:<?php echo$alarmas[$i]['station']; ?>]</span>
                                     <span>[Fecha/Hora : <?php echo $alarmas[$i]['timestamp']; ?>]</span>
                                 </li>
                             <?php 

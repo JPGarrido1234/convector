@@ -113,11 +113,18 @@ if ( isset( $_POST ) ) {
         }
     }else if(isset($_POST['dat_btn_adm'])){
         if(isset($_POST['session_dat']) && isset($_POST['cod_dat_adm'])){
+            $insert = false;
             $_SESSION['ss_usuario'] = $_POST['session_dat'];
             $_SESSION['cod_datalogger'] = $_POST['cod_dat_adm'];
             $entidad = fx_recoger_entidad($cn, $_POST['session_dat']);
-            fx_update_datalogger($cn, $_POST['cod_dat_adm'], $_POST['dat_ex_adm'], $entidad);
-            include($_SERVER['DOCUMENT_ROOT']."/detalles/detalle_datalogger.php");    
+            //fx_update_datalogger($cn, $_POST['cod_dat_adm'], $_POST['dat_ex_adm'], $entidad);
+            $insert = fx_alta_datalogger($cn, $_POST['cod_dat_adm'], $entidad);
+            
+            if($insert){
+                include($_SERVER['DOCUMENT_ROOT']."/detalles/detalle_datalogger.php");    
+            }else{
+                echo "Error al introducir los datos.";
+            }
         }
     }
 }

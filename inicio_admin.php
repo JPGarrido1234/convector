@@ -46,7 +46,8 @@ error_reporting(E_ALL);
         
         //$_SESSION['alta_subruta'] = null;
     }
-} ?>
+} 
+?>
         <section class="seccion_oculta" id="alta_carga_admin">
             <div class="titulo" id="titulo_alta_carga_admin">
                 <h2><?php echo alta_carga_M ?></h2>
@@ -125,6 +126,7 @@ error_reporting(E_ALL);
                 </div>
             </form>
         </section>
+        
         <section class="seccion_oculta" id="alta_subruta_admin">
             <div class="titulo" id="titulo_alta_subruta_admin">
                 <h2><?php echo alta_subruta_M ?></h2>
@@ -349,6 +351,7 @@ error_reporting(E_ALL);
             <section id="lista_cargas_ajax_admin">
             </section>
         </section>
+
         <section class="seccion_oculta" id="lista_subrutas_admin">
             <div class="titulo titulo_filtros" id="titulo_lista_subrutas_admin">
                 <h2><?php echo lista_subrutas_M ?></h2>
@@ -409,7 +412,7 @@ error_reporting(E_ALL);
             <section id="lista_subrutas_ajax_admin">
             </section>
         </section>
-
+        
         <section class="seccion_oculta" id="lista_dataloggers_admin">
             <div class="titulo titulo_filtros" id="titulo_info_dataloggers_admin">
                 <h2><?php echo lista_dataloggers_M ?></h2>
@@ -422,86 +425,98 @@ error_reporting(E_ALL);
                     <li><a href="javascript:cambiarFiltrosDataloggersAdmin(0)"><?php echo borrar ?></a></li>
                 </ul>
             </div>
-            <div id="div_lista_dataloggers_completa">
+            <div class="seccion_oculta" id="div_lista_dataloggers_apagados">
                 <?php
-                $dataloggers = fx_recoger_dataloggers_entidad( $cn, fx_recoger_entidad( $cn, $_SESSION['ss_usuario'] ) );
-                $dataloggers_enuso = array();
-                $dataloggers_apagados = array();
-                for ( $i = 0, $cant = count( $dataloggers ); $i < $cant; ++$i ) {
-                    if ( $dataloggers[$i]['is_active'] == 1 ) {
-                        array_push( $dataloggers_enuso, $dataloggers[$i] );
-                    } else if ( $dataloggers[$i]['is_active'] == 0 ) {
-                        array_push( $dataloggers_apagados, $dataloggers[$i] );
+                if(isset($dataloggers_apagados)){
+                    for ( $i = 0, $cant = count( $dataloggers_apagados ); $i < $cant; ++$i ) {
+                        $enlace3 = fx_recoger_ultimo_enlace( $cn, $dataloggers_apagados[$i]['code'] );
+                        echo '<div class="info_carga con_btn_inv">';
+                        if ( $enlace3['load_id'] != null ) {
+                            echo '<pre>'.datalogger.' '.$dataloggers_apagados[$i]['code'].'            '.ultima_carga.': '.fx_recoger_loadding__id($cn, $enlace3['load_id']).
+                            '            '.contenedor.': '.$enlace3['code'].'</pre>';
+                        } else {
+                            echo '<pre>'.datalogger.' '.$dataloggers_apagados[$i]['code'].'            '.datalogger_sin_cargas_registradas.'</pre>';
+                        }
+    
+                        echo '<form class="formulario" id="form_lista_dataloggers_apagado_admin_'.$dataloggers_apagados[$i]['code'].'" method="POST" action="">';
+                            echo '<input type="hidden" name="session_datalogger" value="'.$_SESSION['ss_usuario'].'">';
+                            echo '<input type="hidden" name="codigo_datalogger" value="'.$dataloggers_apagados[$i]['code'].'">';
+                            echo '<input type="hidden" name="tipo" value="dataloger">';
+                            echo '<input class="btn_inv" name="inv_btn_push_dat" type="submit">';
+                        echo '</form>';
+    
+                        echo '</div>';
                     }
-                    echo '<div class="info_carga con_btn_inv" onmouseover="mostrarDetalles(\'info_dat_'.$dataloggers[$i]['code'].
-                    '\')"'.' onmouseout="esconderDetalles(\'info_dat_'.$dataloggers[$i]['code'].'\')">';
-                    echo '<pre>'.datalogger.' '.$dataloggers[$i]['code'].'            '.estado.': '.$dataloggers[$i]['is_active'].'</pre>';
-                    
-                    echo '<form class="formulario" id="form_lista_dataloggers_admin_'.$dataloggers[$i]['code'].'" method="POST" action="">';
-                        echo '<input type="hidden" name="session_datalogger" value="'.$_SESSION['ss_usuario'].'">';
-                        echo '<input type="hidden" name="codigo_datalogger" value="'.$dataloggers[$i]['code'].'">';
-                        echo '<input type="hidden" name="tipo" value="dataloger">';
-                        echo '<input class="btn_inv" name="inv_btn_push_dat" type="submit">';
-                    echo '</form>';
-                    echo '</div>';
-                    
-                    echo '<div class="info_c" id="info_dat_'.$dataloggers[$i]['code'].'">';
-                    $enlace = fx_recoger_ultimo_enlace( $cn, $dataloggers[$i]['code'] );
-                    if ( $dataloggers[$i]['is_active'] != 0 ) {
-                        echo '<pre>'.carga_actual.': '.fx_recoger_loadding__id($cn, $enlace['load_id']).' - '.contenedor.': '.$enlace['code'].'</pre>';
-                    } elseif ( $enlace['load_id'] != null ) {
-                        echo '<pre>'.ultima_carga.': '.fx_recoger_loadding__id($cn, $enlace['load_id']).' - '.contenedor.': '.$enlace['code'].'</pre>';
-                    } else {
-                        echo '<pre>'.datalogger_sin_cargas_registradas.'</pre>';
-                    }
-                    echo '</div>';
                 }
                 ?>
             </div>
             <div class="seccion_oculta" id="div_lista_dataloggers_enuso">
                 <?php
-                for ( $i = 0, $cant = count( $dataloggers_enuso ); $i < $cant; ++$i ) {
-                    $enlace2 = fx_recoger_ultimo_enlace( $cn, $dataloggers_enuso[$i]['code'] );
-                    echo '<div class="info_carga con_btn_inv">';
-                    echo '<pre>'.datalogger.' '.$dataloggers_enuso[$i]['code'].'            '.carga_actual.': '.fx_recoger_loadding__id($cn, $enlace2['load_id']).
-                    '           '.contenedor.': '.$enlace2['code'].'</pre>';
-
-                    echo '<form class="formulario" id="form_lista_dataloggers_enuso_admin_'.$dataloggers_enuso[$i]['code'].'" method="POST" action="">';
-                        echo '<input type="hidden" name="session_datalogger" value="'.$_SESSION['ss_usuario'].'">';
-                        echo '<input type="hidden" name="codigo_datalogger" value="'.$dataloggers_enuso[$i]['code'].'">';
-                        echo '<input type="hidden" name="tipo" value="dataloger">';
-                        echo '<input class="btn_inv" name="inv_btn_push_dat" type="submit">';
-                    echo '</form>';
-
-                    echo '</div>';
+                if(isset($dataloggers_enuso)){
+                    for ( $i = 0, $cant = count( $dataloggers_enuso ); $i < $cant; ++$i ) {
+                        $enlace2 = fx_recoger_ultimo_enlace( $cn, $dataloggers_enuso[$i]['code'] );
+                        echo '<div class="info_carga con_btn_inv">';
+                        echo '<pre>'.datalogger.' '.$dataloggers_enuso[$i]['code'].'            '.carga_actual.': '.fx_recoger_loadding__id($cn, $enlace2['load_id']).
+                        '           '.contenedor.': '.$enlace2['code'].'</pre>';
+    
+                        echo '<form class="formulario" id="form_lista_dataloggers_enuso_admin_'.$dataloggers_enuso[$i]['code'].'" method="POST" action="">';
+                            echo '<input type="hidden" name="session_datalogger" value="'.$_SESSION['ss_usuario'].'">';
+                            echo '<input type="hidden" name="codigo_datalogger" value="'.$dataloggers_enuso[$i]['code'].'">';
+                            echo '<input type="hidden" name="tipo" value="dataloger">';
+                            echo '<input class="btn_inv" name="inv_btn_push_dat" type="submit">';
+                        echo '</form>';
+    
+                        echo '</div>';
+                    }
                 }
                 ?>
             </div>
-            <div class="seccion_oculta" id="div_lista_dataloggers_apagados">
+            <div id="div_lista_dataloggers_completa">
                 <?php
-                for ( $i = 0, $cant = count( $dataloggers_apagados ); $i < $cant; ++$i ) {
-                    $enlace3 = fx_recoger_ultimo_enlace( $cn, $dataloggers_apagados[$i]['code'] );
-                    echo '<div class="info_carga con_btn_inv">';
-                    if ( $enlace3['load_id'] != null ) {
-                        echo '<pre>'.datalogger.' '.$dataloggers_apagados[$i]['code'].'            '.ultima_carga.': '.fx_recoger_loadding__id($cn, $enlace3['load_id']).
-                        '            '.contenedor.': '.$enlace3['code'].'</pre>';
-                    } else {
-                        echo '<pre>'.datalogger.' '.$dataloggers_apagados[$i]['code'].'            '.datalogger_sin_cargas_registradas.'</pre>';
+                if(isset($_SESSION['ss_usuario'])){
+                    $dataloggers = fx_recoger_dataloggers_entidad( $cn, fx_recoger_entidad( $cn, $_SESSION['ss_usuario'] ) );
+                    $dataloggers_enuso = array();
+                    $dataloggers_apagados = array();
+                    if(isset($dataloggers)){
+                        for ( $i = 0, $cant = count( $dataloggers ); $i < $cant; ++$i ) {
+                            if ( $dataloggers[$i]['is_active'] == 1 ) {
+                                array_push( $dataloggers_enuso, $dataloggers[$i] );
+                            } else if ( $dataloggers[$i]['is_active'] == 0 ) {
+                                array_push( $dataloggers_apagados, $dataloggers[$i] );
+                            }
+                            echo '<div class="info_carga con_btn_inv" onmouseover="mostrarDetalles(\'info_dat_'.$dataloggers[$i]['code'].
+                            '\')"'.' onmouseout="esconderDetalles(\'info_dat_'.$dataloggers[$i]['code'].'\')">';
+                            echo '<pre>'.datalogger.' '.$dataloggers[$i]['code'].'            '.estado.': '.$dataloggers[$i]['is_active'].'</pre>';
+                            
+                            echo '<form class="formulario" id="form_lista_dataloggers_admin_'.$dataloggers[$i]['code'].'" method="POST" action="">';
+                                echo '<input type="hidden" name="session_datalogger" value="'.$_SESSION['ss_usuario'].'">';
+                                echo '<input type="hidden" name="codigo_datalogger" value="'.$dataloggers[$i]['code'].'">';
+                                echo '<input type="hidden" name="tipo" value="dataloger">';
+                                echo '<input class="btn_inv" name="inv_btn_push_dat" type="submit">';
+                            echo '</form>';
+                            echo '</div>';
+                            
+                            echo '<div class="info_c" id="info_dat_'.$dataloggers[$i]['code'].'">';
+                            if(isset($dataloggers[$i]['code'])){
+                                $enlace = fx_recoger_ultimo_enlace( $cn, $dataloggers[$i]['code'] );
+                                if(isset($enlace)){
+                                    if ( $dataloggers[$i]['is_active'] != 0 ) {
+                                        echo '<pre>'.carga_actual.': '.fx_recoger_loadding__id($cn, $enlace['load_id']).' - '.contenedor.': '.$enlace['code'].'</pre>';
+                                    } elseif ( $enlace['load_id'] != null ) {
+                                        echo '<pre>'.ultima_carga.': '.fx_recoger_loadding__id($cn, $enlace['load_id']).' - '.contenedor.': '.$enlace['code'].'</pre>';
+                                    } else {
+                                        echo '<pre>'.datalogger_sin_cargas_registradas.'</pre>';
+                                    }
+                                }
+                            }            
+                            echo '</div>';
+                        }
                     }
-
-                    echo '<form class="formulario" id="form_lista_dataloggers_apagado_admin_'.$dataloggers_apagados[$i]['code'].'" method="POST" action="">';
-                        echo '<input type="hidden" name="session_datalogger" value="'.$_SESSION['ss_usuario'].'">';
-                        echo '<input type="hidden" name="codigo_datalogger" value="'.$dataloggers_apagados[$i]['code'].'">';
-                        echo '<input type="hidden" name="tipo" value="dataloger">';
-                        echo '<input class="btn_inv" name="inv_btn_push_dat" type="submit">';
-                    echo '</form>';
-
-                    echo '</div>';
                 }
                 ?>
             </div>
         </section>
-
+        
         <section class="seccion_oculta" id="lista_productos_admin">
             <div class="titulo" id="titulo_lista_productos_admin">
                 <h2><?php echo lista_productos_M ?></h2>
@@ -519,7 +534,7 @@ error_reporting(E_ALL);
             }
             ?>
         </section>
-
+        
         <section class="seccion_oculta" id="seccion_info_entidad">
             <div class="titulo" id="titulo_info_entidad_admin">
                 <h2><?php echo informacion_entidad_M ?></h2>
@@ -589,11 +604,10 @@ error_reporting(E_ALL);
                 ?>
             </div>
         </section>
-
-        <?php
-if(!isset($_POST['enviado'])){
-    if(!isset($_POST['cod_carga']) && !isset($_POST['codigo']) && !isset($_POST['nombre6']) && !isset($_POST['session_carga']) && !isset($_POST['codigo_datalogger']) && !isset($_POST['cod_subruta'])){
-        require("headers_footers/footer.php");
-    }
-}
-?>
+        <?php 
+            if(!isset($_POST['enviado'])){
+                if(!isset($_POST['cod_carga']) && !isset($_POST['codigo']) && !isset($_POST['nombre6']) && !isset($_POST['session_carga']) && !isset($_POST['codigo_datalogger']) && !isset($_POST['cod_subruta'])){
+                    require("headers_footers/footer.php");
+                }
+            }
+        ?>
